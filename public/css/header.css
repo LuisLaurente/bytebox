@@ -1,0 +1,569 @@
+/* ==========================================================================
+   HEADER CSS COMPLETO - DISEÑO ACTUALIZADO
+   ========================================================================== */
+
+/* Variables de Color (basadas en tu logo e imagen) */
+:root {
+  --color-primario: #2AC1DB; /* Azul/Cian principal */
+  --color-fondo-header: #1B1B1B; /* Negro/Gris oscuro del header */
+  --color-texto-header: #ffffff;
+  --color-borde-input: #4a4d50;
+  --color-fondo-dropdown: #2d3035;
+  --color-borde-dropdown: #444;
+  --radio-borde-suave: 12px; /* Bordes redondeados suaves */
+  --radio-borde-completo: 50px; /* Para elementos circulares/píldoras */
+}
+.sticky-header-wrapper {
+  position: sticky; /* Hacemos que este contenedor sea el pegajoso */
+  top: 0;           /* Se pega en la parte superior de la ventana */
+  z-index: 1000;    /* Se asegura de que esté por encima de otro contenido */
+}
+
+/* Estilos para la barra superior (Empresa, Novedades, etc.) */
+.top-bar {
+  background-color: #f8f9fa; /* Un gris muy claro */
+  padding: 8px 5%;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 13px;
+}
+
+.top-bar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.top-links a, .social-icons a {
+  color: #3b3b3b;
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.2s;
+}
+
+.top-links a:hover, .social-icons a:hover {
+  color: var(--color-primario);
+}
+
+.social-icons {
+  display: flex;
+  align-items: center;
+}
+
+/* ==========================================================================
+   ESTILOS PRINCIPALES DEL HEADER (Logo, Búsqueda, Perfil, Carrito)
+   ========================================================================== */
+
+.main-header {
+  background-color: var(--color-fondo-header);
+  padding: 15px 5%;
+  border-bottom: 1px solid #333;
+  
+  /* --- INICIO DE LA CORRECCIÓN --- */
+  position: sticky; /* Hacemos que el header principal sea pegajoso */
+  top: 0;           /* Se pega en el borde superior de la pantalla */
+  z-index: 1001;    /* Un z-index alto para que esté por encima de todo */
+  /* --- FIN DE LA CORRECCIÓN --- */
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px; /* Espacio entre logo, búsqueda y acciones */
+}
+
+/* --- 1. Logo (Izquierda) --- */
+.header-left {
+  flex-shrink: 0; /* Evita que el logo se encoja */
+  /* Evitar que el contenedor obligue al logo a estirarse */
+  min-width: 0;
+}
+
+.logo-link .logo-image {
+  display: block;
+  /* Preferir dimensiones naturales pero limitar el alto para mantener proporción */
+  max-height: 50px;
+  height: auto;
+  width: auto;
+  max-width: 220px; /* evita que el logo se haga excesivamente ancho en pantallas pequeñas */
+  object-fit: contain; /* asegura que no se distorsione */
+}
+
+/* --- 2. Barra de Búsqueda (Centro) --- */
+.main-nav {
+  flex-grow: 1; /* Permite que la barra de búsqueda ocupe el espacio disponible */
+  max-width: 600px; /* Ancho máximo para la búsqueda */
+}
+
+.search-form {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 50px 12px 20px; /* Espacio para el ícono de lupa */
+  border-radius: var(--radio-borde-completo);
+  border: 1px solid var(--color-borde-input);
+  background-color: var(--color-fondo-header);
+  color: var(--color-texto-header);
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(0, 169, 224, 0.3);
+}
+
+.search-input::placeholder {
+  color: #888;
+}
+
+.search-button {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 38px;
+  width: 45px;
+  border: none;
+  border-radius: var(--radio-borde-completo);
+  background-color: var(--color-primario);
+  color: var(--color-texto-header);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.search-button:hover {
+  background-color: #008fbf; /* Un poco más oscuro al pasar el cursor */
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  stroke: white;
+}
+
+/* --- 3. Acciones de Usuario (Derecha) --- */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espacio entre perfil y carrito */
+}
+
+.user-profile-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  background-color: transparent;
+  border: 1px solid var(--color-primario);
+  border-radius: var(--radio-borde-suave);
+  color: var(--color-texto-header);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.user-profile-button:hover,
+.user-profile-container.open .user-profile-button {
+  background-color: rgba(0, 169, 224, 0.15);
+}
+
+.user-icon, .dropdown-icon {
+  stroke: var(--color-texto-header);
+}
+
+.user-icon { width: 24px; height: 24px; }
+.dropdown-icon { width: 16px; height: 16px; }
+
+.cart-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  width: 44px;
+  background-color: var(--color-primario);
+  border-radius: 50%; /* Círculo perfecto */
+  color: var(--color-texto-header);
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.cart-button:hover {
+  background-color: #008fbf;
+}
+
+.cart-icon {
+  width: 24px;
+  height: 24px;
+  stroke: white;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #e63946; /* Rojo para notificaciones */
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   BARRA DE CATEGORÍAS
+   ========================================================================== */
+
+.categories-bar {
+  background-color: #ffffff;
+  padding: 10px 5%;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  /* No necesita position: sticky aquí */
+}
+
+.categories-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.all-categories-button {
+  padding: 12px 25px;
+  background-color: var(--color-primario);
+  color: white;
+  border: none;
+  border-radius: var(--radio-borde-completo);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.2s;
+}
+
+.all-categories-button:hover {
+  background-color: #008fbf;
+}
+
+.dropdown-arrow-icon {
+  stroke: white;
+  transition: transform 0.2s;
+}
+
+.all-categories-button[aria-expanded="true"] .dropdown-arrow-icon {
+  transform: rotate(180deg);
+}
+
+.category-links {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  overflow-x: auto; /* Para móvil si no caben */
+}
+
+.category-link {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.category-link:hover {
+  color: var(--color-primario);
+}
+
+/* ==========================================================================
+   DROPDOWNS (Perfil y Categorías)
+   ========================================================================== */
+
+.user-profile-container, .all-categories-dropdown-container {
+  position: relative;
+}
+
+.profile-dropdown, .categories-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: var(--color-fondo-dropdown);
+  border: 1px solid var(--color-borde-dropdown);
+  border-radius: var(--radio-borde-suave);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1010;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  min-width: 220px;
+}
+
+/* Estilos específicos para el dropdown de categorías */
+.categories-dropdown {
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  width: 700px; /* Ancho fijo para desktop */
+  max-width: calc(100vw - 40px); /* Evita desbordamiento horizontal */
+  box-sizing: border-box;
+}
+
+.user-profile-container.open .profile-dropdown,
+.categories-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: var(--color-borde-dropdown);
+  margin: 8px 0;
+}
+
+/* Estilos para el mega-menú de categorías */
+.category-column {
+  flex: 1;
+}
+
+.category-item-with-children {
+  margin-bottom: 15px;
+}
+
+.category-item.parent {
+  font-weight: bold;
+  color: var(--color-primario);
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.subcategory-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.subcategory-item a {
+  display: block;
+  padding: 6px 0;
+  color: #ccc;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.subcategory-item a:hover {
+  color: white;
+}
+
+/* ==========================================================================
+   AUTOCOMPLETE DE BÚSQUEDA
+   ========================================================================== */
+.autocomplete-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--color-fondo-dropdown);
+  border: 1px solid var(--color-borde-dropdown);
+  border-radius: var(--radio-borde-suave);
+  margin-top: 8px;
+  z-index: 1005;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.autocomplete-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-borde-dropdown);
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.autocomplete-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 15px;
+  border-radius: 4px;
+}
+
+.autocomplete-info {
+  color: #e0e0e0;
+}
+
+.autocomplete-name {
+  font-weight: 500;
+}
+
+.autocomplete-price {
+  color: var(--color-primario);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   DISEÑO RESPONSIVE (MÓVIL)
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .header-content {
+    flex-wrap: wrap; /* Permitir que los elementos pasen a la siguiente línea */
+    row-gap: 15px; /* Espacio vertical cuando se envuelven */
+  }
+
+  .header-left {
+    /* No forzamos 50%: dejar tamaño automático para que el logo mantenga proporción
+       y no crezca en exceso al reducir el ancho del viewport */
+    flex: 0 0 auto;
+    flex-basis: auto;
+  }
+
+  .header-right {
+    flex-basis: 50%; /* Acciones ocupan la otra mitad */
+    justify-content: flex-end; /* Alinear a la derecha */
+  }
+
+  .main-nav {
+    order: 3; /* Mover la barra de búsqueda al final */
+    flex-basis: 100%; /* Ocupar todo el ancho en la segunda fila */
+    max-width: none;
+  }
+
+  .top-bar { display: none; } /* Ocultar barra superior en móvil */
+  .category-links { display: none; } /* Ocultar links de categorías en móvil */
+  
+  /* Hacer el dropdown de categorías responsivo en tablets */
+  .categories-dropdown {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  
+  .category-column {
+    flex: none;
+    width: 100%;
+  }
+  
+  .category-item.parent {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  
+  .subcategory-item a {
+    font-size: 13px;
+    padding: 4px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-header, .categories-bar {
+    padding-left: 3%;
+    padding-right: 3%;
+  }
+
+  .logo-link .logo-image {
+    /* Usar max-height para preservar relación de aspecto */
+    max-height: 32px; /* Logo más pequeño en móviles */
+    height: auto;
+    width: auto;
+    max-width: 140px;
+    object-fit: contain;
+  }
+
+  /* Ajuste adicional para pantallas muy pequeñas (ej. 320-375px) */
+  @media (max-width: 375px) {
+    .logo-link .logo-image {
+      max-height: 28px;
+      max-width: 120px;
+    }
+  }
+
+  .user-profile-button {
+    padding: 6px 10px;
+  }
+  
+  .cart-button {
+    height: 40px;
+    width: 40px;
+  }
+  
+  .cart-icon, .user-icon {
+    width: 22px;
+    height: 22px;
+  }
+  
+  /* Dropdown de categorías en móviles */
+  .categories-dropdown {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    max-height: 50vh;
+    overflow-y: auto;
+    width: calc(100vw - 20px);
+    left: -10px;
+  }
+  
+  .category-column {
+    flex: none;
+    width: 100%;
+  }
+  
+  .category-item.parent {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  .subcategory-item a {
+    font-size: 12px;
+    padding: 3px 0;
+  }
+}

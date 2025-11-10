@@ -1,0 +1,471 @@
+/* ========================================
+   PRODUCTO CREAR - CSS COMPLETO
+   ======================================== */
+
+/* Variables CSS */
+:root {
+    --color-primary: #007cba;
+    --color-primary-dark: #005a8b;
+    --color-success: #28a745;
+    --color-success-dark: #1e7e34;
+    --color-danger: #dc3545;
+    --color-danger-dark: #b02a37;
+    --color-text: #333;
+    --color-text-light: #555;
+    --color-border: #ccc;
+    --color-background: #f8f9fa;
+    --color-background-light: #ffffff;
+    --border-radius: 8px;
+    --border-radius-small: 4px;
+    --shadow: 0 2px 10px rgba(0,0,0,0.1);
+    --shadow-hover: 0 4px 20px rgba(0,0,0,0.15);
+    --transition: all 0.3s ease;
+}
+
+/* Reset y base */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    margin: 0;
+    padding: 20px;
+}
+
+/* Contenedor principal */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--color-background-light);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--color-primary);
+}
+
+/* Título principal */
+h2 {
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.2rem;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h3 {
+    color: var(--color-text);
+    margin: 30px 0 20px 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 8px;
+}
+
+/* Labels */
+label {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 1rem;
+}
+
+/* Inputs generales */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-small);
+    font-size: 16px;
+    font-family: inherit;
+    transition: var(--transition);
+    background: #fff;
+    margin-bottom: 20px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 124, 186, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Textarea específico */
+textarea {
+    min-height: 120px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* Input file */
+input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px dashed var(--color-border);
+    border-radius: var(--border-radius-small);
+    background: #fafafa;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 20px;
+}
+
+input[type="file"]:hover {
+    border-color: var(--color-primary);
+    background: #f0f8ff;
+}
+
+/* Select múltiple */
+select[multiple] {
+    min-height: 120px;
+    padding: 10px;
+}
+
+select[multiple] option {
+    padding: 8px;
+    margin: 2px 0;
+    border-radius: var(--border-radius-small);
+}
+
+select[multiple] option:checked {
+    background: var(--color-primary);
+    color: white;
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+    margin-bottom: 0;
+    transform: scale(1.3);
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+label:has(input[type="checkbox"]) {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: var(--border-radius-small);
+    transition: var(--transition);
+}
+
+label:has(input[type="checkbox"]):hover {
+    background: #e9ecef;
+}
+
+/* Categorías */
+.categorias-container {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: var(--border-radius-small);
+    border: 1px solid #e9ecef;
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.categoria-item {
+    margin: 8px 0;
+    padding: 5px 0;
+}
+
+.categoria-item label {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 8px 12px;
+    background: white;
+    border-radius: var(--border-radius-small);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid #e9ecef;
+}
+
+.categoria-item label:hover {
+    background: #e3f2fd;
+    border-color: var(--color-primary);
+}
+
+.categoria-item input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+/* Variantes */
+#variantes-container {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: var(--border-radius-small);
+    border: 1px solid #e9ecef;
+    margin-bottom: 20px;
+}
+
+.variante {
+    background: white;
+    padding: 20px;
+    border-radius: var(--border-radius-small);
+    border: 1px solid #dee2e6;
+    margin-bottom: 15px;
+    position: relative;
+    transition: var(--transition);
+}
+
+.variante:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-color: var(--color-primary);
+}
+
+.variante:last-child {
+    margin-bottom: 0;
+}
+
+.variante label {
+    display: inline-block;
+    width: 80px;
+    margin: 0 10px 10px 0;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.variante input {
+    display: inline-block;
+    width: calc(33% - 15px);
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+.variante input:last-child {
+    margin-right: 0;
+}
+
+/* Botones */
+button,
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 10px 5px;
+}
+
+/* Botón principal */
+button[type="submit"] {
+    background: linear-gradient(135deg, var(--color-success), var(--color-success-dark));
+    color: white;
+    font-size: 18px;
+    padding: 15px 30px;
+    box-shadow: var(--shadow);
+}
+
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, var(--color-success-dark), #155724);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Botón agregar variante */
+button[type="button"] {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+    font-size: 14px;
+    padding: 10px 20px;
+}
+
+button[type="button"]:hover {
+    background: linear-gradient(135deg, var(--color-primary-dark), #004666);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+/* Enlace cancelar */
+a {
+    background: linear-gradient(135deg, var(--color-danger), var(--color-danger-dark));
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    display: inline-block;
+    font-weight: 600;
+}
+
+a:hover {
+    background: linear-gradient(135deg, var(--color-danger-dark), #871e2b);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    color: white;
+    text-decoration: none;
+}
+
+/* Grupo de botones */
+.button-group {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #e9ecef;
+}
+
+/* Animaciones */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-container {
+    animation: slideIn 0.5s ease-out;
+}
+
+.variante {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Estados de validación */
+input:invalid {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+input:valid {
+    border-color: var(--color-success);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .form-container {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+    
+    h3 {
+        font-size: 1.2rem;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+        font-size: 16px; /* Evita zoom en iOS */
+    }
+    
+    .variante input {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    
+    .variante label {
+        width: 100%;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    button,
+    .btn,
+    a {
+        width: 100%;
+        text-align: center;
+        margin: 5px 0;
+        display: block;
+    }
+    
+    .button-group {
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 15px;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .categorias-container {
+        max-height: 200px;
+    }
+    
+    button[type="submit"] {
+        font-size: 16px;
+        padding: 12px 20px;
+    }
+}
+
+/* Mejoras de accesibilidad */
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Utilidades */
+.required {
+    color: var(--color-danger);
+}
+
+.help-text {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.field-group {
+    margin-bottom: 25px;
+}
+
+/* Loading state para botones */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+button:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}

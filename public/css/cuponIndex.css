@@ -1,0 +1,715 @@
+/* cuponIndex.css */
+/* ===== VARIABLES Y RESET ===== */
+:root {
+    --color-negro: #1b1b1b;
+    --color-turquesa: #2ac1db;
+    --color-blanco: #ffffff;
+    --border-radius: 8px;
+    --shadow: 0 2px 8px rgba(27, 27, 27, 0.1);
+    --shadow-lg: 0 4px 16px rgba(27, 27, 27, 0.15);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    color: var(--color-negro);
+    background-color: var(--color-blanco);
+}
+.codigoNombre{
+    color: var(--color-negro);
+}
+.valorNumero{
+    color: var(--color-negro);
+}
+/* ===== LAYOUT PRINCIPAL ===== */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+    padding: 2rem;
+    background-color: var(--color-blanco);
+    overflow-y: auto;
+}
+
+.cupon-admin-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ===== HEADER ===== */
+.cupon-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.cupon-header h1 {
+    background: var(--color-negro);
+    color: var(--color-blanco);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.header-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+}
+
+/* ===== BOTONES ===== */
+.btn-nuevo-cupon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+}
+
+.btn-nuevo-cupon span {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+}
+
+/* ===== ALERTAS ===== */
+.alert {
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    margin: 1.5rem 0;
+    font-weight: 500;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.alert-success {
+    background: var(--color-blanco);
+    color: var(--color-negro);
+    border-left: 4px solid var(--color-turquesa);
+}
+
+.alert-error {
+    background: var(--color-blanco);
+    color: var(--color-negro);
+    border-left: 4px solid var(--color-negro);
+}
+
+/* ===== ESTADÍSTICAS ===== */
+.estadisticas-cupones {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--color-blanco);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--color-blanco);
+    transition: var(--transition);
+}
+
+.stat-card.total {
+    border-color: var(--color-negro);
+}
+
+.stat-card.activos {
+    border-color: var(--color-turquesa);
+}
+
+.stat-card.vigentes {
+    border-color: var(--color-negro);
+}
+
+.stat-card.usados {
+    border-color: var(--color-turquesa);
+}
+
+.stat-card h3 {
+    color: var(--color-negro);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card .numero {
+    color: var(--color-negro);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* ===== TABLA DE CUPONES ===== */
+.cupones-tabla-container {
+    background: var(--color-blanco);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid var(--color-blanco);
+}
+
+.empty-state {
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--color-negro);
+}
+
+.empty-state h3 {
+    color: var(--color-negro);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.cupones-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cupones-tabla th {
+    background: var(--color-negro);
+    color: var(--color-blanco);
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid var(--color-blanco);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cupones-tabla td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-blanco);
+    vertical-align: middle;
+    background: var(--color-blanco);
+}
+
+.cupones-tabla tr:last-child td {
+    border-bottom: none;
+}
+
+.cupones-tabla tr:hover td {
+    background: rgba(42, 193, 219, 0.05);
+}
+
+/* ===== TIPOS DE CUPÓN ===== */
+.tipo-cupon {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tipo-porcentaje {
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+}
+
+.tipo-monto {
+    background: var(--color-negro);
+    color: var(--color-blanco);
+}
+
+/* ===== VIGENCIA ===== */
+.vigencia-dates {
+    font-size: 0.85rem;
+}
+
+.fecha-inicio {
+    font-weight: 500;
+    color: var(--color-negro);
+}
+
+.fecha-fin {
+    color: var(--color-negro);
+    opacity: 0.7;
+}
+
+/* ===== BADGES DE ESTADO ===== */
+.estado-badge {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.estado-vigente {
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+}
+
+.estado-expirado {
+    background: var(--color-negro);
+    color: var(--color-blanco);
+    opacity: 0.7;
+}
+
+.estado-pendiente {
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+    opacity: 0.8;
+}
+
+.estado-inactivo {
+    background: var(--color-negro);
+    color: var(--color-blanco);
+    opacity: 0.6;
+}
+
+/* ===== USOS Y LÍMITES ===== */
+.usos-container {
+    text-align: center;
+}
+
+.usos-actuales {
+    font-size: 1.125rem;
+    color: var(--color-negro);
+}
+
+.usos-limite {
+    font-size: 0.8rem;
+    color: var(--color-negro);
+    opacity: 0.7;
+}
+
+.limites-container {
+    font-size: 0.85rem;
+}
+
+.monto-minimo,
+.limite-usuario {
+    margin-bottom: 0.25rem;
+    color: var(--color-negro);
+}
+
+/* ===== ACCIONES ===== */
+.acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-toggle {
+    display: inline;
+}
+
+.btn-accion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    width: 100%;
+    box-shadow: var(--shadow);
+}
+
+.btn-ver {
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+}
+
+.btn-editar {
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+}
+
+.btn-toggle {
+    background: var(--color-negro);
+    color: var(--color-blanco);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet (1024px) */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .content {
+        padding: 1.5rem;
+    }
+    
+    .estadisticas-cupones {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .cupones-tabla {
+        font-size: 0.875rem;
+    }
+    
+    .cupones-tabla th,
+    .cupones-tabla td {
+        padding: 0.75rem;
+    }
+}
+
+/* Móvil (768px) */
+@media (max-width: 768px) {
+    .content {
+        padding: 1rem;
+    }
+    
+    .cupon-header h1 {
+        font-size: 2rem;
+        padding: 1rem;
+    }
+    
+    .estadisticas-cupones {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-nuevo-cupon,
+    .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .cupones-tabla-container {
+        overflow-x: auto;
+    }
+    
+    .cupones-tabla {
+        min-width: 800px;
+    }
+    
+    .acciones {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .btn-accion {
+        width: auto;
+        flex: 1;
+        min-width: 80px;
+    }
+}
+
+/* Móvil pequeño (480px) */
+@media (max-width: 480px) {
+    .content {
+        padding: 0.75rem;
+    }
+    
+    .cupon-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-card .numero {
+        font-size: 2rem;
+    }
+    
+    .empty-state {
+        padding: 2rem 1rem;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.25rem;
+    }
+}
+
+/* Móvil muy pequeño (380px) */
+@media (max-width: 380px) {
+    .content {
+        padding: 0.25rem;
+        overflow-x: hidden;
+        width: 100%;
+    }
+    
+    .cupon-admin-container {
+        width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .cupon-header h1 {
+        font-size: 1.25rem;
+        padding: 0.5rem;
+        word-wrap: break-word;
+        margin: 0.5rem 0;
+    }
+    
+    .stat-card {
+        padding: 0.5rem;
+        min-width: 0;
+    }
+    
+    .stat-card .numero {
+        font-size: 1.5rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 0.75rem;
+    }
+    
+    .btn-nuevo-cupon,
+    .btn-primary {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .cupones-tabla-container {
+        overflow-x: hidden;
+        width: 100%;
+    }
+    
+    .cupones-tabla {
+        width: 100% !important;
+        min-width: 100%;
+        font-size: 0.7rem;
+        display: block;
+        overflow-x: hidden;
+    }
+    
+    .cupones-tabla thead,
+    .cupones-tabla tbody {
+        display: block;
+        width: 100%;
+    }
+    
+    .cupones-tabla tr {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        border-bottom: 1px solid var(--color-blanco);
+        padding: 0.5rem 0;
+    }
+    
+    .cupones-tabla th,
+    .cupones-tabla td {
+        padding: 0.25rem;
+        white-space: normal;
+        border: none;
+        flex: 1;
+        min-width: 50%;
+        box-sizing: border-box;
+    }
+    
+    .cupones-tabla th {
+        display: none;
+    }
+    
+    .cupones-tabla td {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+    }
+    
+    .cupones-tabla td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        font-size: 0.65rem;
+        color: var(--color-negro);
+        opacity: 0.8;
+        margin-bottom: 0.125rem;
+        text-transform: uppercase;
+    }
+    
+    .cupones-tabla td:nth-child(1)::before { content: "Código"; }
+    .cupones-tabla td:nth-child(2)::before { content: "Tipo"; }
+    .cupones-tabla td:nth-child(3)::before { content: "Valor"; }
+    .cupones-tabla td:nth-child(5)::before { content: "Estado"; }
+    .cupones-tabla td:nth-child(8)::before { content: "Acciones"; }
+    
+    .cupones-tabla td:nth-child(4),
+    .cupones-tabla td:nth-child(6),
+    .cupones-tabla td:nth-child(7) {
+        display: none;
+    }
+    
+    .acciones {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.125rem;
+        width: 100%;
+    }
+    
+    .btn-accion {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.375rem;
+        min-width: auto;
+        flex: 1;
+    }
+    
+    .estadisticas-cupones {
+        gap: 0.5rem;
+        grid-template-columns: 1fr;
+    }
+    
+    .header-actions {
+        gap: 0.5rem;
+        flex-direction: column;
+    }
+    
+    .empty-state {
+        padding: 1.5rem 0.5rem;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.1rem;
+    }
+    
+    .empty-state p {
+        font-size: 0.9rem;
+    }
+    
+    /* Asegurar que no hay overflow en ningún elemento */
+    * {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    body {
+        overflow-x: hidden;
+    }
+}
+
+/* ===== ESTADOS HOVER ===== */
+@media (hover: hover) {
+    .btn-nuevo-cupon:hover {
+        background: var(--color-negro);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .btn-primary:hover {
+        background: var(--color-negro);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .btn-ver:hover {
+        background: var(--color-negro);
+        transform: translateY(-1px);
+    }
+    
+    .btn-editar:hover {
+        background: var(--color-negro);
+        transform: translateY(-1px);
+    }
+    
+    .btn-toggle:hover {
+        background: var(--color-turquesa);
+        transform: translateY(-1px);
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .cupones-tabla tr:hover td {
+        background: rgba(42, 193, 219, 0.1);
+    }
+}
+
+/* ===== ACCESIBILIDAD ===== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+    
+    .btn-nuevo-cupon:hover,
+    .btn-primary:hover,
+    .btn-accion:hover,
+    .stat-card:hover {
+        transform: none !important;
+    }
+}
+
+/* Focus visible para navegación con teclado */
+.btn-nuevo-cupon:focus-visible,
+.btn-primary:focus-visible,
+.btn-accion:focus-visible {
+    outline: 2px solid var(--color-turquesa);
+    outline-offset: 2px;
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+    .cupones-tabla tr:hover td {
+        background: var(--color-turquesa);
+        color: var(--color-blanco);
+    }
+}

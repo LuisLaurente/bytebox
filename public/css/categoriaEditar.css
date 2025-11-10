@@ -1,0 +1,389 @@
+/* Estilo Admin Elegante: Paleta de colores negro (#1b1b1b), turquesa (#2ac1db), blanco (#ffffff) */
+
+/* Reset básico y configuración global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #1b1b1b;
+    line-height: 1.6;
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.categoria-editar-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.categoria-editar-main {
+    flex: 1;
+    margin-left: 280px;
+    background-color: #ffffff;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+.categoria-editar-content {
+    padding: 2rem;
+}
+
+.categoria-editar-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ===== ENCABEZADO ===== */
+.categoria-editar-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1b1b1b;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* ===== MENSAJES DE ERROR ===== */
+.categoria-editar-error {
+    background-color: #ffffff;
+    color: #1b1b1b;
+    border-left: 4px solid #dc3545;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.categoria-editar-errors {
+    background-color: #ffffff;
+    color: #1b1b1b;
+    border-left: 4px solid #dc3545;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.categoria-editar-errors-list {
+    list-style: none;
+    padding: 0;
+}
+
+.categoria-editar-errors-list li {
+    padding: 0.25rem 0;
+    color: #1b1b1b;
+}
+
+/* ===== FORMULARIO ===== */
+.categoria-editar-form {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+/* ===== GRUPOS DE FORMULARIO ===== */
+.categoria-editar-form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.categoria-editar-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1b1b1b;
+    margin-bottom: 0.5rem;
+}
+
+.categoria-editar-input,
+.categoria-editar-select,
+.categoria-editar-file-input {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    color: #1b1b1b;
+    font-family: inherit;
+}
+
+.categoria-editar-input:focus,
+.categoria-editar-select:focus,
+.categoria-editar-file-input:focus {
+    outline: none;
+    border-color: #2ac1db;
+    box-shadow: 0 0 0 3px rgba(42, 193, 219, 0.1);
+}
+
+.categoria-editar-input::placeholder {
+    color: #6c757d;
+}
+
+.categoria-editar-file-input {
+    padding: 0.5rem;
+    border-style: dashed;
+}
+
+/* ===== IMAGEN ACTUAL ===== */
+.categoria-editar-current-image {
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+.categoria-editar-current-image-preview {
+    max-width: 200px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.categoria-editar-no-image {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+/* ===== PREVIEW DE NUEVA IMAGEN ===== */
+.categoria-editar-preview-wrapper {
+    display: none;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.categoria-editar-preview-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.categoria-editar-preview-image {
+    max-width: 200px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== ACCIONES DEL FORMULARIO ===== */
+.categoria-editar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.categoria-editar-submit-btn {
+    background-color: #2ac1db;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+}
+
+.categoria-editar-submit-btn:hover {
+    background-color: #1b1b1b;
+}
+
+.categoria-editar-back-link {
+    color: #6c757d;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.categoria-editar-back-link:hover {
+    color: #1b1b1b;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablets (1024px) */
+@media (max-width: 1024px) {
+    .categoria-editar-main {
+        margin-left: 0;
+    }
+    
+    .categoria-editar-content {
+        padding: 1.5rem;
+    }
+    
+    .categoria-editar-container {
+        max-width: 100%;
+    }
+    
+    .categoria-editar-form {
+        padding: 1.5rem;
+    }
+}
+
+/* Tabletas pequeñas (768px) */
+@media (max-width: 768px) {
+    .categoria-editar-content {
+        padding: 1rem;
+    }
+    
+    .categoria-editar-title {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .categoria-editar-form {
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+    
+    .categoria-editar-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    .categoria-editar-submit-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .categoria-editar-back-link {
+        text-align: center;
+    }
+}
+
+/* Móviles (480px) */
+@media (max-width: 480px) {
+    .categoria-editar-content {
+        padding: 0.5rem;
+    }
+    
+    .categoria-editar-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .categoria-editar-form {
+        padding: 1rem;
+        border-radius: 6px;
+    }
+    
+    .categoria-editar-form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .categoria-editar-input,
+    .categoria-editar-select,
+    .categoria-editar-file-input {
+        padding: 0.65rem 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    .categoria-editar-current-image-preview,
+    .categoria-editar-preview-image {
+        max-width: 150px;
+    }
+    
+    .categoria-editar-error,
+    .categoria-editar-errors {
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* Móviles muy pequeños (380px) */
+@media (max-width: 380px) {
+    .categoria-editar-content {
+        padding: 0.25rem;
+        overflow-x: hidden;
+        width: 100%;
+    }
+    
+    .categoria-editar-container {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .categoria-editar-title {
+        font-size: 1.25rem;
+        padding: 0 0.5rem;
+    }
+    
+    .categoria-editar-form {
+        padding: 0.75rem;
+        margin: 0 0.25rem;
+    }
+    
+    .categoria-editar-label {
+        font-size: 0.85rem;
+    }
+    
+    .categoria-editar-input,
+    .categoria-editar-select,
+    .categoria-editar-file-input {
+        padding: 0.5rem 0.65rem;
+        font-size: 0.85rem;
+    }
+    
+    .categoria-editar-submit-btn {
+        padding: 0.65rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .categoria-editar-current-image-preview,
+    .categoria-editar-preview-image {
+        max-width: 120px;
+    }
+    
+    .categoria-editar-error,
+    .categoria-editar-errors {
+        padding: 0.5rem 0.75rem;
+        margin: 0 0.25rem 1rem 0.25rem;
+    }
+    
+    .categoria-editar-errors-list li {
+        font-size: 0.85rem;
+    }
+    
+    .categoria-editar-no-image {
+        font-size: 0.8rem;
+    }
+}
+
+/* Estados de hover solo en dispositivos con hover */
+@media (hover: hover) {
+    .categoria-editar-submit-btn:hover {
+        background-color: #1b1b1b;
+    }
+    
+    .categoria-editar-back-link:hover {
+        color: #1b1b1b;
+    }
+    
+    .categoria-editar-input:hover,
+    .categoria-editar-select:hover,
+    .categoria-editar-file-input:hover {
+        border-color: #2ac1db;
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* Enfoque visible para accesibilidad */
+.categoria-editar-input:focus-visible,
+.categoria-editar-select:focus-visible,
+.categoria-editar-file-input:focus-visible,
+.categoria-editar-submit-btn:focus-visible,
+.categoria-editar-back-link:focus-visible {
+    outline: 2px solid #2ac1db;
+    outline-offset: 2px;
+}

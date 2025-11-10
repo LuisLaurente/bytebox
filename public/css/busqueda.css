@@ -1,0 +1,394 @@
+/* ================================================================== */
+/* BUSQUEDA.CSS - DISEÑO CON SIDEBAR DE FILTROS                      */
+/* ================================================================== */
+
+:root {
+  --primary-color: #2ac1db;
+  --dark-color: #1b1b1b;
+  --white-color: #ffffff;
+  --light-gray: #f8f9fa;
+  --medium-gray: #e9ecef;
+  --text-gray: #6c757d;
+  --border-color: #dee2e6;
+  --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+/* --- Contenedores y Layout --- */
+.main-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.content-wrapper {
+  padding: 2rem 0;
+}
+
+.breadcrumb {
+  font-size: 0.9rem;
+  color: var(--text-gray);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+.breadcrumb a {
+  color: var(--text-gray);
+  text-decoration: none;
+}
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* --- Layout Principal (Grid) --- */
+.search-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr; /* Columna fija para filtros, el resto flexible */
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* ================================================================== */
+/* SIDEBAR DE FILTROS                                                 */
+/* ================================================================== */
+.filters-sidebar {
+  background-color: var(--white-color);
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  position: sticky; /* Se mantiene visible al hacer scroll */
+  top: 20px;
+}
+
+.filters-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.filter-group {
+  margin-bottom: 2rem;
+}
+
+.filter-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  background-color: var(--white-color);
+  cursor: pointer;
+}
+
+/* --- Filtro de Precio --- */
+.price-slider-container {
+  margin-bottom: 1rem;
+}
+.price-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.price-input {
+  width: 45%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+.price-input::-webkit-outer-spin-button,
+.price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* --- Botones de Filtro --- */
+.filter-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.apply-filters-btn,
+.clear-filters-btn {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  text-align: center;
+}
+
+.apply-filters-btn {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: 1px solid var(--primary-color);
+}
+.apply-filters-btn:hover {
+  background-color: #22a8c4;
+  border-color: #22a8c4;
+}
+
+.clear-filters-btn {
+  background-color: transparent;
+  color: var(--text-gray);
+  border: 1px solid var(--border-color);
+}
+.clear-filters-btn:hover {
+  color: var(--dark-color);
+  border-color: var(--dark-color);
+}
+
+/* ================================================================== */
+/* CONTENIDO PRINCIPAL                                                */
+/* ================================================================== */
+.main-content .page-header {
+  margin-bottom: 1rem;
+}
+.main-content .page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* --- Barra de Herramientas Superior --- */
+.top-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: var(--light-gray);
+  border-radius: var(--border-radius);
+}
+
+.results-count {
+  margin: 0;
+  color: var(--text-gray);
+}
+
+.sort-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.sort-label {
+  font-weight: 500;
+}
+.sort-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  background-color: var(--white-color);
+  cursor: pointer;
+}
+
+.mobile-filter-toggle {
+  display: none; /* Oculto en escritorio */
+  background-color: var(--dark-color);
+  color: var(--white-color);
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+/* --- Grid de Productos y Paginación --- */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.pagination {
+  margin: 2.5rem 0;
+}
+
+/* ================================================================== */
+/* ESTILOS PARA noUiSlider                                            */
+/* ================================================================== */
+.noUi-target {
+  background: var(--medium-gray);
+  border: none;
+  box-shadow: none;
+  height: 4px;
+}
+.noUi-connect {
+  background: var(--primary-color);
+}
+.noUi-horizontal .noUi-handle {
+  width: 16px; /* ancho */
+  height: 16px; /* alto igual al ancho */
+  border-radius: 50%; /* que sea redondo */
+  background: #00cfff; /* tu color */
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+.noUi-handle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+.noUi-handle:focus {
+  outline: none;
+}
+/* Ocultar las rayitas que noUI agrega dentro del handle */
+.noUi-handle::before,
+.noUi-handle::after {
+  display: none;
+}
+
+/* ================================================================== */
+/* RESPONSIVE DESIGN                                                  */
+/* ================================================================== */
+@media (max-width: 992px) {
+  .search-layout {
+    grid-template-columns: 1fr; /* Apila las columnas */
+  }
+  .filters-sidebar {
+    position: fixed; /* Se convierte en un menú lateral */
+    left: -100%;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    z-index: 1000;
+    background-color: var(--white-color);
+    transition: left 0.3s ease-in-out;
+    overflow-y: auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  }
+  .filters-sidebar.active {
+    left: 0;
+  }
+  .mobile-filter-toggle {
+    display: inline-flex; /* Muestra el botón en móvil */
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-toolbar {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .sort-section {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    padding: 0 1rem;
+  }
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+  .main-content .page-title {
+    font-size: 1rem;
+  }
+  .breadcrumb {
+    font-size: 0.8rem;
+    margin-bottom: 0.7rem;
+  }
+}
+/* ================================================================== */
+/* PAGINACIÓN                                                        */
+/* ================================================================== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagination-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+
+  color: var(--dark-color);
+  background-color: var(--white-color);
+  border: 1px solid var(--border-color);
+}
+
+.page-link:hover {
+  color: var(--white-color);
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
+}
+
+.page-link.active {
+  color: var(--white-color);
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  font-weight: 700;
+  cursor: default;
+  pointer-events: none; /* Evita que se pueda hacer clic en la página actual */
+}
+
+.page-link.disabled {
+  color: var(--text-gray);
+  background-color: var(--light-gray);
+  border-color: var(--border-color);
+  cursor: not-allowed; /* Indica que el botón no es usable */
+  pointer-events: none;
+}
+
+/* Estilos para los puntos suspensivos (...) */
+.page-link.dots {
+  border: none;
+  background: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+.page-link.dots:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Ajustes para los botones de "Anterior" y "Siguiente" */
+.page-link.prev,
+.page-link.next {
+  font-weight: 600;
+}

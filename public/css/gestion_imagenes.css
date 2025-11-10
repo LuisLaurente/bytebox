@@ -1,0 +1,556 @@
+/* Estilo Admin Elegante: Paleta de colores negro (#1b1b1b), turquesa (#2ac1db), blanco (#ffffff) */
+
+/* Reset básico y configuración global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #1b1b1b;
+    line-height: 1.6;
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.gestion-imagenes-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.gestion-imagenes-main {
+    flex: 1;
+    margin-left: 280px;
+    background-color: #ffffff;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+.gestion-imagenes-content {
+    padding: 2rem;
+}
+
+.gestion-imagenes-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* ===== ENCABEZADO ===== */
+.gestion-imagenes-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1b1b1b;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* ===== ALERTAS ===== */
+.gestion-imagenes-alert {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid;
+}
+
+.gestion-imagenes-alert-danger {
+    background-color: #ffffff;
+    color: #1b1b1b;
+    border-left-color: #dc3545;
+}
+
+.gestion-imagenes-alert-info {
+    background-color: #ffffff;
+    color: #1b1b1b;
+    border-left-color: #2ac1db;
+}
+
+/* ===== PASOS ===== */
+.gestion-imagenes-paso {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid #e9ecef;
+}
+
+.gestion-imagenes-paso-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1b1b1b;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.gestion-imagenes-paso-numero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: #2ac1db;
+    color: #ffffff;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.gestion-imagenes-paso-descripcion {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+
+/* ===== INSTRUCCIONES ===== */
+.gestion-imagenes-instrucciones {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.gestion-imagenes-instrucciones-titulo {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1b1b1b;
+    margin-bottom: 1rem;
+}
+
+.gestion-imagenes-lista {
+    list-style: none;
+    padding: 0;
+}
+
+.gestion-imagenes-lista li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+    color: #1b1b1b;
+}
+
+.gestion-imagenes-lista li:last-child {
+    border-bottom: none;
+}
+
+.gestion-imagenes-lista li strong {
+    color: #1b1b1b;
+}
+
+/* ===== TABLA DE EJEMPLO ===== */
+.gestion-imagenes-tabla-contenedor {
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.gestion-imagenes-tabla-ejemplo {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.gestion-imagenes-tabla-ejemplo th {
+    background-color: #1b1b1b;
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.gestion-imagenes-tabla-ejemplo td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e9ecef;
+    color: #1b1b1b;
+}
+
+.gestion-imagenes-tabla-ejemplo tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===== FORMULARIO ===== */
+.gestion-imagenes-formulario {
+    margin-top: 1.5rem;
+}
+
+.gestion-imagenes-upload-area {
+    background-color: #f8f9fa;
+    border: 2px dashed #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s ease;
+}
+
+.gestion-imagenes-upload-area:hover {
+    border-color: #2ac1db;
+}
+
+.gestion-imagenes-upload-titulo {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1b1b1b;
+    margin-bottom: 1rem;
+}
+
+.gestion-imagenes-file-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    color: #1b1b1b;
+    margin-bottom: 0.75rem;
+}
+
+.gestion-imagenes-file-input:focus {
+    outline: none;
+    border-color: #2ac1db;
+    box-shadow: 0 0 0 3px rgba(42, 193, 219, 0.1);
+}
+
+.gestion-imagenes-upload-descripcion {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* ===== BOTONES ===== */
+.gestion-imagenes-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.gestion-imagenes-btn-success {
+    background-color: #2ac1db;
+    color: #ffffff;
+}
+
+.gestion-imagenes-btn-success:hover {
+    background-color: #1b1b1b;
+}
+
+.gestion-imagenes-btn-secondary {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+.gestion-imagenes-btn-secondary:hover {
+    background-color: #1b1b1b;
+}
+
+/* ===== ACCIONES DEL FORMULARIO ===== */
+.gestion-imagenes-form-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.gestion-imagenes-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablets (1024px) */
+@media (max-width: 1024px) {
+    .gestion-imagenes-main {
+        margin-left: 0;
+    }
+    
+    .gestion-imagenes-content {
+        padding: 1.5rem;
+    }
+    
+    .gestion-imagenes-container {
+        max-width: 100%;
+    }
+    
+    .gestion-imagenes-paso {
+        padding: 1.5rem;
+    }
+    
+    .gestion-imagenes-title {
+        font-size: 1.75rem;
+    }
+}
+
+/* Tabletas pequeñas (768px) */
+@media (max-width: 768px) {
+    .gestion-imagenes-content {
+        padding: 1rem;
+    }
+    
+    .gestion-imagenes-paso {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    
+    .gestion-imagenes-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .gestion-imagenes-paso-title {
+        font-size: 1.1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .gestion-imagenes-instrucciones {
+        padding: 1rem;
+    }
+    
+    .gestion-imagenes-upload-area {
+        padding: 1rem;
+    }
+    
+    .gestion-imagenes-tabla-contenedor {
+        font-size: 0.9rem;
+    }
+    
+    .gestion-imagenes-tabla-ejemplo th,
+    .gestion-imagenes-tabla-ejemplo td {
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+/* Móviles (480px) */
+@media (max-width: 480px) {
+    .gestion-imagenes-content {
+        padding: 0.5rem;
+    }
+    
+    .gestion-imagenes-paso {
+        padding: 0.75rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .gestion-imagenes-title {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+    
+    .gestion-imagenes-paso-title {
+        font-size: 1rem;
+    }
+    
+    .gestion-imagenes-paso-descripcion {
+        font-size: 0.9rem;
+    }
+    
+    .gestion-imagenes-instrucciones-titulo {
+        font-size: 0.9rem;
+    }
+    
+    .gestion-imagenes-lista li {
+        font-size: 0.85rem;
+        padding: 0.4rem 0;
+    }
+    
+    .gestion-imagenes-file-input {
+        padding: 0.65rem 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    .gestion-imagenes-btn {
+        padding: 0.65rem 1rem;
+        font-size: 0.85rem;
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .gestion-imagenes-form-actions,
+    .gestion-imagenes-actions {
+        margin-top: 1.5rem;
+    }
+}
+
+/* Móviles muy pequeños (380px) */
+@media (max-width: 380px) {
+    .gestion-imagenes-content {
+        padding: 0.5rem;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+    }
+    
+    .gestion-imagenes-container {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .gestion-imagenes-paso {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .gestion-imagenes-title {
+        font-size: 1.1rem;
+        padding: 0 0.5rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .gestion-imagenes-paso-title {
+        font-size: 0.9rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        padding-right: 0.5rem;
+    }
+    
+    .gestion-imagenes-paso-descripcion {
+        font-size: 0.8rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .gestion-imagenes-instrucciones {
+        padding: 0.75rem;
+        width: 100%;
+        box-sizing: border-box;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .gestion-imagenes-instrucciones-titulo {
+        font-size: 0.85rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .gestion-imagenes-lista {
+        width: 100%;
+    }
+    
+    .gestion-imagenes-lista li {
+        font-size: 0.8rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        padding-right: 0.25rem;
+    }
+    
+    .gestion-imagenes-upload-area {
+        padding: 0.75rem;
+        width: 100%;
+        box-sizing: border-box;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .gestion-imagenes-upload-titulo {
+        font-size: 0.9rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .gestion-imagenes-file-input {
+        padding: 0.5rem 0.65rem;
+        font-size: 0.85rem;
+        width: 100%;
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+    
+    .gestion-imagenes-upload-descripcion {
+        font-size: 0.8rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .gestion-imagenes-tabla-contenedor {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+        padding: 0 0.5rem;
+    }
+    
+    .gestion-imagenes-tabla-ejemplo {
+        font-size: 0.7rem;
+        min-width: 320px;
+        width: auto;
+    }
+    
+    .gestion-imagenes-tabla-ejemplo th,
+    .gestion-imagenes-tabla-ejemplo td {
+        padding: 0.3rem 0.4rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 80px;
+    }
+    
+    .gestion-imagenes-btn {
+        width: 100%;
+        box-sizing: border-box;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .gestion-imagenes-form-actions,
+    .gestion-imagenes-actions {
+        width: 100%;
+        padding: 0 0.25rem;
+    }
+    
+    /* Prevenir cualquier overflow */
+    * {
+        max-width: 100%;
+    }
+    
+    body {
+        overflow-x: hidden;
+    }
+}
+
+/* Estados de hover solo en dispositivos con hover */
+@media (hover: hover) {
+    .gestion-imagenes-btn-success:hover {
+        background-color: #1b1b1b;
+    }
+    
+    .gestion-imagenes-btn-secondary:hover {
+        background-color: #1b1b1b;
+    }
+    
+    .gestion-imagenes-upload-area:hover {
+        border-color: #2ac1db;
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* Enfoque visible para accesibilidad */
+.gestion-imagenes-file-input:focus-visible,
+.gestion-imagenes-btn:focus-visible {
+    outline: 2px solid #2ac1db;
+    outline-offset: 2px;
+}

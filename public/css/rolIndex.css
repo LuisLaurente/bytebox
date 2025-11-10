@@ -1,0 +1,597 @@
+/* Estilo Admin Elegante: Paleta de colores negro (#1b1b1b), turquesa (#2ac1db), blanco (#ffffff) */
+
+/* Reset básico y configuración global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #1b1b1b;
+    line-height: 1.6;
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.rol-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.rol-main-content {
+    flex: 1;
+    margin-left: 280px; /* Mismo ancho que el sidebar */
+    background-color: #ffffff;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+.rol-content {
+    padding: 2rem;
+}
+
+.rol-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.rol-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+/* ===== ESTADÍSTICAS ===== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.fecha_creacion{
+    color: #1b1b1b;
+}
+
+.stat-card {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #2ac1db;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #2ac1db;
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #1b1b1b;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2ac1db;
+}
+
+/* ===== ALERTAS ===== */
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.alert-success {
+    background-color: #ffffff;
+    color: #1b1b1b;
+    border-left: 4px solid #2ac1db;
+}
+
+.alert-error {
+    background-color: #ffffff;
+    color: #1b1b1b;
+    border-left: 4px solid #dc3545;
+}
+
+/* ===== HEADER DE TABLA ===== */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem 2rem;
+    background-color: #1b1b1b;
+    color: #ffffff;
+    border-radius: 8px;
+}
+
+.table-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #2ac1db;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #1b1b1b;
+}
+
+.btn-icon {
+    width: 20px;
+    height: 20px;
+    color: #ffffff;
+}
+
+/* ===== TABLA ===== */
+.table-container {
+    overflow-x: auto;
+}
+
+.roles-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.roles-table th,
+.roles-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.roles-table th {
+    background-color: #ffffff;
+    font-weight: 600;
+    color: #1b1b1b;
+}
+
+.acciones-cell {
+    width: 200px;
+}
+
+/* ===== CELDA DE ROL ===== */
+.role-cell {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.role-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #2ac1db;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.role-avatar svg {
+    width: 20px;
+    height: 20px;
+}
+
+.role-info {
+    flex: 1;
+}
+
+.role-name {
+    font-weight: 500;
+    color: #1b1b1b;
+}
+
+.role-id {
+    font-size: 0.85rem;
+    color: #1b1b1b;
+}
+
+.role-description {
+    font-size: 0.9rem;
+    color: #1b1b1b;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ===== BADGES ===== */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.users-badge {
+    background-color: #1b1b1b;
+    color: #ffffff;
+}
+
+.badge-success {
+    background-color: #2ac1db;
+    color: #ffffff;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+/* ===== ACCIONES ===== */
+.acciones-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-edit {
+    background-color: #2ac1db;
+    color: #ffffff;
+}
+
+.btn-edit:hover {
+    background-color: #1b1b1b;
+}
+
+.btn-toggle {
+    background-color: #2ac1db;
+    color: #ffffff;
+}
+
+.btn-toggle:hover {
+    background-color: #1b1b1b;
+}
+
+.btn-delete {
+    background-color: #1b1b1b;
+    color: #ffffff;
+}
+
+.btn-delete:hover {
+    background-color: #2ac1db;
+}
+
+.btn-action svg {
+    width: 20px;
+    height: 20px;
+    color: #ffffff;
+}
+
+.form-inline {
+    display: inline;
+}
+
+/* ===== ESTADO VACÍO ===== */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #1b1b1b;
+}
+
+.empty-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1rem;
+    color: #2ac1db;
+}
+
+.empty-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.empty-description {
+    font-size: 1rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablets (1024px) */
+@media (max-width: 1024px) {
+    .rol-main-content {
+        margin-left: 0;
+    }
+    
+    .rol-content {
+        padding: 1.5rem;
+    }
+    
+    .acciones-container {
+        flex-wrap: wrap;
+    }
+    
+    .acciones-cell {
+        width: auto;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .rol-card {
+        padding: 1.5rem;
+    }
+}
+
+/* Tabletas pequeñas (768px) */
+@media (max-width: 768px) {
+    .rol-content {
+        padding: 1rem;
+    }
+    
+    .rol-card {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .roles-table th,
+    .roles-table td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .role-cell {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .table-title {
+        font-size: 1.25rem;
+    }
+    
+    /* Ocultar columnas menos importantes */
+    .roles-table th:nth-child(2),
+    .roles-table td:nth-child(2),
+    .roles-table th:nth-child(5),
+    .roles-table td:nth-child(5) {
+        display: none;
+    }
+}
+
+/* Móviles (480px) */
+@media (max-width: 480px) {
+    .rol-content {
+        padding: 0.5rem;
+    }
+    
+    .rol-card {
+        padding: 0.75rem;
+        border-radius: 6px;
+    }
+    
+    .stats-grid {
+        gap: 0.75rem;
+    }
+    
+    .stat-card {
+        padding: 0.75rem;
+    }
+    
+    .stat-content {
+        gap: 0.75rem;
+    }
+    
+    .stat-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .stat-value {
+        font-size: 1.25rem;
+    }
+    
+    .table-header {
+        padding: 0.75rem;
+        gap: 0.75rem;
+    }
+    
+    .roles-table {
+        font-size: 0.9rem;
+    }
+    
+    .roles-table th,
+    .roles-table td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    /* Ocultar más columnas en móviles */
+    .roles-table th:nth-child(3),
+    .roles-table td:nth-child(3) {
+        display: none;
+    }
+    
+    .acciones-container {
+        gap: 0.25rem;
+    }
+    
+    .btn-action {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .btn-action svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .role-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .role-avatar svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+    }
+}
+
+/* Móviles muy pequeños (380px) */
+@media (max-width: 380px) {
+    .rol-content {
+        padding: 0.25rem;
+    }
+    
+    .rol-card {
+        padding: 0.5rem;
+    }
+    
+    .stats-grid {
+        gap: 0.5rem;
+    }
+    
+    .stat-card {
+        padding: 0.5rem;
+    }
+    
+    .table-header {
+        padding: 0.5rem;
+    }
+    
+    .roles-table {
+        font-size: 0.8rem;
+    }
+    
+    /* Solo mostrar columnas esenciales */
+    .roles-table th:nth-child(1),
+    .roles-table td:nth-child(1),
+    .roles-table th:nth-child(4),
+    .roles-table td:nth-child(4),
+    .roles-table th:nth-child(6),
+    .roles-table td:nth-child(6) {
+        display: table-cell;
+    }
+    
+    .roles-table th:nth-child(2),
+    .roles-table td:nth-child(2),
+    .roles-table th:nth-child(3),
+    .roles-table td:nth-child(3),
+    .roles-table th:nth-child(5),
+    .roles-table td:nth-child(5) {
+        display: none;
+    }
+    
+    .role-cell {
+        min-width: 120px;
+    }
+    
+    .role-name {
+        font-size: 0.85rem;
+    }
+    
+    .role-id {
+        font-size: 0.7rem;
+    }
+}
+
+/* Estados de hover solo en dispositivos con hover */
+@media (hover: hover) {
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-primary:hover {
+        background-color: #1b1b1b;
+    }
+    
+    .btn-edit:hover {
+        background-color: #1b1b1b;
+    }
+    
+    .btn-toggle:hover {
+        background-color: #1b1b1b;
+    }
+    
+    .btn-delete:hover {
+        background-color: #2ac1db;
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+    
+    .stat-card:hover {
+        transform: none;
+    }
+}

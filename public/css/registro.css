@@ -1,0 +1,240 @@
+/* Tipografías */
+body {
+  font-family: 'Outfit', sans-serif;
+  background:#2AC1DB;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Contenedor */
+.container {
+  max-width: 420px;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Tarjeta */
+.card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* Header */
+.text-center {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.brand {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  color: #1B1B1B;
+}
+.subtitle {
+  font-size: 0.95rem;
+  color: #555;
+}
+.highlight {
+  font-size: 0.8rem;
+  color: #2AC1DB;
+}
+
+/* Alertas */
+.alert {
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+.alert.error {
+  background: #ffe5e5;
+  color: #b91c1c;
+}
+.alert.success {
+  background: #e6ffed;
+  color: #047857;
+}
+
+/* Beneficios */
+.benefits {
+  background: #f9f9f9;
+  border-left: 4px solid #2AC1DB;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+.benefits h4 {
+  font-size: 0.9rem;
+  color: #1B1B1B;
+  margin-bottom: 0.5rem;
+}
+.benefits ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8rem;
+  color: #333;
+}
+.benefits li {
+  margin-bottom: 0.3rem;
+}
+
+/* Formulario */
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-group label {
+  font-size: 0.85rem;
+  color: #1B1B1B;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.form-group input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-group input:focus {
+  border-color: #2AC1DB;
+}
+
+/* Barra de fuerza contraseña */
+.password-strength {
+  height: 4px;
+  border-radius: 2px;
+  background: #ddd;
+  margin-top: 0.3rem;
+  width: 0;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+.hint {
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+  color: #666;
+}
+
+/* Checkbox */
+.form-check {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  margin: 1rem 0;
+}
+.form-check input {
+  margin-right: 0.5rem;
+}
+.form-check a {
+  color: #2AC1DB;
+  font-weight: 500;
+  text-decoration: none;
+}
+.form-check a:hover {
+  text-decoration: underline;
+}
+
+/* Botón */
+button {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  background: #2AC1DB;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+button:hover {
+  background: #1b9eb5;
+}
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* Links */
+.login-link {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #555;
+}
+.login-link a {
+  color: #2AC1DB;
+  font-weight: 500;
+  text-decoration: none;
+}
+.login-link a:hover {
+  text-decoration: underline;
+}
+.back-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+.back-link a {
+  font-size: 0.8rem;
+  color: #fff;
+  text-decoration: none;
+}
+.back-link a:hover {
+  text-decoration: underline;
+}
+.hidden {
+  display: none;
+}
+
+/* Validación de contraseña */
+.password-strength {
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  display: none;
+}
+
+.password-strength.weak {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.password-strength.medium {
+  background: #fef3c7;
+  color: #d97706;
+  border: 1px solid #fed7aa;
+}
+
+.password-strength.strong {
+  background: #d1fae5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+/* Estilos para hints */
+.hint {
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+  color: #6b7280;
+}
+
+.hint.success {
+  color: #059669;
+}
+
+.hint.warning {
+  color: #d97706;
+}
+
+.hint.error {
+  color: #dc2626;
+}
