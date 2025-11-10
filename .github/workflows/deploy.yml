@@ -11,12 +11,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Deploy via SFTP
+      - name: Create remote directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: bytebox.pe
+          username: ylxfwfte
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p /test.bytebox.pe/
+            chmod 755 /test.bytebox.pe/
+
+      - name: Deploy complete project
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           username: 'ylxfwfte'
           server: 'bytebox.pe'
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          local_path: './public/*'
-          remote_path: '/test.bytebox.pe/public/'
+          local_path: './*'                    # TODO el proyecto
+          remote_path: '/test.bytebox.pe/'     # A la carpeta raíz
           sftp_only: true
