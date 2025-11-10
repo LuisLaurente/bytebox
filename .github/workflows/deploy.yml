@@ -3,9 +3,14 @@ name: Deploy to HostGator
 on:
   push:
     branches: [ production ]
+  pull_request:
+    types: [closed]
+    branches: [ production ]
 
 jobs:
   deploy:
+    # Solo deploy si el PR fue merged, no closed
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
