@@ -2,7 +2,7 @@ name: Deploy to HostGator
 
 on:
   push:
-    branches: [ production , develop ]
+    branches: [ production ]
 
 jobs:
   deploy:
@@ -11,11 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Deploy to test.bytebox.pe
-        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      - name: Deploy via SFTP
+        uses: easingthemes/ssh-deploy@v4.1.8
         with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          local-dir: ./public/
-          server-dir: /test.bytebox.pe/public/
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: "bytebox.pe"
+          REMOTE_USER: "ylxfwfte"
+          SOURCE: "public/"
+          TARGET: "/test.bytebox.pe/public/"
