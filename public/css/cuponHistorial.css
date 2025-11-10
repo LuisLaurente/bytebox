@@ -1,0 +1,472 @@
+/* cuponHistorial.css */
+/* ===== VARIABLES Y RESET ===== */
+:root {
+    --color-negro: #1b1b1b;
+    --color-turquesa: #2ac1db;
+    --color-blanco: #ffffff;
+    --border-radius: 8px;
+    --shadow: 0 2px 8px rgba(27, 27, 27, 0.1);
+    --shadow-lg: 0 4px 16px rgba(27, 27, 27, 0.15);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    color: var(--color-negro);
+    background-color: var(--color-blanco);
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    display: flex;
+    flex-direction: column;
+    color: #000000;
+}
+
+.content {
+    flex: 1;
+    padding: 2rem;
+    background-color: var(--color-blanco);
+    overflow-y: auto;
+}
+
+.historial-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ===== HEADER Y NAVEGACIÓN ===== */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.historial-container h1 {
+    background: var(--color-negro);
+    color: var(--color-blanco);
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+/* ===== INFORMACIÓN DEL CUPÓN ===== */
+.cupon-info {
+    background: var(--color-blanco);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--color-turquesa);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.info-item {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ===== BADGES DE ESTADO ===== */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge.vigente {
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+}
+
+.badge.expirado {
+    background: var(--color-negro);
+    color: var(--color-blanco);
+}
+
+.badge.pendiente {
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+    opacity: 0.8;
+}
+
+.badge.inactivo {
+    background: var(--color-negro);
+    color: var(--color-blanco);
+    opacity: 0.8;
+}
+
+/* ===== ESTADO VACÍO ===== */
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--color-blanco);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.empty-state h3 {
+    color: var(--color-negro);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: var(--color-negro);
+    opacity: 0.7;
+    font-size: 1.125rem;
+}
+
+/* ===== TABLA DE HISTORIAL ===== */
+.historial-table-container {
+    background: var(--color-blanco);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.historial-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.historial-table th {
+    background: var(--color-negro);
+    color: var(--color-blanco);
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid var(--color-blanco);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.historial-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-blanco);
+    vertical-align: middle;
+}
+
+.historial-table tr:last-child td {
+    border-bottom: none;
+}
+
+.historial-table tr:hover td {
+    background: rgba(42, 193, 219, 0.05);
+}
+
+/* ===== ENLACES ===== */
+.pedido-link {
+    color: var(--color-turquesa);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+/* ===== TOTAL DE USOS ===== */
+.total-usos {
+    text-align: center;
+    color: var(--color-negro);
+    opacity: 0.8;
+    font-size: 1rem;
+    padding: 1rem;
+    background: var(--color-blanco);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet (1024px) */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .content {
+        padding: 1.5rem;
+    }
+    
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .historial-table {
+        font-size: 0.875rem;
+    }
+    
+    .historial-table th,
+    .historial-table td {
+        padding: 0.75rem;
+    }
+}
+
+/* Móvil (768px) */
+@media (max-width: 768px) {
+    .content {
+        padding: 1rem;
+    }
+    
+    .historial-container h1 {
+        font-size: 1.75rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .cupon-info {
+        padding: 1rem;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .empty-state {
+        padding: 2rem 1rem;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.25rem;
+    }
+    
+    .empty-state p {
+        font-size: 1rem;
+    }
+    
+    .historial-table-container {
+        overflow-x: auto;
+    }
+    
+    .historial-table {
+        min-width: 600px;
+    }
+}
+
+/* Móvil pequeño (480px) */
+@media (max-width: 480px) {
+    .content {
+        padding: 0.75rem;
+    }
+    
+    .historial-container h1 {
+        font-size: 1.5rem;
+    }
+    
+    .back-button {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .info-item {
+        font-size: 0.85rem;
+    }
+}
+
+/* Móvil muy pequeño (380px) - SIN SCROLL HORIZONTAL */
+@media (max-width: 380px) {
+    .content {
+        padding: 0.25rem;
+        overflow-x: hidden;
+        width: 100%;
+    }
+    
+    .historial-container {
+        width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .back-button {
+        padding: 0.625rem 1rem;
+        font-size: 0.85rem;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .historial-container h1 {
+        font-size: 1.1rem;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    
+    .cupon-info {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .info-item {
+        font-size: 0.8rem;
+        padding: 0.25rem 0;
+    }
+    
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .empty-state {
+        padding: 1.5rem 0.75rem;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .empty-state p {
+        font-size: 0.9rem;
+    }
+    
+    .historial-table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .historial-table {
+        min-width: 100%;
+        font-size: 0.75rem;
+    }
+    
+    .historial-table th,
+    .historial-table td {
+        padding: 0.5rem 0.25rem;
+        white-space: nowrap;
+    }
+    
+    /* Ocultar columnas menos importantes en móviles muy pequeños */
+    .historial-table th:nth-child(3),
+    .historial-table td:nth-child(3),
+    .historial-table th:nth-child(5),
+    .historial-table td:nth-child(5) {
+        display: none;
+    }
+    
+    .total-usos {
+        font-size: 0.85rem;
+        padding: 0.75rem;
+    }
+    
+    .pedido-link {
+        font-size: 0.75rem;
+    }
+    
+    /* Asegurar que no hay overflow en ningún elemento */
+    * {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    body {
+        overflow-x: hidden;
+    }
+    
+    /* Layout de tabla responsivo para móviles muy pequeños */
+    @media (max-width: 350px) {
+        .historial-table th:nth-child(2),
+        .historial-table td:nth-child(2) {
+            display: none;
+        }
+        
+        .historial-table {
+            font-size: 0.7rem;
+        }
+        
+        .historial-table th,
+        .historial-table td {
+            padding: 0.375rem 0.125rem;
+        }
+    }
+}
+
+/* ===== ESTADOS HOVER ===== */
+@media (hover: hover) {
+    .back-button:hover {
+        background: var(--color-negro);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .pedido-link:hover {
+        color: var(--color-negro);
+        text-decoration: underline;
+    }
+    
+    .historial-table tr:hover td {
+        background: rgba(42, 193, 219, 0.1);
+    }
+}
+
+/* ===== ACCESIBILIDAD ===== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+    
+    .back-button:hover {
+        transform: none !important;
+    }
+}
+
+/* Focus visible para navegación con teclado */
+.back-button:focus-visible,
+.pedido-link:focus-visible {
+    outline: 2px solid var(--color-turquesa);
+    outline-offset: 2px;
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+    :root {
+        --color-negro: #000000;
+        --color-turquesa: #008080;
+        --color-blanco: #ffffff;
+    }
+    
+    .historial-table tr:hover td {
+        background: #ffff00;
+        color: #000000;
+    }
+}

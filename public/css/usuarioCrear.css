@@ -1,0 +1,456 @@
+/* Estilo Admin Elegante: Paleta de colores negro (#1b1b1b), turquesa (#2ac1db), blanco (#ffffff) */
+
+/* Reset básico y configuración global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #1b1b1b;
+    line-height: 1.6;
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.usuario-crear-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.usuario-crear-main {
+    flex: 1;
+    margin-left: 280px; /* Mismo ancho que el sidebar */
+    background-color: #ffffff;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+.usuario-crear-content {
+    padding: 2rem;
+}
+
+.usuario-crear-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* ===== TARJETA PRINCIPAL ===== */
+.usuario-crear-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* ===== HEADER ===== */
+.usuario-crear-header-section {
+    background-color: #1b1b1b;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.usuario-crear-title-wrapper {
+    flex: 1;
+}
+
+.usuario-crear-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.usuario-crear-subtitle {
+    font-size: 1rem;
+    color: #2ac1db;
+    opacity: 0.9;
+}
+
+.usuario-crear-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #2ac1db;
+    color: #ffffff;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.usuario-crear-close-btn:hover {
+    background-color: #ffffff;
+    color: #1b1b1b;
+}
+
+.usuario-crear-close-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* ===== MENSAJES DE ERROR ===== */
+.usuario-crear-error-message {
+    background-color: #ffffff;
+    color: #1b1b1b;
+    border-left: 4px solid #dc3545;
+    padding: 1rem 2rem;
+    margin: 0;
+}
+
+/* ===== FORMULARIO ===== */
+.usuario-crear-form {
+    padding: 2rem;
+}
+
+.usuario-crear-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.usuario-crear-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.usuario-crear-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1b1b1b;
+    margin-bottom: 0.5rem;
+}
+
+.usuario-crear-input,
+.usuario-crear-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    color: #1b1b1b;
+}
+
+.usuario-crear-input:focus,
+.usuario-crear-select:focus {
+    outline: none;
+    border-color: #2ac1db;
+    box-shadow: 0 0 0 3px rgba(42, 193, 219, 0.1);
+}
+
+.usuario-crear-input::placeholder {
+    color: #6c757d;
+}
+
+/* ===== PASSWORD INPUT ===== */
+.usuario-crear-password-wrapper {
+    position: relative;
+}
+
+.usuario-crear-password-input {
+    padding-right: 3rem;
+}
+
+.usuario-crear-password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: color 0.3s ease;
+}
+
+.usuario-crear-password-toggle:hover {
+    color: #2ac1db;
+}
+
+.usuario-crear-password-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.usuario-crear-help-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+/* ===== CHECKBOX ===== */
+.usuario-crear-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.usuario-crear-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #e9ecef;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.usuario-crear-checkbox:checked {
+    background-color: #2ac1db;
+    border-color: #2ac1db;
+}
+
+.usuario-crear-checkbox-label {
+    font-size: 0.9rem;
+    color: #1b1b1b;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* ===== INFO BOX ===== */
+.usuario-crear-info-box {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+.usuario-crear-info-content {
+    display: flex;
+    gap: 1rem;
+}
+
+.usuario-crear-info-icon {
+    width: 24px;
+    height: 24px;
+    color: #0c5460;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+}
+
+.usuario-crear-info-text {
+    flex: 1;
+}
+
+.usuario-crear-info-title {
+    font-weight: 600;
+    color: #0c5460;
+    margin-bottom: 0.75rem;
+}
+
+.usuario-crear-info-list {
+    list-style: none;
+    padding: 0;
+}
+
+.usuario-crear-info-list li {
+    position: relative;
+    padding-left: 1rem;
+    margin-bottom: 0.5rem;
+    color: #0c5460;
+    font-size: 0.9rem;
+}
+
+.usuario-crear-info-list li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #0c5460;
+}
+
+.usuario-crear-info-list li:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== BOTONES ===== */
+.usuario-crear-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.usuario-crear-cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background-color: #6c757d;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.usuario-crear-cancel-btn:hover {
+    background-color: #1b1b1b;
+}
+
+.usuario-crear-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #2ac1db;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.usuario-crear-submit-btn:hover {
+    background-color: #1b1b1b;
+}
+
+.usuario-crear-submit-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablets (1024px) */
+@media (max-width: 1024px) {
+    .usuario-crear-main {
+        margin-left: 0;
+    }
+    
+    .usuario-crear-content {
+        padding: 1.5rem;
+    }
+    
+    .usuario-crear-container {
+        max-width: 100%;
+    }
+}
+
+/* Tabletas pequeñas (768px) */
+@media (max-width: 768px) {
+    .usuario-crear-content {
+        padding: 1rem;
+    }
+    
+    .usuario-crear-header-section {
+        padding: 1.5rem;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .usuario-crear-close-btn {
+        align-self: flex-end;
+        width: 36px;
+        height: 36px;
+    }
+    
+    .usuario-crear-form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .usuario-crear-form {
+        padding: 1.5rem;
+    }
+    
+    .usuario-crear-actions {
+        flex-direction: column-reverse;
+        gap: 0.75rem;
+    }
+    
+    .usuario-crear-cancel-btn,
+    .usuario-crear-submit-btn {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+/* Móviles (380px) */
+@media (max-width: 480px) {
+    .usuario-crear-content {
+        padding: 0.5rem;
+    }
+    
+    .usuario-crear-card {
+        border-radius: 8px;
+    }
+    
+    .usuario-crear-header-section {
+        padding: 1rem;
+    }
+    
+    .usuario-crear-title {
+        font-size: 1.5rem;
+    }
+    
+    .usuario-crear-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .usuario-crear-form {
+        padding: 1rem;
+    }
+    
+    .usuario-crear-info-box {
+        padding: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .usuario-crear-info-content {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+    
+    .usuario-crear-info-icon {
+        align-self: center;
+    }
+    
+    .usuario-crear-input,
+    .usuario-crear-select {
+        padding: 0.65rem 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Estados de hover solo en dispositivos con hover */
+@media (hover: hover) {
+    .usuario-crear-close-btn:hover {
+        background-color: #ffffff;
+        color: #1b1b1b;
+    }
+    
+    .usuario-crear-cancel-btn:hover {
+        background-color: #1b1b1b;
+    }
+    
+    .usuario-crear-submit-btn:hover {
+        background-color: #1b1b1b;
+    }
+    
+    .usuario-crear-password-toggle:hover {
+        color: #2ac1db;
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}

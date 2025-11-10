@@ -1,0 +1,214 @@
+/* -------- Tipografía -------- */
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #1B1B1B;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+/* -------- Container -------- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* -------- Header -------- */
+.checkout-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.checkout-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    color: #2AC1DB;
+    margin: 0.5rem 0;
+}
+
+.checkout-subtitle {
+    font-size: 1rem;
+    color: #CCCCCC;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #2AC1DB;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+/* -------- Grid Layout -------- */
+.checkout-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .checkout-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* -------- Cards generales -------- */
+.summary-card,
+.auth-card,
+.info-card {
+    background-color: #2B2B2B;
+    border: 1px solid #363993;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* -------- Resumen -------- */
+.summary-title {
+    font-family: 'Orbitron', sans-serif;
+    color: #2AC1DB;
+    margin-bottom: 1rem;
+}
+
+.summary-details {
+    font-size: 0.95rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+}
+
+.summary-row.total {
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.summary-divider {
+    border: 0;
+    border-top: 1px solid #363993;
+    margin: 1rem 0;
+}
+
+.summary-row.discount {
+    color: #2AC1DB;
+}
+
+/* -------- Auth Cards -------- */
+.auth-card .card-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background-color: #363993;
+    color: #FFFFFF;
+}
+
+.auth-title {
+    font-family: 'Orbitron', sans-serif;
+    color: #FFFFFF;
+    margin: 0.5rem 0;
+}
+
+.auth-description {
+    font-size: 0.9rem;
+    color: #CCCCCC;
+    margin-bottom: 1rem;
+}
+
+.benefits-list {
+    margin-bottom: 1.5rem;
+}
+
+.benefit-item {
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+    color: #DDDDDD;
+}
+
+/* -------- Botones -------- */
+.auth-button {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s ease;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.auth-button.blue {
+    background-color: #2AC1DB;
+    color: #1B1B1B;
+}
+
+.auth-button.blue:hover {
+    background-color: #23a9c2;
+}
+
+.auth-button.green {
+    background-color: #363993;
+    color: #FFFFFF;
+}
+
+.auth-button.green:hover {
+    background-color: #2b2d70;
+}
+
+/* -------- Info Card -------- */
+.info-card {
+    grid-column: span 3;
+}
+
+@media (max-width: 1024px) {
+    .info-card {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .info-card {
+        grid-column: span 1;
+    }
+}
+
+.info-title {
+    font-family: 'Orbitron', sans-serif;
+    color: #2AC1DB;
+    margin-bottom: 1rem;
+}
+
+.info-list p {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+    color: #DDDDDD;
+}
+
+.info-tip {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border-left: 4px solid #2AC1DB;
+    background-color: #1B1B1B;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #CCCCCC;
+}

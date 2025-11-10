@@ -1,0 +1,501 @@
+/* Estilo Admin Elegante: Paleta de colores negro (#1b1b1b), turquesa (#2ac1db), blanco (#ffffff) */
+
+/* Reset básico y configuración global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #1b1b1b;
+    line-height: 1.6;
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.rol-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.rol-main-content {
+    flex: 1;
+    margin-left: 280px; /* Mismo ancho que el sidebar */
+    background-color: #ffffff;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+.rol-content {
+    padding: 2rem;
+}
+
+.rol-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* ===== ENCABEZADO ===== */
+.page-header {
+    background-color: #1b1b1b;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.header-text {
+    flex: 1;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    color: #2ac1db;
+    opacity: 0.9;
+}
+
+/* ===== BOTONES ===== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background-color: #1b1b1b;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: #1b1b1b;
+    border: 2px solid #e9ecef;
+}
+
+.btn-outline:hover {
+    background-color: #1b1b1b;
+    color: #ffffff;
+    border-color: #1b1b1b;
+}
+
+.btn-primary {
+    background-color: #2ac1db;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #1b1b1b;
+}
+
+.btn-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* ===== ALERTAS ===== */
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border-left: 4px solid;
+}
+
+.alert-error {
+    background-color: #ffffff;
+    color: #1b1b1b;
+    border-left-color: #dc3545;
+}
+
+.alert-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+/* ===== TARJETA DE FORMULARIO ===== */
+.form-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* ===== SECCIONES DEL FORMULARIO ===== */
+.form-section {
+    padding: 2rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1b1b1b;
+    margin-bottom: 0.5rem;
+}
+
+.section-description {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+
+/* ===== GRID DEL FORMULARIO ===== */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+/* ===== GRUPOS DE FORMULARIO ===== */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1b1b1b;
+    margin-bottom: 0.5rem;
+}
+
+.form-input,
+.form-textarea {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    color: #1b1b1b;
+    font-family: inherit;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #2ac1db;
+    box-shadow: 0 0 0 3px rgba(42, 193, 219, 0.1);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: #6c757d;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ===== CHECKBOX ===== */
+.checkbox-group {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.checkbox-group:has(.checkbox-input:checked) {
+    border-color: #2ac1db;
+    background-color: rgba(42, 193, 219, 0.05);
+}
+
+.checkbox-input {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #e9ecef;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 0.75rem;
+}
+
+.checkbox-input:checked {
+    background-color: #2ac1db;
+    border-color: #2ac1db;
+}
+
+.checkbox-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.checkbox-label {
+    font-weight: 600;
+    color: #1b1b1b;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 0.25rem;
+}
+
+.checkbox-description {
+    font-size: 0.8rem;
+    color: #6c757d;
+    line-height: 1.4;
+}
+
+/* ===== GRID DE PERMISOS ===== */
+.permisos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+/* ===== ACCIONES DEL FORMULARIO ===== */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablets (1024px) */
+@media (max-width: 1024px) {
+    .rol-main-content {
+        margin-left: 0;
+    }
+    
+    .rol-content {
+        padding: 1.5rem;
+    }
+    
+    .permisos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+/* Tabletas pequeñas (768px) */
+@media (max-width: 768px) {
+    .rol-content {
+        padding: 1rem;
+    }
+    
+    .page-header {
+        padding: 1.5rem;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .page-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .page-header p {
+        font-size: 1rem;
+    }
+    
+    .form-section {
+        padding: 1.5rem;
+    }
+    
+    .form-actions {
+        padding: 1.5rem;
+        flex-direction: column-reverse;
+        gap: 0.75rem;
+    }
+    
+    .btn {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+/* Móviles (480px) */
+@media (max-width: 480px) {
+    .rol-content {
+        padding: 0.5rem;
+    }
+    
+    .page-header {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .page-header p {
+        font-size: 0.9rem;
+    }
+    
+    .form-section {
+        padding: 1rem;
+    }
+    
+    .form-card {
+        border-radius: 8px;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+    
+    .permisos-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .checkbox-group {
+        padding: 0.75rem;
+    }
+    
+    .form-input,
+    .form-textarea {
+        padding: 0.65rem 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Móviles muy pequeños (380px) */
+@media (max-width: 380px) {
+    .rol-content {
+        padding: 0.25rem;
+    }
+    
+    .page-header {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .page-header h1 {
+        font-size: 1.25rem;
+    }
+    
+    .page-header p {
+        font-size: 0.8rem;
+    }
+    
+    .form-section {
+        padding: 0.75rem;
+    }
+    
+    .form-actions {
+        padding: 1rem;
+    }
+    
+    .btn {
+        padding: 0.65rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .checkbox-group {
+        padding: 0.5rem;
+    }
+    
+    .checkbox-label {
+        font-size: 0.9rem;
+    }
+    
+    .checkbox-description {
+        font-size: 0.75rem;
+    }
+    
+    .alert {
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .form-input,
+    .form-textarea {
+        padding: 0.5rem 0.65rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Estados de hover solo en dispositivos con hover */
+@media (hover: hover) {
+    .btn-secondary:hover {
+        background-color: #1b1b1b;
+    }
+    
+    .btn-outline:hover {
+        background-color: #1b1b1b;
+        color: #ffffff;
+        border-color: #1b1b1b;
+    }
+    
+    .btn-primary:hover {
+        background-color: #1b1b1b;
+    }
+    
+    .checkbox-group:hover {
+        border-color: #2ac1db;
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* Enfoque visible para accesibilidad */
+.form-input:focus-visible,
+.form-textarea:focus-visible,
+.checkbox-input:focus-visible,
+.btn:focus-visible {
+    outline: 2px solid #2ac1db;
+    outline-offset: 2px;
+}
+
+/* Corrección para el sidebar dentro del contenido */
+.sidebar {
+    display: none; /* El navbar ya está incluido en el layout principal */
+}

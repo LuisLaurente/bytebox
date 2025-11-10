@@ -1,0 +1,159 @@
+/* --- Estructura y Variables --- */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Outfit:wght@300;400;500&display=swap');
+
+:root {
+    --primary-color: #2ac1db;
+    --dark-color: #1b1b1b;
+    --white-color: #ffffff;
+    --light-gray: #f5f5f5;
+    --success-color: #27ae60;
+    --error-color: #e74c3c;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--light-gray);
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.profile-container {
+    max-width: 960px;
+    width: 100%;
+    background-color: var(--white-color);
+    color: var(--dark-color);
+    border-radius: 16px;
+    padding: 3rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+}
+
+/* --- Tipografía --- */
+h1, h3 {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: var(--dark-color);
+    margin-bottom: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+}
+
+/* --- Componentes --- */
+.profile-card,
+.orders-card {
+    background-color: var(--white-color);
+    color: var(--dark-color);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #4a4a4a;
+}
+
+input[type="text"],
+input[type="email"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(42, 193, 219, 0.2);
+}
+
+input[readonly] {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    border-color: #ddd;
+    box-shadow: none;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background-color: var(--dark-color);
+    color: var(--white-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+    background-color: #2b2b2b;
+    transform: translateY(-2px);
+}
+
+.orders-button {
+    background-color: var(--dark-color);
+    color: var(--white-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+    text-align: center;
+    width: 100%;
+}
+
+.orders-button:hover {
+    background-color: #2b2b2b;
+    transform: translateY(-2px);
+}
+
+/* --- Mensajes --- */
+.message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.success-message {
+    background-color: #e8f9e8;
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+.error-message {
+    background-color: #fcebeb;
+    color: var(--error-color);
+    border: 1px solid var(--error-color);
+}

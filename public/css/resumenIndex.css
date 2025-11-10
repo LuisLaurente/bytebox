@@ -1,0 +1,691 @@
+/* ========================================
+   REPORTE VENTAS ADMIN - ESTILO ADMIN ELEGANTE OPTIMIZADO
+   COLORES: #1b1b1b (negro), #2ac1db (turquesa), #ffffff (blanco)
+   ======================================== */
+
+/* Importar fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+/* Variables de colores */
+:root {
+  --_resumenAdmin-color-negro: #1b1b1b;
+  --_resumenAdmin-color-turquesa: #2ac1db;
+  --_resumenAdmin-color-blanco: #ffffff;
+  --_resumenAdmin-color-gris-claro: #f8f9fa;
+  --_resumenAdmin-color-gris-medio: #e9ecef;
+  --_resumenAdmin-color-gris-oscuro: #6c757d;
+  --_resumenAdmin-color-texto: #2c3e50;
+  --_resumenAdmin-color-texto-claro: #7f8c8d;
+  --_resumenAdmin-color-exito: #28a745;
+  --_resumenAdmin-color-error: #dc3545;
+  --_resumenAdmin-color-advertencia: #ffc107;
+  --_resumenAdmin-color-info: #17a2b8;
+  --_resumenAdmin-color-borde: #dee2e6;
+  --_resumenAdmin-color-fondo: #f5f6fa;
+}
+
+/* Reset y estilos globales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--_resumenAdmin-color-fondo);
+  color: var(--_resumenAdmin-color-texto);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+}
+
+/* Layout principal */
+._resumenAdmin-admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+._resumenAdmin-main-content {
+  flex: 1;
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  background: var(--_resumenAdmin-color-fondo);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+._resumenAdmin-content {
+  padding: 30px;
+  min-height: 100vh;
+}
+
+/* Contenedor principal */
+._resumenAdmin-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Cards generales */
+._resumenAdmin-header-card,
+._resumenAdmin-filter-card,
+._resumenAdmin-summary-card,
+._resumenAdmin-details-card {
+  background: var(--_resumenAdmin-color-blanco);
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  margin-bottom: 25px;
+  overflow: hidden;
+}
+
+/* Header */
+._resumenAdmin-header-card {
+  text-align: center;
+}
+
+._resumenAdmin-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--_resumenAdmin-color-negro);
+  margin-bottom: 10px;
+}
+
+._resumenAdmin-subtitle {
+  font-size: 1.1rem;
+  color: var(--_resumenAdmin-color-texto-claro);
+}
+
+/* Filtros */
+._resumenAdmin-filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+@media (min-width: 768px) {
+  ._resumenAdmin-filter-container {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 20px;
+  }
+}
+
+._resumenAdmin-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+._resumenAdmin-filter-label {
+  font-weight: 600;
+  color: var(--_resumenAdmin-color-texto);
+  font-size: 0.9rem;
+}
+
+._resumenAdmin-filter-input {
+  padding: 12px 15px;
+  border: 2px solid var(--_resumenAdmin-color-borde);
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: var(--_resumenAdmin-color-blanco);
+}
+
+._resumenAdmin-filter-input:focus {
+  outline: none;
+  border-color: var(--_resumenAdmin-color-turquesa);
+  box-shadow: 0 0 0 3px rgba(42, 193, 219, 0.1);
+}
+
+._resumenAdmin-filter-actions {
+  margin-top: 10px;
+}
+
+@media (min-width: 768px) {
+  ._resumenAdmin-filter-actions {
+    margin-top: 0;
+  }
+}
+
+/* Botones */
+._resumenAdmin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  gap: 8px;
+}
+
+._resumenAdmin-btn-primary {
+  background: var(--_resumenAdmin-color-turquesa);
+  color: var(--_resumenAdmin-color-blanco);
+  box-shadow: 0 4px 12px rgba(42, 193, 219, 0.3);
+}
+
+._resumenAdmin-btn-primary:hover {
+  background: var(--_resumenAdmin-color-negro);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+._resumenAdmin-btn-export {
+  background: var(--_resumenAdmin-color-exito);
+  color: var(--_resumenAdmin-color-blanco);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+._resumenAdmin-btn-export:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+}
+
+/* Sección de exportación */
+._resumenAdmin-export-section {
+  margin-bottom: 25px;
+}
+
+/* Resumen general */
+._resumenAdmin-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--_resumenAdmin-color-negro);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--_resumenAdmin-color-turquesa);
+}
+
+._resumenAdmin-summary-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  list-style: none;
+}
+
+._resumenAdmin-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: var(--_resumenAdmin-color-gris-claro);
+  border-radius: 8px;
+  border-left: 4px solid var(--_resumenAdmin-color-turquesa);
+}
+
+._resumenAdmin-summary-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+._resumenAdmin-summary-label {
+  font-weight: 500;
+  color: var(--_resumenAdmin-color-texto);
+  flex: 1;
+}
+
+._resumenAdmin-summary-value {
+  font-weight: 600;
+  color: var(--_resumenAdmin-color-negro);
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* ===== TABLA OPTIMIZADA - PRODUCTOS AGRUPADOS ===== */
+._resumenAdmin-table-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--_resumenAdmin-color-borde);
+}
+
+._resumenAdmin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--_resumenAdmin-color-blanco);
+  font-size: 0.85rem;
+  table-layout: fixed;
+}
+
+._resumenAdmin-table-header {
+  background: var(--_resumenAdmin-color-negro);
+}
+
+._resumenAdmin-table-head {
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--_resumenAdmin-color-blanco);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Optimización de anchos de columnas */
+._resumenAdmin-table-head:nth-child(1) { width: 80px; }  /* Pedido ID */
+._resumenAdmin-table-head:nth-child(2) { width: 100px; } /* Fecha */
+._resumenAdmin-table-head:nth-child(3) { width: 90px; }  /* Estado */
+._resumenAdmin-table-head:nth-child(4) { width: 100px; } /* Método Pago */
+._resumenAdmin-table-head:nth-child(5) { width: 150px; } /* Productos */
+._resumenAdmin-table-head:nth-child(6) { width: 80px; }  /* Items */
+._resumenAdmin-table-head:nth-child(7) { width: 100px; } /* Subtotal Pedido */
+._resumenAdmin-table-head:nth-child(8) { width: 100px; } /* Desc. Promoción */
+._resumenAdmin-table-head:nth-child(9) { width: 90px; }  /* Desc. Cupón */
+._resumenAdmin-table-head:nth-child(10) { width: 80px; }  /* Envío */
+._resumenAdmin-table-head:nth-child(11) { width: 100px; } /* TOTAL PEDIDO */
+._resumenAdmin-table-head:nth-child(12) { width: 70px; }  /* Acciones */
+
+._resumenAdmin-center {
+  text-align: center;
+}
+
+._resumenAdmin-table-body {
+  background: var(--_resumenAdmin-color-blanco);
+}
+
+._resumenAdmin-table-row {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid var(--_resumenAdmin-color-borde);
+}
+
+._resumenAdmin-table-row:hover {
+  background: var(--_resumenAdmin-color-gris-claro);
+}
+
+._resumenAdmin-table-cell {
+  padding: 12px 8px;
+  vertical-align: top;
+  border: none;
+  color: var(--_resumenAdmin-color-texto);
+  overflow: hidden;
+}
+
+._resumenAdmin-actions-cell {
+  white-space: nowrap;
+}
+
+._resumenAdmin-action-link {
+  color: var(--_resumenAdmin-color-turquesa);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(42, 193, 219, 0.1);
+  border: 1px solid transparent;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+._resumenAdmin-action-link:hover {
+  background: var(--_resumenAdmin-color-turquesa);
+  color: var(--_resumenAdmin-color-blanco);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(42, 193, 219, 0.3);
+}
+
+/* Estilos para productos agrupados */
+._resumenAdmin-productos-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+._resumenAdmin-producto-item {
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--_resumenAdmin-color-borde);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+._resumenAdmin-producto-item:last-child {
+  border-bottom: none;
+}
+
+._resumenAdmin-producto-nombre {
+  flex: 1;
+  font-weight: 500;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+._resumenAdmin-producto-detalle {
+  font-size: 0.75rem;
+  color: var(--_resumenAdmin-color-texto-claro);
+  text-align: right;
+  margin-left: 8px;
+}
+
+._resumenAdmin-producto-cantidad {
+  background: var(--_resumenAdmin-color-turquesa);
+  color: white;
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 0.7rem;
+  margin-left: 5px;
+}
+
+/* Estados vacíos */
+._resumenAdmin-empty-state {
+  text-align: center;
+  color: var(--_resumenAdmin-color-texto-claro);
+  font-style: italic;
+  padding: 40px 20px;
+  background: var(--_resumenAdmin-color-gris-claro);
+  border-radius: 8px;
+  border: 2px dashed var(--_resumenAdmin-color-borde);
+}
+
+/*NUEVAS COLUMNAS - OPTIMIZADAS*/
+._resumenAdmin-status-badge {
+    padding: 4px 6px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    min-width: 70px;
+}
+
+._resumenAdmin-status-pendiente {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+._resumenAdmin-status-procesando {
+    background-color: #cce7ff;
+    color: #004085;
+}
+
+._resumenAdmin-status-enviado {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+._resumenAdmin-status-entregado {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+._resumenAdmin-status-cancelado {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+._resumenAdmin-total-cell {
+    font-weight: bold;
+    background-color: #f8f9fa;
+    font-family: 'Orbitron', sans-serif;
+}
+
+._resumenAdmin-empty-cell {
+    text-align: center;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    font-style: italic;
+}
+
+/* Estados de la tabla */
+._resumenAdmin-table-row:nth-child(even) {
+  background: var(--_resumenAdmin-color-gris-claro);
+}
+
+._resumenAdmin-table-row:nth-child(even):hover {
+  background: #e9ecef;
+}
+
+/* ===== RESPONSIVE DESIGN MEJORADO ===== */
+
+/* Tablet grande */
+@media (max-width: 1200px) {
+  ._resumenAdmin-table {
+    font-size: 0.8rem;
+  }
+  
+  ._resumenAdmin-table-head {
+    font-size: 0.75rem;
+    padding: 10px 6px;
+  }
+  
+  ._resumenAdmin-table-cell {
+    padding: 10px 6px;
+    font-size: 0.8rem;
+  }
+  
+  ._resumenAdmin-status-badge {
+    font-size: 0.65rem;
+    min-width: 60px;
+    padding: 3px 5px;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  ._resumenAdmin-main-content {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  ._resumenAdmin-content {
+    padding: 20px;
+  }
+  
+  ._resumenAdmin-header-card,
+  ._resumenAdmin-filter-card,
+  ._resumenAdmin-summary-card,
+  ._resumenAdmin-details-card {
+    padding: 20px;
+  }
+  
+  ._resumenAdmin-title {
+    font-size: 1.8rem;
+  }
+  
+  ._resumenAdmin-summary-list {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  /* Ajustes adicionales para tabla en tablet */
+  ._resumenAdmin-table {
+    font-size: 0.75rem;
+  }
+  
+  ._resumenAdmin-table-head {
+    font-size: 0.7rem;
+    padding: 8px 4px;
+  }
+  
+  ._resumenAdmin-table-cell {
+    padding: 8px 4px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Móvil grande */
+@media (max-width: 768px) {
+  ._resumenAdmin-content {
+    padding: 15px;
+  }
+  
+  ._resumenAdmin-header-card {
+    padding: 20px 15px;
+    text-align: center;
+  }
+  
+  ._resumenAdmin-title {
+    font-size: 1.5rem;
+  }
+  
+  ._resumenAdmin-subtitle {
+    font-size: 1rem;
+  }
+  
+  ._resumenAdmin-filter-card,
+  ._resumenAdmin-summary-card,
+  ._resumenAdmin-details-card {
+    padding: 15px;
+  }
+  
+  ._resumenAdmin-section-title {
+    font-size: 1.3rem;
+  }
+  
+  ._resumenAdmin-filter-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  ._resumenAdmin-summary-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  /* Tabla se convierte en cards en móvil */
+  ._resumenAdmin-table-container {
+    overflow: visible;
+    border: none;
+    background: transparent;
+  }
+  
+  ._resumenAdmin-table {
+    display: block;
+  }
+  
+  ._resumenAdmin-table-header {
+    display: none;
+  }
+  
+  ._resumenAdmin-table-body {
+    display: block;
+  }
+  
+  ._resumenAdmin-table-row {
+    display: block;
+    margin-bottom: 15px;
+    background: var(--_resumenAdmin-color-blanco);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border: 1px solid var(--_resumenAdmin-color-borde);
+  }
+  
+  ._resumenAdmin-table-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--_resumenAdmin-color-gris-medio);
+    text-align: left;
+    white-space: normal;
+  }
+  
+  ._resumenAdmin-table-cell:last-child {
+    border-bottom: none;
+  }
+  
+  ._resumenAdmin-table-cell::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--_resumenAdmin-color-negro);
+    font-size: 0.8rem;
+    flex: 1;
+  }
+  
+  ._resumenAdmin-table-cell > *:not(._resumenAdmin-productos-lista) {
+    flex: 2;
+    text-align: right;
+  }
+  
+  ._resumenAdmin-productos-lista {
+    flex: 2;
+    text-align: left;
+  }
+  
+  ._resumenAdmin-actions-cell {
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  ._resumenAdmin-actions-cell::before {
+    display: none;
+  }
+  
+  ._resumenAdmin-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+  ._resumenAdmin-content {
+    padding: 10px;
+  }
+  
+  ._resumenAdmin-header-card,
+  ._resumenAdmin-filter-card,
+  ._resumenAdmin-summary-card,
+  ._resumenAdmin-details-card {
+    padding: 15px 10px;
+  }
+  
+  ._resumenAdmin-title {
+    font-size: 1.3rem;
+  }
+  
+  ._resumenAdmin-summary-list {
+    gap: 10px;
+  }
+  
+  ._resumenAdmin-summary-item {
+    padding: 12px;
+  }
+  
+  ._resumenAdmin-table-row {
+    padding: 12px;
+  }
+  
+  ._resumenAdmin-table-cell {
+    padding: 6px 0;
+    font-size: 0.8rem;
+  }
+}
+
+/* Estados de carga */
+._resumenAdmin-btn:disabled {
+  background: var(--_resumenAdmin-color-gris-oscuro);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+._resumenAdmin-btn:disabled:hover {
+  background: var(--_resumenAdmin-color-gris-oscuro);
+  transform: none;
+}

@@ -1,0 +1,1229 @@
+/* ================================================================== */
+/*          NUEVA HOJA DE ESTILOS PARA HOME.CSS (DISEÑO FINAL)        */
+/* ================================================================== */
+
+/* --- VARIABLES Y ESTILOS BASE --- */
+:root {
+  --primary-color: #2ac1db;
+  --dark-color: #1b1b1b;
+  --white-color: #ffffff;
+  --gray-dark: #6c757d;
+  --font-primary: "Orbitron", sans-serif;
+  --font-secondary: "Outfit", sans-serif;
+}
+
+body {
+  font-family: var(--font-secondary);
+  color: var(--white-color);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  justify-content: center;
+}
+
+.contenedor2 {
+  background-image: url("../images/back.jpeg");
+}
+
+/* --- TÍTULOS DE SECCIÓN ESTILIZADOS --- */
+.section-title {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-title h2 {
+  font-family: var(--font-primary);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #4a4d50;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.section-title .line {
+  width: 80px;
+  height: 4px;
+  background-color: var(--primary-color);
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+/* === HERO + CATEGORÍAS: único contenedor full-height === */
+.hero-and-categories {
+  height: 84vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  background-color: var(--bg);
+  scroll-snap-align: start;
+  position: relative;
+  overflow: hidden; /* Prevenir desbordamiento */
+}
+
+/* El banner ocupa el espacio disponible */
+.hero-and-categories .hero-banner-container {
+  flex: 1 1 auto;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
+
+/* Cada slide del hero debe llenar todo el contenedor del banner */
+.hero-and-categories .hero-slide {
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+.hero-and-categories .hero-slide.active {
+  display: block;
+}
+
+.hero-and-categories .hero-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Categorías - CONTENEDOR CORREGIDO */
+.categories-carousel-container {
+  width: 100%;
+  padding: 14px 0 20px;
+  background: transparent;
+  flex-shrink: 0;
+  overflow: hidden; /* Prevenir desbordamiento */
+}
+
+/* Track de categorías corregido */
+.categories-carousel-track {
+  display: flex;
+  gap: 2rem; /* REDUCIDO de 5rem a 2rem para evitar desbordamiento */
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  overflow-x: auto; /* Permitir scroll si es necesario */
+  padding: 0 1rem;
+  scrollbar-width: none; /* Ocultar scrollbar en Firefox */
+  -ms-overflow-style: none; /* Ocultar scrollbar en IE/Edge */
+}
+
+.categories-carousel-track::-webkit-scrollbar {
+  display: none; /* Ocultar scrollbar en WebKit */
+}
+
+/* ================================================================== */
+/*          ESTILOS PARA LAS CATEGORÍAS CON HOVER Y SOMBRA            */
+/* ================================================================== */
+
+.category-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 12px;
+  min-width: 120px; /* Ancho mínimo consistente */
+  max-width: 150px;
+  flex-shrink: 0; /* Evitar que se reduzcan demasiado */
+  transition: transform 0.3s ease, background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* --- 1. EFECTO HOVER --- */
+.category-box:hover {
+  transform: translateY(-8px);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.category-box:hover .category-name {
+  color: var(--primary-color);
+}
+
+/* --- 2. SOMBRA NEGRA (aplicada a la imagen) --- */
+.category-image {
+  width: 120px; /* Tamaño más consistente */
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white-color);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.3s ease;
+  flex-shrink: 0; /* Mantener tamaño consistente */
+}
+
+.category-box:hover .category-image {
+  border-color: #fff;
+}
+
+.category-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.category-name {
+  margin-top: 10px;
+  font-family: "Outfit", sans-serif;
+  color: var(--dark-color);
+  font-size: 1rem; /* Tamaño más consistente */
+  text-align: center;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  box-shadow: rgba(0, 0, 0, 0.5);
+  word-wrap: break-word;
+  max-width: 100%;
+}
+
+/* ================================================================== */
+/* SECCIÓN 3: PRODUCTOS DESTACADOS                                    */
+/* ================================================================== */
+.featured-products {
+  padding: 6rem 0;
+  margin-top: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.products-carousel-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%, /* AUMENTADO de 5% a 10% para fade más suave */
+    black 90%, /* AUMENTADO de 95% a 90% para fade más suave */
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+}
+
+.products-carousel-container.dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.products-carousel-container .products-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2rem;
+  margin-top: 1rem;
+  will-change: transform;
+}
+
+.products-carousel-container .products-grid.scrolling {
+  animation: scroll-infinite 60s linear infinite;
+}
+
+.products-carousel-container:hover .scrolling {
+  animation-play-state: paused;
+}
+
+.products-carousel-container.dragging .products-grid {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ================================================== */
+/*          ESTILOS PARA LA SECCIÓN DE BANNERS        */
+/* ================================================== */
+
+.promo-banners-section {
+  background-color: #ffffff;
+  padding: 2rem 0; /* Solo padding vertical */
+}
+
+.banners-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 100%;
+  padding: 0; /* Sin padding lateral */
+}
+
+.promo-banner-item {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0; /* Sin bordes redondeados para que llegue a los extremos */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex: 1; /* Cada banner ocupa el mismo espacio disponible */
+}
+
+.promo-banner-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.promo-banner-item img {
+  display: block;
+  width: 100%;
+  height: 300px; /* Altura aumentada */
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.promo-banner-item:hover img {
+  transform: scale(1.05);
+}
+
+/* --- Responsive Design --- */
+
+/* Para tablets */
+@media (max-width: 992px) {
+  .banners-grid {
+    gap: 1rem;
+  }
+
+  .promo-banner-item img {
+    height: 250px;
+  }
+}
+
+/* Para móviles grandes y tablets en vertical */
+@media (max-width: 768px) {
+  .promo-banners-section {
+    padding: 1.5rem 0;
+  }
+
+  .banners-grid {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .promo-banner-item img {
+    height: 200px;
+  }
+}
+
+/* Para móviles pequeños */
+@media (max-width: 480px) {
+  .promo-banners-section {
+    padding: 1rem 0;
+  }
+
+  .promo-banner-item img {
+    height: 180px;
+  }
+}
+
+
+/* ================================================================== */
+/* SECCIÓN 4: ¿POR QUÉ ELEGIR BYTEBOX?                                */
+/* ================================================================== */
+.why-choose-us {
+  padding: 6rem 0;
+  background-color: #fff;
+  color: var(--dark-color);
+}
+
+.why-choose-us .section-title h2 {
+  color: var(--dark-color);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3rem;
+  text-align: center;
+}
+
+.feature-box i {
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.feature-box h3 {
+  font-family: var(--font-primary);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--dark-color);
+}
+
+.feature-box p {
+  line-height: 1.6;
+  color: var(--gray-dark);
+  padding: 0 1rem;
+}
+
+/* ====== HERO SLIDER CORREGIDO ====== */
+.hero-banner-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: block;
+  background: #000;
+}
+
+.hero-banner-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* slides - ocultas por defecto, excepto .active */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 700ms ease;
+  pointer-events: none;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+/* Flechas CORREGIDAS - siempre visibles y bien posicionadas */
+.hero-prev, .hero-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.45);
+  border: none;
+  color: #fff;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 30;
+  transition: background 0.15s;
+}
+
+.hero-prev:hover, .hero-next:hover { 
+  background: rgba(0,0,0,0.6); 
+}
+
+.hero-prev { 
+  left: 20px; 
+}
+
+.hero-next { 
+  right: 20px; 
+}
+
+/* Dots - siempre centrados */
+.hero-dots {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 30;
+}
+
+.hero-dots .dot {
+  width: 10px;
+  height: 10px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: transform .15s, background .15s;
+}
+
+.hero-dots .dot.active {
+  background: #ffffff;
+  transform: scale(1.15);
+}
+
+/* ================================================================== */
+/* RESPONSIVE DESIGN - MEDIA QUERIES OPTIMIZADAS                      */
+/* ================================================================== */
+
+/* Tablets grandes y laptops pequeñas */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 1100px;
+    padding: 0 1.5rem;
+  }
+  
+  .hero-and-categories {
+    height: 70vh;
+  }
+
+  .section-title h2 {
+    font-size: 2.2rem;
+  }
+
+  .featured-products,
+  .why-choose-us {
+    padding: 5rem 0;
+  }
+
+  .features-grid {
+    gap: 2.5rem;
+  }
+
+  .categories-carousel-track {
+    gap: 1.5rem;
+  }
+
+  .category-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .category-name {
+    font-size: 1rem;
+  }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 1.2rem;
+  }
+
+  .hero-and-categories {
+    height: 60vh;
+  }
+
+  .hero-content-static {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 5%;
+  }
+
+  .hero-text {
+    max-width: 100%;
+    padding-right: 0;
+    margin-bottom: 2rem;
+  }
+
+  .hero-text h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-text p {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+
+  .hero-features {
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .hero-image {
+    max-width: 100%;
+  }
+
+  .category-image {
+    width: 90px;
+    height: 90px;
+  }
+
+  .category-name {
+    font-size: 0.9rem;
+  }
+
+  .categories-carousel-track {
+    gap: 1rem;
+    justify-content: center;
+    padding: 0 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  /* Flechas del slider en tablets */
+  .hero-prev, .hero-next {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .hero-prev { left: 15px; }
+  .hero-next { right: 15px; }
+}
+
+/* Tablets pequeñas */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  /* BANNER: 100% ancho sin bordes */
+  .hero-and-categories {
+    height: 50vh; /* Altura reducida para móviles */
+  }
+
+  .hero-banner-container {
+    width: 100vw; /* Forzar 100% del viewport */
+    margin-left: calc(-50vw + 50%); /* Centrado perfecto */
+    left: 0;
+    right: 0;
+  }
+
+  .hero-slide img {
+    width: 100vw; /* Ancho completo del viewport */
+    object-fit: cover; /* Mantener relación aspecto */
+  }
+
+  .section-title {
+    margin-bottom: 2rem;
+  }
+
+  .section-title h2 {
+    font-size: 2rem;
+  }
+
+  .section-title .line {
+    width: 60px;
+    height: 3px;
+  }
+
+  .hero-content-static {
+    padding: 1.5rem 0; /* Sin padding horizontal */
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+
+  .categories-carousel-container {
+    padding: 12px 0 20px;
+  }
+
+  .category-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .category-name {
+    font-size: 0.85rem;
+  }
+
+  .categories-carousel-track {
+    gap: 1rem;
+    justify-content: center;
+    padding: 0 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .category-box {
+    min-width: 100px;
+    max-width: 110px;
+  }
+
+  .featured-products,
+  .why-choose-us {
+    padding: 3rem 0;
+  }
+
+  .products-carousel-container {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+  }
+
+  .products-carousel-container .products-grid {
+    gap: 1.5rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .feature-box {
+    padding: 0 1rem;
+  }
+
+  .feature-box i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-box h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .feature-box p {
+    padding: 0;
+    font-size: 0.95rem;
+  }
+
+  /* Flechas del slider en tablets pequeñas */
+  .hero-prev, .hero-next {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .hero-prev { left: 12px; }
+  .hero-next { right: 12px; }
+}
+
+/* Móviles grandes */
+@media (max-width: 600px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  /* BANNER: 100% ancho sin bordes */
+  .hero-and-categories {
+    height: 45vh;
+  }
+
+  .hero-banner-container {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+
+  .hero-slide img {
+    width: 100vw;
+    object-fit: cover;
+  }
+
+  .hero-content-static {
+    padding: 1rem 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+
+  .section-title h2 {
+    font-size: 1.8rem;
+  }
+
+  .section-title .line {
+    width: 50px;
+  }
+
+  .hero-text h1 {
+    font-size: 1.7rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-text p {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .categories-carousel-container {
+    padding: 10px 0 15px;
+  }
+
+  .category-image {
+    width: 75px;
+    height: 75px;
+  }
+
+  .category-name {
+    font-size: 0.8rem;
+  }
+
+  .categories-carousel-track {
+    gap: 0.8rem;
+    justify-content: center;
+    padding: 0 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .category-box {
+    min-width: 90px;
+    max-width: 95px;
+  }
+
+  .featured-products,
+  .why-choose-us {
+    padding: 2.5rem 0;
+  }
+
+  .products-carousel-container .products-grid {
+    gap: 1.2rem;
+  }
+
+  .features-grid {
+    gap: 2rem;
+  }
+
+  .feature-box {
+    padding: 0 0.5rem;
+  }
+
+  .feature-box i {
+    font-size: 2.3rem;
+  }
+
+  .feature-box h3 {
+    font-size: 1.2rem;
+  }
+
+  .feature-box p {
+    font-size: 0.9rem;
+  }
+
+  /* Flechas del slider en móviles grandes */
+  .hero-prev, .hero-next {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .hero-prev { left: 10px; }
+  .hero-next { right: 10px; }
+}
+
+/* Móviles medianos */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.8rem;
+  }
+
+  /* BANNER: 100% ancho sin bordes */
+  .hero-and-categories {
+    height: 40vh;
+  }
+
+  .hero-banner-container {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+
+  .hero-slide img {
+    width: 100vw;
+    object-fit: cover;
+  }
+
+  .hero-content-static {
+    padding: 0.8rem 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+
+  .section-title {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title h2 {
+    font-size: 1.6rem;
+  }
+
+  .section-title .line {
+    width: 45px;
+    height: 2.5px;
+  }
+
+  .hero-text h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .hero-text p {
+    font-size: 0.9rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .categories-carousel-container {
+    padding: 8px 0 12px;
+  }
+
+  .category-image {
+    width: 70px;
+    height: 70px;
+    border-width: 1.5px;
+  }
+
+  .category-name {
+    font-size: 0.75rem;
+    margin-top: 6px;
+  }
+
+  .categories-carousel-track {
+    gap: 0.6rem;
+    justify-content: center;
+    padding: 0 0.3rem;
+    flex-wrap: wrap;
+  }
+
+  .category-box {
+    min-width: 80px;
+    max-width: 85px;
+  }
+
+  .featured-products,
+  .why-choose-us {
+    padding: 2rem 0;
+  }
+
+  .products-carousel-container {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 5%,
+      black 95%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 5%,
+      black 95%,
+      transparent
+    );
+  }
+
+  .products-carousel-container .products-grid {
+    gap: 1rem;
+  }
+
+  .features-grid {
+    gap: 1.8rem;
+  }
+
+  .feature-box {
+    padding: 0;
+  }
+
+  .feature-box i {
+    font-size: 2.2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .feature-box h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .feature-box p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  /* Flechas del slider en móviles medianos */
+  .hero-prev, .hero-next {
+    width: 34px;
+    height: 34px;
+  }
+  
+  .hero-prev { left: 8px; }
+  .hero-next { right: 8px; }
+}
+
+/* Móviles pequeños - ESPECÍFICO PARA 375px */
+@media (max-width: 375px) {
+  .container {
+    padding: 0 0.6rem;
+  }
+
+  /* BANNER: 100% ancho sin bordes - CORREGIDO */
+  .hero-and-categories {
+    height: 35vh;
+  }
+
+  .hero-banner-container {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    left: 0;
+    right: 0;
+    position: relative;
+  }
+
+  .hero-slide,
+  .hero-slide img {
+    width: 100vw;
+    max-width: 100vw;
+    object-fit: cover;
+  }
+
+  .hero-content-static {
+    padding: 0.6rem 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    left: 0;
+    right: 0;
+  }
+
+  .section-title h2 {
+    font-size: 1.5rem;
+  }
+
+  .section-title .line {
+    width: 40px;
+  }
+
+  .hero-text h1 {
+    font-size: 1.4rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .hero-text p {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  .categories-carousel-container {
+    padding: 6px 0 10px;
+  }
+
+  .category-image {
+    width: 65px;
+    height: 65px;
+  }
+
+  .category-name {
+    font-size: 0.7rem;
+    margin-top: 5px;
+  }
+
+  .categories-carousel-track {
+    gap: 0.5rem;
+    justify-content: center;
+    padding: 0 0.2rem;
+    flex-wrap: wrap;
+  }
+
+  .category-box {
+    min-width: 75px;
+    max-width: 80px;
+    padding: 8px;
+  }
+
+  .featured-products,
+  .why-choose-us {
+    padding: 1.8rem 0;
+  }
+
+  .products-carousel-container .products-grid {
+    gap: 0.8rem;
+  }
+
+  .features-grid {
+    gap: 1.5rem;
+  }
+
+  .feature-box i {
+    font-size: 2rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .feature-box h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-box p {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  /* Flechas del slider en móviles pequeños - MANTENIDAS */
+  .hero-prev, .hero-next {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .hero-prev { left: 6px; }
+  .hero-next { right: 6px; }
+}
+
+/* Móviles extra pequeños */
+@media (max-width: 320px) {
+  .container {
+    padding: 0 0.4rem;
+  }
+
+  /* BANNER: 100% ancho sin bordes */
+  .hero-and-categories {
+    height: 30vh;
+  }
+
+  .hero-banner-container {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+
+  .hero-slide img {
+    width: 100vw;
+    object-fit: cover;
+  }
+
+  .hero-content-static {
+    padding: 0.5rem 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+
+  .section-title h2 {
+    font-size: 1.3rem;
+  }
+
+  .section-title .line {
+    width: 35px;
+    height: 2px;
+  }
+
+  .hero-text h1 {
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .hero-text p {
+    font-size: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .categories-carousel-container {
+    padding: 5px 0 8px;
+  }
+
+  .category-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .category-name {
+    font-size: 0.65rem;
+    margin-top: 4px;
+  }
+
+  .categories-carousel-track {
+    gap: 0.4rem;
+    justify-content: center;
+    padding: 0 0.1rem;
+    flex-wrap: wrap;
+  }
+
+  .category-box {
+    min-width: 70px;
+    max-width: 75px;
+    padding: 6px;
+  }
+
+  .featured-products,
+  .why-choose-us {
+    padding: 1.5rem 0;
+  }
+
+  .products-carousel-container .products-grid {
+    gap: 0.6rem;
+  }
+
+  .features-grid {
+    gap: 1.2rem;
+  }
+
+  .feature-box i {
+    font-size: 1.8rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .feature-box h3 {
+    font-size: 0.95rem;
+  }
+
+  .feature-box p {
+    font-size: 0.75rem;
+  }
+
+  /* Flechas del slider en móviles extra pequeños - MANTENIDAS */
+  .hero-prev, .hero-next {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .hero-prev { left: 4px; }
+  .hero-next { right: 4px; }
+}
+
+/* Ajustes para pantallas con altura reducida */
+@media (max-height: 700px) and (max-width: 768px) {
+  .hero-and-categories {
+    height: 20vh;
+    min-height: auto;
+  }
+  
+  .categories-carousel-container {
+    padding: 6px 0 10px;
+  }
+  
+  .category-image {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-height: 600px) and (max-width: 768px) {
+  .hero-and-categories {
+    height: 40vh;
+  }
+  
+  .hero-text h1 {
+    font-size: 1.4rem;
+  }
+  
+  .hero-text p {
+    font-size: 0.85rem;
+  }
+  
+  .category-image {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+/* Ajustes para orientación landscape en móviles */
+@media (max-height: 500px) and (max-width: 900px) {
+  .hero-and-categories {
+    height: 60vh;
+  }
+  
+  .categories-carousel-container {
+    padding: 4px 0 8px;
+  }
+  
+  .category-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .category-name {
+    font-size: 0.6rem;
+  }
+}

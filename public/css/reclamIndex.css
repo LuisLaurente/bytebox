@@ -1,0 +1,380 @@
+/* ========================================
+   RECLAMACIONES ADMIN - ESTILO ADMIN ELEGANTE
+   COLORES: #1b1b1b (negro), #2ac1db (turquesa), #ffffff (blanco)
+   ======================================== */
+
+/* Importar fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+/* Variables de colores */
+:root {
+  --_reclamAdmin-color-negro: #1b1b1b;
+  --_reclamAdmin-color-turquesa: #2ac1db;
+  --_reclamAdmin-color-blanco: #ffffff;
+  --_reclamAdmin-color-gris-claro: #f8f9fa;
+  --_reclamAdmin-color-gris-medio: #e9ecef;
+  --_reclamAdmin-color-gris-oscuro: #6c757d;
+  --_reclamAdmin-color-texto: #2c3e50;
+  --_reclamAdmin-color-texto-claro: #7f8c8d;
+  --_reclamAdmin-color-exito: #28a745;
+  --_reclamAdmin-color-error: #dc3545;
+  --_reclamAdmin-color-advertencia: #ffc107;
+  --_reclamAdmin-color-info: #17a2b8;
+  --_reclamAdmin-color-borde: #dee2e6;
+  --_reclamAdmin-color-fondo: #f5f6fa;
+}
+
+/* Reset y estilos globales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--_reclamAdmin-color-fondo);
+  color: var(--_reclamAdmin-color-texto);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+}
+
+/* Layout principal */
+._reclamAdmin-admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+._reclamAdmin-main-content {
+  flex: 1;
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  background: var(--_reclamAdmin-color-fondo);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+._reclamAdmin-content {
+  padding: 30px;
+  min-height: 100vh;
+}
+
+/* Contenedor principal */
+._reclamAdmin-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header Card */
+._reclamAdmin-header-card {
+  background: var(--_reclamAdmin-color-blanco);
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  margin-bottom: 25px;
+  overflow: hidden;
+}
+
+._reclamAdmin-header-content {
+  text-align: center;
+}
+
+._reclamAdmin-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--_reclamAdmin-color-negro);
+  margin-bottom: 10px;
+}
+
+._reclamAdmin-subtitle {
+  font-size: 1.1rem;
+  color: var(--_reclamAdmin-color-texto-claro);
+}
+
+/* Table Card */
+._reclamAdmin-table-card {
+  background: var(--_reclamAdmin-color-blanco);
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  overflow: hidden;
+}
+
+/* Table Container */
+._reclamAdmin-table-container {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid var(--_reclamAdmin-color-borde);
+}
+
+/* Table Styles */
+._reclamAdmin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--_reclamAdmin-color-blanco);
+  font-size: 0.95rem;
+}
+
+._reclamAdmin-table-header {
+  background: var(--_reclamAdmin-color-negro);
+}
+
+._reclamAdmin-table-head {
+  padding: 16px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--_reclamAdmin-color-blanco);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+  white-space: nowrap;
+}
+
+._reclamAdmin-table-body {
+  background: var(--_reclamAdmin-color-blanco);
+}
+
+._reclamAdmin-table-row {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid var(--_reclamAdmin-color-borde);
+}
+
+._reclamAdmin-table-row:hover {
+  background: var(--_reclamAdmin-color-gris-claro);
+  transform: scale(1.01);
+}
+
+._reclamAdmin-table-cell {
+  padding: 16px 12px;
+  vertical-align: top;
+  border: none;
+  color: var(--_reclamAdmin-color-texto);
+}
+
+._reclamAdmin-message-cell {
+  max-width: 300px;
+  word-wrap: break-word;
+  white-space: pre-line;
+  line-height: 1.4;
+}
+
+._reclamAdmin-actions-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Delete Button */
+._reclamAdmin-delete-button {
+  color: var(--_reclamAdmin-color-error);
+  text-decoration: none;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid transparent;
+}
+
+._reclamAdmin-delete-button:hover {
+  color: var(--_reclamAdmin-color-blanco);
+  background: var(--_reclamAdmin-color-error);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+/* Empty State */
+._reclamAdmin-empty-state {
+  text-align: center;
+  color: var(--_reclamAdmin-color-texto-claro);
+  font-style: italic;
+  padding: 40px 20px;
+  background: var(--_reclamAdmin-color-gris-claro);
+  border-radius: 8px;
+  border: 2px dashed var(--_reclamAdmin-color-borde);
+}
+
+/* Scroll personalizado para tabla */
+._reclamAdmin-table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+._reclamAdmin-table-container::-webkit-scrollbar-track {
+  background: var(--_reclamAdmin-color-gris-claro);
+  border-radius: 4px;
+}
+
+._reclamAdmin-table-container::-webkit-scrollbar-thumb {
+  background: var(--_reclamAdmin-color-turquesa);
+  border-radius: 4px;
+}
+
+._reclamAdmin-table-container::-webkit-scrollbar-thumb:hover {
+  background: var(--_reclamAdmin-color-negro);
+}
+
+/* Estados de la tabla */
+._reclamAdmin-table-row:nth-child(even) {
+  background: var(--_reclamAdmin-color-gris-claro);
+}
+
+._reclamAdmin-table-row:nth-child(even):hover {
+  background: #e9ecef;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  ._reclamAdmin-main-content {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  ._reclamAdmin-content {
+    padding: 20px;
+  }
+  
+  ._reclamAdmin-header-card,
+  ._reclamAdmin-table-card {
+    padding: 20px;
+  }
+  
+  ._reclamAdmin-title {
+    font-size: 1.8rem;
+  }
+  
+  ._reclamAdmin-table-head,
+  ._reclamAdmin-table-cell {
+    padding: 12px 8px;
+    font-size: 0.9rem;
+  }
+  
+  ._reclamAdmin-message-cell {
+    max-width: 200px;
+  }
+}
+
+/* Móvil */
+@media (max-width: 768px) {
+  ._reclamAdmin-content {
+    padding: 15px;
+  }
+  
+  ._reclamAdmin-header-card {
+    padding: 20px 15px;
+    text-align: center;
+  }
+  
+  ._reclamAdmin-title {
+    font-size: 1.5rem;
+  }
+  
+  ._reclamAdmin-subtitle {
+    font-size: 1rem;
+  }
+  
+  ._reclamAdmin-table-card {
+    padding: 15px;
+  }
+  
+  ._reclamAdmin-table-head,
+  ._reclamAdmin-table-cell {
+    padding: 10px 6px;
+    font-size: 0.85rem;
+  }
+  
+  ._reclamAdmin-message-cell {
+    max-width: 150px;
+    font-size: 0.8rem;
+  }
+  
+  ._reclamAdmin-delete-button {
+    font-size: 1rem;
+    padding: 6px;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+  ._reclamAdmin-content {
+    padding: 10px;
+  }
+  
+  ._reclamAdmin-header-card,
+  ._reclamAdmin-table-card {
+    padding: 15px 10px;
+  }
+  
+  ._reclamAdmin-title {
+    font-size: 1.3rem;
+  }
+  
+  ._reclamAdmin-table-head {
+    font-size: 0.8rem;
+    padding: 8px 4px;
+  }
+  
+  ._reclamAdmin-table-cell {
+    padding: 8px 4px;
+    font-size: 0.8rem;
+  }
+  
+  ._reclamAdmin-message-cell {
+    max-width: 120px;
+  }
+}
+
+/* Estados de prioridad (si se agregan en el futuro) */
+._reclamAdmin-priority-high {
+  background: rgba(220, 53, 69, 0.1);
+  border-left: 4px solid var(--_reclamAdmin-color-error);
+}
+
+._reclamAdmin-priority-medium {
+  background: rgba(255, 193, 7, 0.1);
+  border-left: 4px solid var(--_reclamAdmin-color-advertencia);
+}
+
+._reclamAdmin-priority-low {
+  background: rgba(40, 167, 69, 0.1);
+  border-left: 4px solid var(--_reclamAdmin-color-exito);
+}
+
+/* Badge para estados (si se agregan en el futuro) */
+._reclamAdmin-status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+._reclamAdmin-status-pendiente {
+  background: rgba(255, 193, 7, 0.1);
+  color: var(--_reclamAdmin-color-advertencia);
+  border: 1px solid var(--_reclamAdmin-color-advertencia);
+}
+
+._reclamAdmin-status-resuelto {
+  background: rgba(40, 167, 69, 0.1);
+  color: var(--_reclamAdmin-color-exito);
+  border: 1px solid var(--_reclamAdmin-color-exito);
+}
+
+._reclamAdmin-status-cerrado {
+  background: rgba(108, 117, 125, 0.1);
+  color: var(--_reclamAdmin-color-gris-oscuro);
+  border: 1px solid var(--_reclamAdmin-color-gris-oscuro);
+}

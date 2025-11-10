@@ -1,0 +1,495 @@
+/* ========================================
+   RESEÑAS ADMIN - ESTILO ADMIN ELEGANTE
+   COLORES: #1b1b1b (negro), #2ac1db (turquesa), #ffffff (blanco)
+   ======================================== */
+
+/* Importar fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+/* Variables de colores */
+:root {
+  --_resenaAdmin-color-negro: #1b1b1b;
+  --_resenaAdmin-color-turquesa: #2ac1db;
+  --_resenaAdmin-color-blanco: #ffffff;
+  --_resenaAdmin-color-gris-claro: #f8f9fa;
+  --_resenaAdmin-color-gris-medio: #e9ecef;
+  --_resenaAdmin-color-gris-oscuro: #6c757d;
+  --_resenaAdmin-color-texto: #2c3e50;
+  --_resenaAdmin-color-texto-claro: #7f8c8d;
+  --_resenaAdmin-color-exito: #28a745;
+  --_resenaAdmin-color-error: #dc3545;
+  --_resenaAdmin-color-advertencia: #ffc107;
+  --_resenaAdmin-color-info: #17a2b8;
+  --_resenaAdmin-color-borde: #dee2e6;
+  --_resenaAdmin-color-fondo: #f5f6fa;
+  --_resenaAdmin-color-estrella: #ffc107;
+}
+
+/* Reset y estilos globales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--_resenaAdmin-color-fondo);
+  color: var(--_resenaAdmin-color-texto);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+}
+
+/* Layout principal */
+._resenaAdmin-admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+._resenaAdmin-main-content {
+  flex: 1;
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  background: var(--_resenaAdmin-color-fondo);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+._resenaAdmin-content {
+  padding: 30px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenedor principal */
+._resenaAdmin-container {
+  max-width: 100%;
+  margin: 0 auto;
+  flex: 1;
+}
+
+/* Header Card */
+._resenaAdmin-header-card {
+  background: var(--_resenaAdmin-color-blanco);
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  margin-bottom: 25px;
+  overflow: hidden;
+  text-align: center;
+}
+
+._resenaAdmin-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--_resenaAdmin-color-negro);
+  margin-bottom: 10px;
+}
+
+._resenaAdmin-subtitle {
+  font-size: 1.1rem;
+  color: var(--_resenaAdmin-color-texto-claro);
+}
+
+/* Alert */
+._resenaAdmin-alert {
+  background: rgba(23, 162, 184, 0.1);
+  border: 2px solid var(--_resenaAdmin-color-info);
+  color: var(--_resenaAdmin-color-info);
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  font-weight: 500;
+  animation: _resenaAdmin-slideIn 0.3s ease-out;
+}
+
+@keyframes _resenaAdmin-slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Table Card */
+._resenaAdmin-table-card {
+  background: var(--_resenaAdmin-color-blanco);
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* Table Container */
+._resenaAdmin-table-container {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid var(--_resenaAdmin-color-borde);
+}
+
+/* Table Styles */
+._resenaAdmin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--_resenaAdmin-color-blanco);
+  font-size: 0.95rem;
+}
+
+._resenaAdmin-table-header {
+  background: var(--_resenaAdmin-color-negro);
+}
+
+._resenaAdmin-table-head {
+  padding: 16px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--_resenaAdmin-color-blanco);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+  white-space: nowrap;
+}
+
+._resenaAdmin-center {
+  text-align: center;
+}
+
+._resenaAdmin-table-body {
+  background: var(--_resenaAdmin-color-blanco);
+}
+
+._resenaAdmin-table-row {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid var(--_resenaAdmin-color-borde);
+}
+
+._resenaAdmin-table-row:hover {
+  background: var(--_resenaAdmin-color-gris-claro);
+  transform: scale(1.01);
+}
+
+._resenaAdmin-table-cell {
+  padding: 16px 12px;
+  vertical-align: top;
+  border: none;
+  color: var(--_resenaAdmin-color-texto);
+}
+
+/* Stars Rating */
+._resenaAdmin-stars {
+  display: flex;
+  gap: 2px;
+}
+
+._resenaAdmin-star {
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+._resenaAdmin-star-active {
+  color: var(--_resenaAdmin-color-estrella);
+}
+
+._resenaAdmin-star-inactive {
+  color: var(--_resenaAdmin-color-gris-medio);
+}
+
+/* Comment Cell */
+._resenaAdmin-comment-cell {
+  max-width: 300px;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+._resenaAdmin-comment-title {
+  color: var(--_resenaAdmin-color-negro);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Status Badges */
+._resenaAdmin-status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid transparent;
+}
+
+._resenaAdmin-status-approved {
+  background: rgba(40, 167, 69, 0.1);
+  color: var(--_resenaAdmin-color-exito);
+  border-color: var(--_resenaAdmin-color-exito);
+}
+
+._resenaAdmin-status-pending {
+  background: rgba(255, 193, 7, 0.1);
+  color: var(--_resenaAdmin-color-advertencia);
+  border-color: var(--_resenaAdmin-color-advertencia);
+}
+
+/* Actions */
+._resenaAdmin-actions-cell {
+  white-space: nowrap;
+}
+
+._resenaAdmin-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+._resenaAdmin-action-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  text-align: center;
+  min-width: 80px;
+}
+
+._resenaAdmin-approve-btn {
+  background: rgba(40, 167, 69, 0.1);
+  color: var(--_resenaAdmin-color-exito);
+  border-color: var(--_resenaAdmin-color-exito);
+}
+
+._resenaAdmin-approve-btn:hover {
+  background: var(--_resenaAdmin-color-exito);
+  color: var(--_resenaAdmin-color-blanco);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+._resenaAdmin-reject-btn {
+  background: rgba(255, 193, 7, 0.1);
+  color: var(--_resenaAdmin-color-advertencia);
+  border-color: var(--_resenaAdmin-color-advertencia);
+}
+
+._resenaAdmin-reject-btn:hover {
+  background: var(--_resenaAdmin-color-advertencia);
+  color: var(--_resenaAdmin-color-negro);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+._resenaAdmin-delete-btn {
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--_resenaAdmin-color-error);
+  border-color: var(--_resenaAdmin-color-error);
+}
+
+._resenaAdmin-delete-btn:hover {
+  background: var(--_resenaAdmin-color-error);
+  color: var(--_resenaAdmin-color-blanco);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+/* Empty State */
+._resenaAdmin-empty-state {
+  text-align: center;
+  color: var(--_resenaAdmin-color-texto-claro);
+  font-style: italic;
+  padding: 40px 20px;
+  background: var(--_resenaAdmin-color-gris-claro);
+  border-radius: 8px;
+  border: 2px dashed var(--_resenaAdmin-color-borde);
+}
+
+/* Footer */
+._resenaAdmin-footer {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--_resenaAdmin-color-borde);
+}
+
+/* Scroll personalizado para tabla */
+._resenaAdmin-table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+._resenaAdmin-table-container::-webkit-scrollbar-track {
+  background: var(--_resenaAdmin-color-gris-claro);
+  border-radius: 4px;
+}
+
+._resenaAdmin-table-container::-webkit-scrollbar-thumb {
+  background: var(--_resenaAdmin-color-turquesa);
+  border-radius: 4px;
+}
+
+._resenaAdmin-table-container::-webkit-scrollbar-thumb:hover {
+  background: var(--_resenaAdmin-color-negro);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  ._resenaAdmin-main-content {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  ._resenaAdmin-content {
+    padding: 20px;
+  }
+  
+  ._resenaAdmin-header-card,
+  ._resenaAdmin-table-card {
+    padding: 20px;
+  }
+  
+  ._resenaAdmin-title {
+    font-size: 1.8rem;
+  }
+  
+  ._resenaAdmin-table-head,
+  ._resenaAdmin-table-cell {
+    padding: 12px 8px;
+    font-size: 0.9rem;
+  }
+  
+  ._resenaAdmin-comment-cell {
+    max-width: 200px;
+  }
+  
+  ._resenaAdmin-actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  ._resenaAdmin-action-btn {
+    min-width: 70px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Móvil */
+@media (max-width: 768px) {
+  ._resenaAdmin-main-content {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  ._resenaAdmin-content {
+    padding: 15px;
+  }
+  
+  ._resenaAdmin-header-card {
+    padding: 20px 15px;
+    text-align: center;
+  }
+  
+  ._resenaAdmin-title {
+    font-size: 1.5rem;
+  }
+  
+  ._resenaAdmin-subtitle {
+    font-size: 1rem;
+  }
+  
+  ._resenaAdmin-table-card {
+    padding: 15px;
+  }
+  
+  ._resenaAdmin-table-head,
+  ._resenaAdmin-table-cell {
+    padding: 10px 6px;
+    font-size: 0.85rem;
+  }
+  
+  ._resenaAdmin-comment-cell {
+    max-width: 150px;
+    font-size: 0.8rem;
+  }
+  
+  ._resenaAdmin-star {
+    font-size: 1rem;
+  }
+  
+  ._resenaAdmin-status-badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+  ._resenaAdmin-main-content {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  ._resenaAdmin-content {
+    padding: 10px;
+  }
+  
+  ._resenaAdmin-header-card,
+  ._resenaAdmin-table-card {
+    padding: 15px 10px;
+  }
+  
+  ._resenaAdmin-title {
+    font-size: 1.3rem;
+  }
+  
+  ._resenaAdmin-table-head {
+    font-size: 0.8rem;
+    padding: 8px 4px;
+  }
+  
+  ._resenaAdmin-table-cell {
+    padding: 8px 4px;
+    font-size: 0.8rem;
+  }
+  
+  ._resenaAdmin-comment-cell {
+    max-width: 120px;
+  }
+  
+  ._resenaAdmin-actions {
+    gap: 4px;
+  }
+  
+  ._resenaAdmin-action-btn {
+    min-width: 60px;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Estados de la tabla */
+._resenaAdmin-table-row:nth-child(even) {
+  background: var(--_resenaAdmin-color-gris-claro);
+}
+
+._resenaAdmin-table-row:nth-child(even):hover {
+  background: #e9ecef;
+}
