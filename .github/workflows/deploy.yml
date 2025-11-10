@@ -12,10 +12,11 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Deploy via SFTP
-        uses: easingthemes/ssh-deploy@v4.1.8
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: "bytebox.pe"
-          REMOTE_USER: "ylxfwfte"
-          SOURCE: "public/"
-          TARGET: "/test.bytebox.pe/public/"
+          username: 'ylxfwfte'
+          server: 'bytebox.pe'
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          local_path: './public/*'
+          remote_path: '/test.bytebox.pe/public/'
+          sftp_only: true
