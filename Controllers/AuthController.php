@@ -254,7 +254,7 @@ class AuthController extends BaseController
             if (!empty($redirect)) {
                 // Si redirect ya contiene la base, redirigir directamente
                 // Si no, usar url() para construir la ruta completa
-                if (strpos($redirect, '/TECNOVEDADES/public/') === 0) {
+                if (strpos($redirect, '/bytebox/public/') === 0) {
                     header('Location: ' . $redirect);
                 } else {
                     header('Location: ' . url($redirect));
