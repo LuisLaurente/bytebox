@@ -1,9 +1,0 @@
-DirectoryIndex index.php
-RewriteEngine On
-RewriteBase /
-RewriteBase /bytebox/public/
-
-# Si la ruta no es un archivo existente, redirigir al index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
