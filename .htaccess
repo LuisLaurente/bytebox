@@ -15,42 +15,47 @@
     php_flag session.cookie_secure Off
 </IfModule>
 
-# Forzar HTTPS (descomenta estas líneas cuando tengas SSL habilitado)
-# <IfModule mod_rewrite.c>
-#    RewriteEngine On
-#    RewriteCond %{HTTPS} off
-#    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-# </IfModule>
-
 # Evitar listado de directorios
 Options -Indexes
 
-# Proteger el archivo .htaccess
-<Files .htaccess>
-    Order Allow,Deny
-    Deny from all
-</Files>
-
 # Proteger archivos sensibles
-<FilesMatch "^(\.env|.*\.log|composer\.json|composer\.lock)$">
+<FilesMatch "^(\.env|.*\.log|composer\.json|composer\.lock|\.htaccess)$">
     Order Allow,Deny
     Deny from all
 </FilesMatch>
 
 # ==========================================
-# REDIRECCIÓN A CARPETA PUBLIC
+# REDIRECCIÓN A CARPETA PUBLIC - COMPATIBLE AMBOS ENTORNOS
 # ==========================================
 RewriteEngine On
 
-# Si la solicitud NO es para la carpeta public/ y el archivo/directorio no existe
-# redirigir a la carpeta public/
+# DETECTAR SI ESTAMOS EN LOCAL (por la presencia de /bytebox/)
+RewriteCond %{REQUEST_URI} ^/bytebox/
+RewriteRule ^ - [E=IS_LOCAL:1]
+
+# REDIRECCIÓN DE LA RAÍZ
+# Para LOCAL: /bytebox/ → /bytebox/public/
+RewriteCond %{ENV:IS_LOCAL} 1
+RewriteRule ^bytebox/?$ /bytebox/public/ [L]
+
+# Para PRODUCCIÓN: / → /public/  
+RewriteCond %{ENV:IS_LOCAL} !1
+RewriteRule ^$ public/ [L]
+
+# REDIRECCIÓN DE RUTAS
+# Para LOCAL: /bytebox/cualquier-cosa → /bytebox/public/cualquier-cosa
+RewriteCond %{ENV:IS_LOCAL} 1
+RewriteCond %{REQUEST_URI} !^/bytebox/public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^bytebox/(.*)$ /bytebox/public/$1 [L]
+
+# Para PRODUCCIÓN: /cualquier-cosa → /public/cualquier-cosa
+RewriteCond %{ENV:IS_LOCAL} !1
 RewriteCond %{REQUEST_URI} !^/public/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ public/$1 [L]
-
-# Redirigir la raíz directamente a public/
-RewriteRule ^$ /bytebox/public/ [L]
 
 # php -- BEGIN cPanel-generated handler, do not edit
 # This domain inherits the “PHP” package.

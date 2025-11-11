@@ -2,6 +2,6 @@ sql
 logs
 SEGURIDAD.md
 config/oauth.php
-config/oauth.template.php
 test-docs
+vendor
 .env
