@@ -5,7 +5,7 @@ function url($path = '') {
 
     // Establece la base según el entorno
     $base = $isLocalhost 
-        ? '/TECNOVEDADES/public/'    // Tu base en local
+        ? '/bytebox/public/'    // Tu base en local
         : '/';                       // En producción, asume raíz del subdominio
 
     // Devuelve la URL completa

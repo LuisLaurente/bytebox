@@ -375,7 +375,7 @@ if (!empty($_GET['open_login']) && $_GET['open_login'] == '1') {
           value="<?php 
             // Extraer la ruta relativa sin la base URL
             $currentUri = $_SERVER['REQUEST_URI'] ?? '';
-            $basePath = '/TECNOVEDADES/public/';
+            $basePath = '/bytebox/public/';
             if (strpos($currentUri, $basePath) === 0) {
               $currentUri = substr($currentUri, strlen($basePath));
             }

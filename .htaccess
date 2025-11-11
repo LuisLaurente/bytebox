@@ -50,7 +50,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ public/$1 [L]
 
 # Redirigir la raíz directamente a public/
-RewriteRule ^$ public/ [L]
+RewriteRule ^$ /bytebox/public/ [L]
 
 # php -- BEGIN cPanel-generated handler, do not edit
 # This domain inherits the “PHP” package.
