@@ -7,8 +7,8 @@ if ($isProduction) {
     // Configuración para producción (cPanel)
     return [
         'host' => 'localhost',
-        'dbname' => 'ylxfwfte_bytebox',  // CAMBIAR: por tu base de datos
-        'username' => 'ylxfwfte_user',         // CAMBIAR: por tu usuario de BD
+        'dbname' => 'ylxfwfte_bytebox',
+        'username' => 'ylxfwfte_user', 
         'password' => '@Bytebox555',            // CAMBIAR: por tu contraseña
         'port' => 3306
     ];
