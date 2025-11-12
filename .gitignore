@@ -5,3 +5,5 @@ config/oauth.php
 test-docs
 vendor
 .env
+config/database.php
+Core/Database.php
