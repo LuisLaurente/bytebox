@@ -372,15 +372,23 @@ if (!empty($_GET['open_login']) && $_GET['open_login'] == '1') {
         ?>
 
         <input type="hidden" name="redirect"
-          value="<?php 
-            // Extraer la ruta relativa sin la base URL
-            $currentUri = $_SERVER['REQUEST_URI'] ?? '';
-            $basePath = '/bytebox/public/';
-            if (strpos($currentUri, $basePath) === 0) {
-              $currentUri = substr($currentUri, strlen($basePath));
-            }
-            echo htmlspecialchars($currentUri ?: 'home/index', ENT_QUOTES, 'UTF-8');
-          ?>">
+  value="<?php 
+    // USANDO TU SISTEMA DE RUTAS EXISTENTE
+    $url = isset($_GET['url']) ? trim($_GET['url'], '/') : '';
+    
+    // Si no hay URL específica, usar la actual
+    if (empty($url)) {
+      $currentUri = $_SERVER['REQUEST_URI'] ?? '';
+      // Extraer solo la parte después de public/
+      if (preg_match('#/public/(.*)$#', $currentUri, $matches)) {
+        $url = $matches[1] ?? 'home/index';
+      } else {
+        $url = 'home/index';
+      }
+    }
+    
+    echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+  ?>">
 
         <div class="modal-row">
           <label for="loginEmail">Correo Electrónico</label>

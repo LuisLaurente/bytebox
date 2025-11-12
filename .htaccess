@@ -25,38 +25,31 @@ Options -Indexes
 </FilesMatch>
 
 # ==========================================
-# REDIRECCIÓN A CARPETA PUBLIC - COMPATIBLE AMBOS ENTORNOS
+# REDIRECCIÓN INTELIGENTE A PUBLIC
 # ==========================================
 RewriteEngine On
 
-# DETECTAR SI ESTAMOS EN LOCAL (por la presencia de /bytebox/)
+# 1. Si es un archivo o directorio existente en public/, servirlo directamente
+RewriteCond %{REQUEST_URI} ^/bytebox/public/ [NC]
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 2. Para LOCAL: Redirigir /bytebox/* a /bytebox/public/index.php?url=*
+RewriteCond %{HTTP_HOST} ^localhost [NC]
 RewriteCond %{REQUEST_URI} ^/bytebox/
-RewriteRule ^ - [E=IS_LOCAL:1]
-
-# REDIRECCIÓN DE LA RAÍZ
-# Para LOCAL: /bytebox/ → /bytebox/public/
-RewriteCond %{ENV:IS_LOCAL} 1
-RewriteRule ^bytebox/?$ /bytebox/public/ [L]
-
-# Para PRODUCCIÓN: / → /public/  
-RewriteCond %{ENV:IS_LOCAL} !1
-RewriteRule ^$ public/ [L]
-
-# REDIRECCIÓN DE RUTAS
-# Para LOCAL: /bytebox/cualquier-cosa → /bytebox/public/cualquier-cosa
-RewriteCond %{ENV:IS_LOCAL} 1
 RewriteCond %{REQUEST_URI} !^/bytebox/public/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^bytebox/(.*)$ /bytebox/public/$1 [L]
+RewriteRule ^bytebox/(.*)$ /bytebox/public/index.php?url=$1 [L,QSA]
 
-# Para PRODUCCIÓN: /cualquier-cosa → /public/cualquier-cosa
-RewriteCond %{ENV:IS_LOCAL} !1
+# 3. Redirigir raíz de local a public/
+RewriteCond %{HTTP_HOST} ^localhost [NC]
+RewriteRule ^bytebox/?$ /bytebox/public/ [L,R=301]
+
+# 4. Para PRODUCCIÓN: Redirigir /* a /public/index.php?url=*
+RewriteCond %{HTTP_HOST} !^localhost [NC]
 RewriteCond %{REQUEST_URI} !^/public/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ public/$1 [L]
+RewriteRule ^(.*)$ /public/index.php?url=$1 [L,QSA]
 
-# php -- BEGIN cPanel-generated handler, do not edit
-# This domain inherits the “PHP” package.
-# php -- END cPanel-generated handler, do not edit
+# 5. Redirigir raíz de producción a public/
+RewriteCond %{HTTP_HOST} !^localhost [NC]
+RewriteRule ^$ /public/ [L,R=301]
