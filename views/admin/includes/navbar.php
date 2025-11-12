@@ -1,4 +1,6 @@
 <?php
+// views/admin/includes/navbar.php
+
 // Función helper para verificar permisos
 function hasPermission($permission)
 {
@@ -8,36 +10,53 @@ function hasPermission($permission)
 // Función para verificar si el usuario es un cliente (rol usuario)
 function isCliente()
 {
+    // Optimización: Cachea el resultado para evitar múltiples accesos a la sesión.
+    static $isClient = null;
+
+    if ($isClient !== null) {
+        return $isClient;
+    }
+
     $userRole = \Core\Helpers\SessionHelper::getRole();
 
     if (is_array($userRole) && isset($userRole['nombre'])) {
-        return $userRole['nombre'] === 'usuario';
+        $isClient = $userRole['nombre'] === 'usuario';
+    } elseif (is_string($userRole)) {
+        $isClient = $userRole === 'usuario';
+    } else {
+        $userPermissions = \Core\Helpers\SessionHelper::getPermissions();
+        if (is_array($userPermissions)) {
+            $isClient = in_array('perfil', $userPermissions) &&
+                        !in_array('usuarios', $userPermissions) &&
+                        !in_array('productos', $userPermissions);
+        } else {
+            $isClient = false;
+        }
     }
-
-    if (is_string($userRole)) {
-        return $userRole === 'usuario';
-    }
-
-    $userPermissions = \Core\Helpers\SessionHelper::getPermissions();
-    if (is_array($userPermissions)) {
-        return in_array('perfil', $userPermissions) &&
-            !in_array('usuarios', $userPermissions) &&
-            !in_array('productos', $userPermissions);
-    }
-
-    return false;
+    
+    return $isClient;
 }
 
-// Obtener información del usuario
+// Obtener información del usuario y sanitizar (Prevención XSS)
 $userName = \Core\Helpers\SessionHelper::getUserName();
+// FIX DE SEGURIDAD: Uso de ENT_QUOTES para manejar comillas simples y dobles.
+$safeUserName = htmlspecialchars($userName ?? 'Usuario', ENT_QUOTES, 'UTF-8');
+
 $userEmail = \Core\Helpers\SessionHelper::getUserEmail();
+
 $userRole = \Core\Helpers\SessionHelper::getRole();
+$userRoleName = is_array($userRole) && isset($userRole['nombre']) ? $userRole['nombre'] : ($userRole ?? 'Sin rol');
+$safeUserRoleName = htmlspecialchars($userRoleName, ENT_QUOTES, 'UTF-8');
+
+// FIX del error CsrfHelper::getToken(): Usamos el método existente tokenField() 
+// para obtener el campo de formulario completo con el token generado y seguro.
+$csrfTokenField = class_exists('\Core\Helpers\CsrfHelper') 
+    ? \Core\Helpers\CsrfHelper::tokenField('logout_form') // Usamos un nombre de formulario específico
+    : '<input type="hidden" name="csrf_token" value="SAFE_FALLBACK_TOKEN">'; // Fallback
 ?>
 <link rel="stylesheet" href="<?= url('/css/navbar.css') ?>">
 <?php if (!isCliente()): ?>
-    <!-- Sidebar Navigation -->
     <aside id="sidebar_navbar" class="sidebar_navbar">
-        <!-- Header del sidebar con logo y nombre -->
         <div class="sidebar-header_navbar">
             <div class="sidebar-logo_navbar">
                 <div class="logo-icon_navbar">
@@ -52,10 +71,8 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
             </div>
         </div>
 
-        <!-- Navegación principal - scrolleable -->
         <nav class="sidebar-nav_navbar">
 
-            <!-- Sección Panel Administrativo -->
             <?php
             $tienePermisosAdmin = hasPermission('usuarios') || hasPermission('productos') || hasPermission('categorias') || hasPermission('pedidos');
             if ($tienePermisosAdmin):
@@ -65,7 +82,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                 </div>
             <?php endif; ?>
 
-            <!-- Gestión de Usuarios -->
             <?php if (hasPermission('usuarios')): ?>
                 <a href="<?= url('/usuario') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
@@ -75,7 +91,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                 </a>
             <?php endif; ?>
 
-            <!-- Roles -->
             <?php if (hasPermission('usuarios')): ?>
                 <a href="<?= url('/rol') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
@@ -85,7 +100,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                 </a>
             <?php endif; ?>
 
-            <!-- Productos -->
             <?php if (hasPermission('productos')): ?>
                 <a href="<?= url('/producto') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
@@ -95,7 +109,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                 </a>
             <?php endif; ?>
 
-            <!-- Categorías -->
             <?php if (hasPermission('categorias')): ?>
                 <a href="<?= url('/categoria') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
@@ -106,7 +119,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
             <?php endif; ?>
 
 
-            <!-- Pedidos -->
             <?php if (hasPermission('pedidos')): ?>
                 <a href="<?= url('/pedido/listar') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
@@ -116,7 +128,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                 </a>
             <?php endif; ?>
 
-            <!-- Cupones -->
             <?php if (hasPermission('cupones')): ?>
                 <a href="<?= url('/cupon') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
@@ -126,7 +137,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                 </a>
             <?php endif; ?>
 
-            <!-- Promociones -->
             <?php if (hasPermission('promociones')): ?>
                 <a href="<?= url('/promocion') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
@@ -136,7 +146,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                 </a>
             <?php endif; ?>
 
-            <!-- Popup Promocional -->
             <?php if (hasPermission('promociones')): ?>
                 <a href="<?= url('/adminpopup') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
@@ -146,8 +155,7 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                 </a>
             <?php endif; ?>
 
-            <!-- Banners -->
-            <?php if (hasPermission('promociones') || hasPermission('banners')): ?>
+            <?php if (hasPermission('banners')): ?>
                 <a href="<?= url('/banner') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
                         <i class="fas fa-image"></i>
@@ -156,7 +164,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                 </a>
             <?php endif; ?>
 
-            <!-- Carga Masiva -->
             <?php if (hasPermission('productos')): ?>
                 <a href="<?= url('/cargamasiva') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
@@ -166,7 +173,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                 </a>
             <?php endif; ?>
 
-            <!-- Reportes de Reclamaciones -->
             <?php if (hasPermission('reportes')): ?>
                 <a href="<?= url('/adminreclamacion') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
@@ -175,7 +181,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                     <span class="nav-text_navbar">Reportes de Reclamaciones</span>
                 </a>
 
-                <!-- Reseñas -->
                 <a href="<?= url('/review') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
                         <i class="fas fa-star"></i>
@@ -183,7 +188,6 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
                     <span class="nav-text_navbar">Reseñas</span>
                 </a>
 
-                <!-- Reportes de Ventas -->
                 <a href="<?= url('/reporte/resumen') ?>" class="nav-link_navbar">
                     <div class="nav-icon-wrapper_navbar">
                         <i class="fas fa-chart-bar"></i>
@@ -193,40 +197,35 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
             <?php endif; ?>
         </nav>
 
-        <!-- Sección de información del usuario -->
         <div class="sidebar-footer_navbar">
             <a href="<?= url('/auth/profile') ?>" class="user-info-navbar-link">
-                <!-- Usuario con dropdown hacia arriba -->
                 <div id="userDropdownWrapper" class="user-dropdown-wrapper">
                     <div id="userDropdownButton" class="user-dropdown-button">
                         <div class="user-avatar_navbar">
-                            <?= strtoupper(substr($userName ?? 'U', 0, 1)) ?>
+                            <?= strtoupper(substr($safeUserName, 0, 1)) ?>
                         </div>
                         <div class="user-details_navbar">
-                            <p class="user-name_navbar"><?= htmlspecialchars($userName ?? 'Usuario') ?></p>
-                            <p class="user-role_navbar"><?= htmlspecialchars($userRole['nombre'] ?? 'Sin rol') ?></p>
+                            <p class="user-name_navbar"><?= $safeUserName ?></p>
+                            <p class="user-role_navbar"><?= $safeUserRoleName ?></p>
                         </div>
                         <i class="fas fa-chevron-up dropdown-arrow"></i>
                     </div>
 
-                    <!-- Dropdown hacia arriba -->
                     <div id="userDropdownMenu" class="user-dropdown-menu">
                         <a href="<?= url('/auth/profile') ?>" class="dropdown-link">Mi Cuenta</a>
                         <div class="dropdown-divider"></div>
-                        <a href="<?= url('/auth/logout') ?>" 
-                        class="dropdown-link logout-link" 
-                        onclick="event.preventDefault(); 
-                                    fetch('<?= url('/auth/logout') ?>')
-                                    .then(() => {
-                                        window.location.href='<?= url('/admin/login') ?>';
-                                    });">
+                        
+                        <form id="logout-form" action="<?= url('/auth/logout') ?>" method="POST" style="display: none;">
+                            <?= $csrfTokenField ?>
+                        </form>
+                        <a href="#" class="dropdown-link logout-link" 
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             Cerrar Sesión
                         </a>
                     </div>
                 </div>
             </a>
 
-            <!-- Debug de permisos (solo en desarrollo) -->
             <?php if (isset($_GET['debug']) && $_GET['debug'] === '1'): ?>
                 <div class="debug-info_navbar">
                     <p class="debug-title_navbar">🔍 Debug Permisos</p>
@@ -241,16 +240,13 @@ $userRole = \Core\Helpers\SessionHelper::getRole();
         </div>
     </aside>
 
-    <!-- Overlay para móviles -->
     <div id="sidebar-overlay_navbar" class="sidebar-overlay_navbar"></div>
 
-    <!-- Botón hamburguesa para móviles -->
     <button id="mobile-menu-button_navbar" class="mobile-menu-button_navbar">
         <i class="fas fa-bars"></i>
     </button>
 <?php endif; ?>
 
-<!-- Script para funcionalidad móvil -->
 <script>
     // Funcionalidad del menú móvil
     const mobileMenuButton_navbar = document.getElementById('mobile-menu-button_navbar');
