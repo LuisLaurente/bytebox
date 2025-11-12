@@ -34,6 +34,18 @@ try {
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../Core/autoload.php';
 
+// DEBUG: Verificar autoload
+error_log("=== AUTOLOAD DEBUG ===");
+error_log("Vendor autoload: " . (file_exists(__DIR__ . '/../vendor/autoload.php') ? 'EXISTE' : 'NO EXISTE'));
+error_log("Core autoload: " . (file_exists(__DIR__ . '/../Core/autoload.php') ? 'EXISTE' : 'NO EXISTE'));
+
+// Probar si una clase existe
+if (class_exists('Controllers\HomeController')) {
+    error_log("✅ HomeController cargado correctamente");
+} else {
+    error_log("❌ HomeController NO se puede cargar");
+}
+
 // ===========================
 // HELPERS (AHORA SÍ PODEMOS USAR LAS CLASES)
 // ===========================
