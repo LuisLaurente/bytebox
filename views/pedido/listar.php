@@ -33,7 +33,7 @@
                         <p class="pedidos-subtitle">Administra y supervisa todos los pedidos del sistema</p>
                     </div>
 
-                    <!-- Estadísticas -->
+                    <!-- Estadísticas lll -->
                     <div class="pedidos-stats">
                         <div class="pedidos-stat-card pedidos-stat-total">
                             <div class="pedidos-stat-icon"></div>
