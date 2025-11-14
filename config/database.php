@@ -19,6 +19,6 @@ if ($isProduction) {
         'dbname' => 'ylxfwfte_bytebox', // 'dbname' => 'tecnovedades',
         'username' => 'root',   // 'username' => 'root
         'password' => '', // 'password' => '',
-        'port' => 3306
+        'port' => 3307
     ];
 }
