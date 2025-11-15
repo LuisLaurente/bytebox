@@ -15,10 +15,10 @@ if ($isProduction) {
 } else {
     // Configuración para desarrollo local
     return [
-        'host' => '127.0.0.1',    // 'host' => '127.0.0.1',
+        'host' => 'localhost:3307',    // 'host' => '127.0.0.1',
         'dbname' => 'ylxfwfte_bytebox', // 'dbname' => 'tecnovedades',
         'username' => 'root',   // 'username' => 'root
         'password' => '', // 'password' => '',
-        'port' => 3306
+        'port' => 3307
     ];
 }
