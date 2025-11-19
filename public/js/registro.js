@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return urlParams.get('redirect') || '';
     }
 
+    // === VALIDACIONES EN TIEMPO REAL ===
     // Validación de fortaleza de contraseña
     if (passwordInput && passwordStrengthDiv) {
         passwordInput.addEventListener('input', function() {
@@ -80,21 +81,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // ---------------------------------------------------------------------
     if (form) {
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // 🛑 DETENER EL ENVÍO NORMAL
+            
+            e.preventDefault(); // 🛑 Detener el envío síncrono inmediatamente
 
-            // 1.1. Validaciones finales (JS)
-            if (!validateForm()) { // Usamos tu función validateForm() original
-                return; // Si falla la validación del lado del cliente, detener aquí
+            // 1.1. Validaciones finales (Cliente)
+            if (!validateForm()) { 
+                toggleSubmitButton(false); // Restaurar botón si la validación cliente falla
+                return false;
             }
             
-            toggleSubmitButton(true); // Mostrar spinner
+            toggleSubmitButton(true, 'Enviando código...'); // Mostrar spinner
 
             const formData = new FormData(form);
-            // Añadir el parámetro redirect si existe en la URL para llevarlo al backend
             formData.append('redirect', getRedirectParam());
 
-            // 1.2. Petición AJAX al endpoint de INICIO (Paso 1 del Backend)
-            fetch('/bytebox/public/auth/iniciarRegistro', { // RUTA CORREGIDA
+            // 1.2. Petición AJAX al endpoint de INICIO (auth/procesarRegistro)
+            // Usamos form.action para que apunte a procesarRegistro, que internamente llama a iniciarRegistro
+            fetch(form.action, { 
                 method: 'POST',
                 body: formData
             })
@@ -109,9 +112,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     // 1.3. ÉXITO: Mostrar Modal
                     modalEmailDisplay.textContent = emailInput.value;
                     modal.style.display = 'flex';
-                    codeInput.value = ''; // Limpiar código anterior
+                    codeInput.value = '';
                     msgError.style.display = 'none';
                     msgSuccess.style.display = 'none';
+                    btnVerify.textContent = "Verificar y Crear Cuenta";
+                    btnVerify.disabled = false;
                     codeInput.focus();
                 } else {
                     // 1.4. FALLO: Mostrar error en el formulario principal
@@ -123,7 +128,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Ocurrió un error de conexión. Intenta nuevamente.');
             })
             .finally(() => {
-                toggleSubmitButton(false); // Restaurar botón
+                // Solo restaurar el botón principal si el modal NO SE MOSTRÓ
+                if (modal.style.display !== 'flex') {
+                    toggleSubmitButton(false); 
+                }
             });
         });
     }
@@ -185,16 +193,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnCancel) {
         btnCancel.addEventListener('click', function() {
             modal.style.display = 'none';
+            toggleSubmitButton(false); // Restaurar botón principal
         });
     }
 
     // 2.3. Lógica del botón Reenviar Código (Opcional, seguridad mejorada)
     if (btnResend) {
         btnResend.addEventListener('click', function() {
-            // Aquí puedes implementar una llamada AJAX separada
-            // a un nuevo método del controlador: AuthController::reenviarCodigo()
-            // Por ahora, solo simular carga y feedback, y luego pedir al usuario que reintente.
-            
             btnResend.disabled = true;
             btnResend.textContent = "Reenviando...";
             msgError.style.display = 'none';
@@ -222,9 +227,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 msgError.style.color = 'red';
             })
             .finally(() => {
-                btnResend.textContent = "Reenviar código";
-                // Añadir un retardo de seguridad (ej. 30 segundos) antes de permitir otro reenvío
+                // Delay de seguridad de 30 segundos
                 setTimeout(() => {
+                    btnResend.textContent = "Reenviar código";
                     btnResend.disabled = false;
                     msgError.style.color = 'red'; // Restablecer color de error
                 }, 30000); 
