@@ -25,11 +25,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const msgError = document.getElementById('modalError');
     const msgSuccess = document.getElementById('modalSuccess');
 
-    if (passwordStrengthDiv && passwordHint && passwordStrengthDiv.parentNode === passwordHint.parentNode) {
-        // Mueve la etiqueta <p> (passwordHint) para que sea el último hijo del <div> (passwordStrengthDiv)
-        passwordStrengthDiv.appendChild(passwordHint);
-        // Esto consolida ambos elementos en el mismo contenedor padre lógico.
-        console.log("✅ Anidamiento DOM: El hint (P) ahora es hijo del strengthDiv (DIV).");
+    // ANIDAMIENTO DE LA P DENTRO DEL DIV MEDIANTE DOM
+    if (passwordStrengthDiv && passwordHint) {
+        // Aseguramos que la etiqueta P sea hija del DIV al cargar el DOM
+        if (passwordStrengthDiv.parentNode === passwordHint.parentNode) {
+            passwordStrengthDiv.appendChild(passwordHint);
+        }
+    }
+
+    // Forzamos a que la función se ejecute al inicio para ocultar los elementos vacíos
+    if (passwordInput && passwordStrengthDiv && passwordHint) {
+        // La función calculatePasswordStrength debe existir y devolver {level: 'none'}
+        const initialStrength = calculatePasswordStrength(passwordInput.value); 
+        updatePasswordStrengthUI(initialStrength, passwordStrengthDiv, passwordHint);
+    }
+
+    // Validación de fortaleza de contraseña (el event listener original)
+    if (passwordInput && passwordStrengthDiv) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            const strength = calculatePasswordStrength(password);
+            updatePasswordStrengthUI(strength, passwordStrengthDiv, passwordHint);
+        });
     }
 
     // Función auxiliar para gestionar estados del botón principal
@@ -291,14 +308,19 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {HTMLElement} strengthDiv 
      * @param {HTMLElement} hintElement 
      */
-    function updatePasswordStrengthUI(strength, strengthDiv, hintElement) {
+    /* function updatePasswordStrengthUI(strength, strengthDiv, hintElement) {
         // Limpiar clases anteriores
         strengthDiv.className = 'password-strength';
         
-        if (strength.level === 'none') {
+        let strengthTextSpan = strengthDiv.querySelector('.strength-label');
+
+        if (strength.level === 'none' || passwordInput.value.length === 0) {
             strengthDiv.style.display = 'none';
             hintElement.textContent = 'Mínimo 6 caracteres';
             hintElement.className = 'hint';
+            hintElement.style.display = 'block';
+            if (strengthTextSpan) strengthTextSpan.remove();
+            return;
         } else {
             strengthDiv.classList.add(strength.level);
             
@@ -327,6 +349,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 hintElement.className = 'hint success';
             }
         }
+    } */
+
+    function updatePasswordStrengthUI(strength, strengthDiv, hintElement) {
+        // 1. Limpiar y configurar el DIV padre
+        strengthDiv.className = 'password-strength';
+        
+        // 2. Buscamos el SPAN para el texto de Fortaleza (o lo creamos si fue eliminado)
+        let strengthTextSpan = strengthDiv.querySelector('.strength-label');
+
+        if (strength.level === 'none' || passwordInput.value.length === 0) {
+            // CRÍTICO: Eliminamos !important y forzamos 'none'
+            strengthDiv.style.display = 'none'; 
+            hintElement.textContent = 'Mínimo 6 caracteres';
+            hintElement.className = 'hint';
+            hintElement.style.display = 'block';
+            if (strengthTextSpan) strengthTextSpan.remove();
+            return;
+        }
+        
+        // 3. Si hay contenido, configuramos el display y la clase de color
+        strengthDiv.style.display = 'block'; 
+        strengthDiv.classList.add(strength.level);
+        
+        // 4. Crear el SPAN si no existe (la primera vez)
+        if (!strengthTextSpan) {
+            strengthTextSpan = document.createElement('span');
+            strengthTextSpan.className = 'strength-label';
+            // Insertamos el nuevo span antes del elemento P (hintElement), que ya está anidado
+            strengthDiv.insertBefore(strengthTextSpan, hintElement); 
+        }
+
+        // 5. Asignar el texto al SPAN (no destructivo)
+        let strengthText = '';
+        switch (strength.level) {
+            case 'weak':
+                strengthText = 'Débil';
+                break;
+            case 'medium':
+                strengthText = 'Media';
+                break;
+            case 'strong':
+                strengthText = 'Fuerte';
+                break;
+        }
+        
+        strengthTextSpan.textContent = `Fortaleza: ${strengthText}`;
+        
+        // 6. Actualizar hint (P)
+        if (strength.feedback.length > 0) {
+            hintElement.textContent = strength.feedback.join(' • '); // Uso punto medio para un look más limpio
+            hintElement.className = 'hint warning';
+        } else {
+            hintElement.textContent = '✓ Contraseña segura';
+            hintElement.className = 'hint success';
+        }
+        
+        hintElement.style.display = 'block';
     }
 
     /**
