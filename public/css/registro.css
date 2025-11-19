@@ -193,14 +193,21 @@ button:disabled {
 
 /* Validación de contraseña */
 .password-strength {
-    display: inline-block; 
+    /* Mantenemos el inline-block para que se ajuste al ancho del texto */
+    display: block; 
+    
+    width: fit-content; 
+    max-width: 100%;
+
     padding: 4px 8px; 
     border-radius: 4px;
     font-size: 0.8em;
     font-weight: 600;
-    margin-top: 5px; /* Para separarlo del input */
+    margin-top: 5px;
+    margin-bottom: 8px; 
     text-align: center;
-    color: white; /* Asegurar que el texto sea visible */
+    color: white; 
+    box-sizing: border-box;
 }
 
 .password-strength.weak {
@@ -226,19 +233,26 @@ button:disabled {
 
 /* Estilos para hints */
 .hint {
-  font-size: 0.75rem;
-  margin-top: 0.3rem;
-  color: #6b7280;
+    /* CRÍTICO: Forzar a que inicie una nueva línea debajo del indicador de fortaleza */
+    display: block !important; 
+    clear: both; /* Evita problemas con cualquier float */
+    
+    font-size: 0.9em;
+    margin-top: 5px; 
+    margin-bottom: 5px;
+    padding-left: 9px; /* Asegura que no haya desplazamiento innecesario */
+    line-height: 1.5;
 }
 
+/* Estilos de color para los mensajes del hint */
 .hint.success {
-  color: #059669;
+    color: #2ecc40; /* Verde */
 }
 
 .hint.warning {
-  color: #d97706;
+    color: #ff851b; /* Naranja */
 }
 
 .hint.error {
-  color: #dc2626;
+    color: #ff4136; /* Rojo */
 }

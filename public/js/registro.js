@@ -292,6 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
             strengthDiv.style.display = 'none';
             hintElement.textContent = 'Mínimo 6 caracteres';
             hintElement.className = 'hint';
+            hintElement.style.display = 'block';
         } else {
             strengthDiv.style.display = 'block';
             strengthDiv.classList.add(strength.level);
@@ -320,6 +321,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 hintElement.textContent = '✓ Contraseña segura';
                 hintElement.className = 'hint success';
             }
+
+            hintElement.style.display = 'block';
         }
     }
 
