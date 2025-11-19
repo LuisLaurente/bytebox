@@ -5,13 +5,14 @@
 
 <body>
 <?php
-$isAdmin = isset($usuario['rol_nombre']) && $usuario['rol_nombre'] === 'admin';
-
-// Solo mostrar header si NO es admin
-if (!$isAdmin) {
-    include_once __DIR__ . '/../admin/includes/header.php';
-}
+// Mostrar header y footer SOLO para usuarios regulares
+$isRegularUser = isset($usuario['rol_nombre']) && $usuario['rol_nombre'] === 'usuario';
 ?>
+
+<?php if ($isRegularUser): ?>
+    <!-- Solo mostrar header si ES usuario regular -->
+    <?php include_once __DIR__ . '/../admin/includes/header.php'; ?>
+<?php endif; ?>
 
 <div class="main-wrapper">
     <!-- Barra lateral -->
@@ -22,7 +23,7 @@ if (!$isAdmin) {
     <!-- Contenido principal -->
     <div class="main-content">
         <div class="profile-container">
-            <h1><?= $isAdmin ? 'Administrador' : 'Mi Cuenta' ?></h1>
+            <h1><?= $isRegularUser ? 'Mi Cuenta' : 'Administración' ?></h1>
 
             <!-- Mensajes -->
             <?php if (!empty($_GET['success'])): ?>
@@ -91,8 +92,8 @@ if (!$isAdmin) {
                 </div>
             </div>
 
-            <?php if (!$isAdmin): ?>
-                <!-- Mis Pedidos -->
+            <?php if ($isRegularUser): ?>
+                <!-- Mis Pedidos - Solo para usuarios regulares -->
                 <div class="orders-card">
                     <h3>Mis Pedidos</h3>
                     <a href="<?= url('/usuario/pedidos') ?>" class="button orders-button">
@@ -100,7 +101,7 @@ if (!$isAdmin) {
                     </a>
                 </div>
 
-                <!-- Mis Direcciones -->
+                <!-- Mis Direcciones - Solo para usuarios regulares -->
                 <div class="orders-card">
                     <h3>Mis Direcciones</h3>
                     <a href="<?= url('/usuario/mis-direcciones') ?>" class="button orders-button">
@@ -112,11 +113,9 @@ if (!$isAdmin) {
     </div>
 </div>
 
-<?php
-// Solo mostrar footer si NO es admin
-if (!$isAdmin) {
-    include_once __DIR__ . '/../admin/includes/footer.php';
-}
-?>
+<?php if ($isRegularUser): ?>
+    <!-- Solo mostrar footer si ES usuario regular -->
+    <?php include_once __DIR__ . '/../admin/includes/footer.php'; ?>
+<?php endif; ?>
 </body>
 </html>
