@@ -369,7 +369,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // 3. Si hay contenido, configuramos el display y la clase de color
-        strengthDiv.style.display = 'block'; 
+        strengthDiv.style.display = 'inline-flex';
+        strengthDiv.style.flexDirection = 'column';
+        strengthDiv.style.justifyContent = 'center';
+        strengthDiv.style.alignItems = 'flex-start';
         strengthDiv.classList.add(strength.level);
         
         // 4. Crear el SPAN si no existe (la primera vez)

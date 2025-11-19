@@ -194,16 +194,13 @@ button:disabled {
 /* Validación de contraseña */
 .password-strength {
     /* CRÍTICO: Usamos inline-flex para compacidad horizontal y Flexbox para control vertical */
-    display: inline-flex !important; 
-    flex-direction: column; /* Apila el SPAN y el P */
-    justify-content: center; /* Centrar verticalmente el contenido */
-    align-items: flex-start; /* Alinear contenido a la izquierda */
+    display: none; 
 
     width: fit-content; 
     white-space: nowrap; 
 
     /* Margen: 0 arriba, 5px abajo (espacio respecto al siguiente form-group) */
-    margin: 8px 0 5px 0; 
+    margin: 8px 0 0 0; 
     
     padding: 23px 8px; /* Espacio interno del recuadro */
     border-radius: 4px;
