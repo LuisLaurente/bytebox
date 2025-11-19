@@ -624,6 +624,7 @@ class AuthController extends BaseController
         
         // 2. Validaciones básicas
         $errores = [];
+
         if (empty($nombre)) $errores[] = 'El nombre es requerido';
         elseif (strlen($nombre) < 2) $errores[] = 'El nombre debe tener al menos 2 caracteres';
         
@@ -635,6 +636,13 @@ class AuthController extends BaseController
 
         if ($password !== $confirm) $errores[] = 'Las contraseñas no coinciden';
 
+        // Verificar si el email ya existe
+            if (empty($errores)) {
+                $usuarioExistente = $this->usuarioModel->obtenerPorEmail($email);
+                if ($usuarioExistente) {
+                    $errores[] = 'Ya existe un usuario con este email';
+                }
+            }
 
         if (!empty($errores)) {
             echo json_encode(['success' => false, 'message' => implode(', ', $errores)]);

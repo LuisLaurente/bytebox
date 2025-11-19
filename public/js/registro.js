@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('redirect', getRedirectParam());
 
             // 1.2. Petición AJAX al endpoint de INICIO (Paso 1 del Backend)
-            fetch(form.action, { // Usar form.action, que es "/auth/procesarRegistro" (el router se encargará)
+            fetch('/bytebox/public/auth/iniciarRegistro', { // RUTA CORREGIDA
                 method: 'POST',
                 body: formData
             })
