@@ -9,6 +9,7 @@ use Core\Helpers\Validator;
 use Core\Helpers\CsrfHelper;
 use Core\Helpers\LoginRateHelper;
 use Core\Helpers\SecurityLogger;
+use Core\Helpers\MailHelper;
 
 use Core\Helpers\CookieHelper;
 use Core\Helpers\RememberMeHelper;
@@ -428,7 +429,7 @@ class AuthController extends BaseController
      * Si la solicitud es AJAX, inicia el proceso de verificación de email.
      * Si no es AJAX (comportamiento legacy), realiza el registro directo (NO RECOMENDADO).
      */
-    public function procesarRegistro()
+    /*public function procesarRegistro()
     {
         // === NUEVO: Comprobación para ver si es una solicitud AJAX ===
         $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
@@ -574,6 +575,26 @@ class AuthController extends BaseController
             header('Location: ' . url("/auth/registro?error=$error$redirectParam"));
             exit;
         }
+    }
+*/
+
+    public function procesarRegistro()
+    {
+        // 1. Detección de AJAX (Método estándar para JavaScript fetch)
+        // La cabecera X-Requested-With puede no estar en todas las peticiones fetch modernas.
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+        
+        // Asumiremos que si el cliente ha implementado el JS del Paso 7, toda petición POST a esta URL 
+        // DEBE ser para iniciar el proceso de verificación.
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // El JS llama a esta URL. Re-enrutamos internamente al nuevo endpoint AJAX.
+            return $this->iniciarRegistro(); 
+        }
+
+        // Si es GET o no es POST, se asume que es una navegación normal de fallback.
+        header('Location: ' . url('/auth/registro'));
+        exit;
     }
 
     /**
