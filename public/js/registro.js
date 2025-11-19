@@ -85,9 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault(); // 🛑 Detener el envío síncrono inmediatamente
 
             // 1.1. Validaciones finales (Cliente)
-            if (!validateForm()) { 
-                toggleSubmitButton(false); // Restaurar botón si la validación cliente falla
-                return false;
+            const isValid = validateForm(); // Usamos la validación que ya creaste
+            if (!isValid) { 
+                // Si la validación falla, restauramos el botón y salimos
+                toggleSubmitButton(false); 
+                return false; 
             }
             
             toggleSubmitButton(true, 'Enviando código...'); // Mostrar spinner
