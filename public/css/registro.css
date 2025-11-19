@@ -193,28 +193,32 @@ button:disabled {
 
 /* Validación de contraseña */
 .password-strength {
-  margin-top: 0.5rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-align: center;
-  display: none;
+    display: inline-block; 
+    padding: 4px 8px; 
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    margin-top: 5px; /* Para separarlo del input */
+    text-align: center;
+    color: white; /* Asegurar que el texto sea visible */
 }
 
 .password-strength.weak {
+  background-color: #ff4136;
   background: #fee2e2;
   color: #dc2626;
   border: 1px solid #fecaca;
 }
 
 .password-strength.medium {
+  background-color: #ff851b;
   background: #fef3c7;
   color: #d97706;
   border: 1px solid #fed7aa;
 }
 
 .password-strength.strong {
+  background-color: #2ecc40;
   background: #d1fae5;
   color: #059669;
   border: 1px solid #a7f3d0;

@@ -145,7 +145,7 @@
 .btn-link { background: none; border: none; color: #888; cursor: pointer; text-decoration: underline; }
 </style>
 
-    <script src="<?= url('public/js/registro.js') ?>"></script>
+    <script src="<?= url('/js/registro.js') ?>"></script>
 </body>
 
 </html>
