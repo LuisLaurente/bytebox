@@ -21,6 +21,12 @@ class Router
         'facebookauth/login' => ['controller' => 'FacebookAuthController', 'method' => 'login'], // ← NUEVA
         'auth/facebook/login' => ['controller' => 'FacebookAuthController', 'method' => 'login'],
         'auth/facebook/callback' => ['controller' => 'FacebookAuthController', 'method' => 'callback'],
+
+        // === NUEVAS RUTAS DE REGISTRO AJAX ===
+        'auth/iniciarRegistro' => ['controller' => 'AuthController', 'method' => 'iniciarRegistro'],
+        'auth/verificarCodigoRegistro' => ['controller' => 'AuthController', 'method' => 'verificarCodigoRegistro'],
+        // ======================================
+
         // Pagos
         'pago/crear-pago-mercado-pago' => ['controller' => 'PagoController', 'method' => 'crearPagoMercadoPago'],
         'pago/exito' => ['controller' => 'PagoController', 'method' => 'exito'],

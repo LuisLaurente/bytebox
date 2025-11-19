@@ -4,6 +4,7 @@
         "league/oauth2-google": "^4.0",
         "league/oauth2-facebook": "^2.2",
         "mercadopago/dx-php": "^3.7",
-        "ralouphie/getallheaders": "^3.0"
+        "ralouphie/getallheaders": "^3.0",
+        "phpmailer/phpmailer": "^7.0"
     }
 }

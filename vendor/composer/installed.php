@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => 'dev-copia1',
-        'version' => 'dev-copia1',
-        'reference' => '4a55b695a37c5a7d08c5a27b85f222a203361a42',
+        'pretty_version' => 'dev-WickedPrueba',
+        'version' => 'dev-WickedPrueba',
+        'reference' => '2b08c8e7ebfb1ecbd918b8e3ed80c72533654bd2',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => 'dev-copia1',
-            'version' => 'dev-copia1',
-            'reference' => '4a55b695a37c5a7d08c5a27b85f222a203361a42',
+            'pretty_version' => 'dev-WickedPrueba',
+            'version' => 'dev-WickedPrueba',
+            'reference' => '2b08c8e7ebfb1ecbd918b8e3ed80c72533654bd2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -79,6 +79,15 @@
             'reference' => '1805d569d427c6f96baf71a18144193a64872904',
             'type' => 'library',
             'install_path' => __DIR__ . '/../mercadopago/dx-php',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'phpmailer/phpmailer' => array(
+            'pretty_version' => 'v7.0.0',
+            'version' => '7.0.0.0',
+            'reference' => 'c7111310c6116ba508a6a170a89eaaed2129bd42',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

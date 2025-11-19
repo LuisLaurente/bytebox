@@ -96,6 +96,55 @@
             </div>
         <?php endif; ?>
     </div>
+
+    <div id="verificationModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><span class="icon">✉️</span> Verifica tu correo</h3>
+            <p>Hemos enviado un código a <strong id="modalEmailDisplay"></strong></p>
+        </div>
+        
+        <div class="modal-body">
+            <div class="code-inputs">
+                <input type="text" id="verificationCode" placeholder="123456" maxlength="6" autocomplete="off">
+            </div>
+            <div id="modalError" class="error-msg" style="display:none; color: red; margin-top: 10px;"></div>
+            <div id="modalSuccess" class="success-msg" style="display:none; color: green; margin-top: 10px;">¡Verificado! Redirigiendo...</div>
+        </div>
+
+        <div class="modal-footer">
+            <button id="btnVerify" type="button" class="btn-primary">Verificar y Crear Cuenta</button>
+            <button id="btnResend" type="button" class="btn-link">Reenviar código</button>
+            <button id="btnCancel" type="button" class="btn-link close-modal">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Estilos rápidos para el modal (Mover a registro.css idealmente) */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(5px);
+}
+.modal-content {
+    background: #1a1a1a; border: 1px solid #333; padding: 30px;
+    border-radius: 15px; width: 90%; max-width: 400px;
+    text-align: center; color: white;
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+}
+#verificationCode {
+    width: 100%; padding: 15px; font-size: 24px; text-align: center;
+    letter-spacing: 8px; background: #000; border: 2px solid #333;
+    color: #00d2ff; border-radius: 8px; margin-top: 15px;
+}
+#verificationCode:focus { border-color: #00d2ff; outline: none; }
+.modal-footer { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+.btn-primary { background: linear-gradient(45deg, #00d2ff, #0078ff); border: none; padding: 12px; color: white; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.btn-link { background: none; border: none; color: #888; cursor: pointer; text-decoration: underline; }
+</style>
+
     <script src="<?= url('public/js/registro.js') ?>"></script>
 </body>
 

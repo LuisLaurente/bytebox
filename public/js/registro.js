@@ -5,6 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('registroForm');
+    const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirm_password');
     const passwordStrengthDiv = document.getElementById('passwordStrength');
@@ -13,6 +14,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submitBtn');
     const submitText = document.getElementById('submitText');
     const submitSpinner = document.getElementById('submitSpinner');
+
+    // === NUEVAS CONSTANTES DEL MODAL ===
+    const modal = document.getElementById('verificationModal');
+    const modalEmailDisplay = document.getElementById('modalEmailDisplay');
+    const codeInput = document.getElementById('verificationCode');
+    const btnVerify = document.getElementById('btnVerify');
+    const btnResend = document.getElementById('btnResend');
+    const btnCancel = document.getElementById('btnCancel');
+    const msgError = document.getElementById('modalError');
+    const msgSuccess = document.getElementById('modalSuccess');
+
+    // Función auxiliar para gestionar estados del botón principal
+    function toggleSubmitButton(isLoading, message = 'Crear Cuenta Gratis') {
+        if (isLoading) {
+            submitText.classList.add('hidden');
+            submitSpinner.classList.remove('hidden');
+            submitBtn.disabled = true;
+        } else {
+            submitText.textContent = message;
+            submitText.classList.remove('hidden');
+            submitSpinner.classList.add('hidden');
+            submitBtn.disabled = false;
+        }
+    }
+
+    // Función auxiliar para obtener el redirect de la URL
+    function getRedirectParam() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('redirect') || '';
+    }
 
     // Validación de fortaleza de contraseña
     if (passwordInput && passwordStrengthDiv) {
@@ -44,28 +75,161 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Manejo del envío del formulario
+    // ---------------------------------------------------------------------
+    // 1. MANEJO DE ENVÍO DEL FORMULARIO (NUEVA LÓGICA AJAX)
+    // ---------------------------------------------------------------------
     if (form) {
         form.addEventListener('submit', function(e) {
-            // Mostrar spinner de carga
-            if (submitText && submitSpinner) {
-                submitText.classList.add('hidden');
-                submitSpinner.classList.remove('hidden');
-                submitBtn.disabled = true;
-            }
+            e.preventDefault(); // 🛑 DETENER EL ENVÍO NORMAL
 
-            // Validaciones finales antes del envío
-            const isValid = validateForm();
-            if (!isValid) {
-                e.preventDefault();
-                // Restaurar botón
-                if (submitText && submitSpinner) {
-                    submitText.classList.remove('hidden');
-                    submitSpinner.classList.add('hidden');
-                    submitBtn.disabled = false;
-                }
-                return false;
+            // 1.1. Validaciones finales (JS)
+            if (!validateForm()) { // Usamos tu función validateForm() original
+                return; // Si falla la validación del lado del cliente, detener aquí
             }
+            
+            toggleSubmitButton(true); // Mostrar spinner
+
+            const formData = new FormData(form);
+            // Añadir el parámetro redirect si existe en la URL para llevarlo al backend
+            formData.append('redirect', getRedirectParam());
+
+            // 1.2. Petición AJAX al endpoint de INICIO (Paso 1 del Backend)
+            fetch('/bytebox/public/auth/iniciarRegistro', { // Ajusta la URL base si es necesario
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // 1.3. ÉXITO: Mostrar Modal
+                    modalEmailDisplay.textContent = emailInput.value;
+                    modal.style.display = 'flex';
+                    codeInput.value = ''; // Limpiar código anterior
+                    msgError.style.display = 'none';
+                    msgSuccess.style.display = 'none';
+                    codeInput.focus();
+                } else {
+                    // 1.4. FALLO: Mostrar error en el formulario principal
+                    alert('Error en el registro: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error('Error de red/servidor:', err);
+                alert('Ocurrió un error de conexión. Intenta nuevamente.');
+            })
+            .finally(() => {
+                toggleSubmitButton(false); // Restaurar botón
+            });
+        });
+    }
+
+    // ---------------------------------------------------------------------
+    // 2. LÓGICA DEL MODAL (Verificación de Código)
+    // ---------------------------------------------------------------------
+
+    // 2.1. Botón de Verificar (Finalizar Registro)
+    btnVerify.addEventListener('click', function() {
+        const code = codeInput.value.trim();
+        
+        if (code.length !== 6) {
+            msgError.textContent = "El código debe tener 6 dígitos.";
+            msgError.style.display = 'block';
+            return;
+        }
+
+        btnVerify.textContent = "Verificando...";
+        btnVerify.disabled = true;
+        msgError.style.display = 'none';
+
+        const formData = new FormData();
+        formData.append('email', emailInput.value);
+        formData.append('codigo', code);
+        formData.append('redirect', getRedirectParam());
+
+        // Petición AJAX al endpoint de VERIFICACIÓN (Paso 2 del Backend)
+        fetch('/bytebox/public/auth/verificarCodigoRegistro', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // ÉXITO: Redirección final
+                msgSuccess.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = data.redirect;
+                }, 1000);
+            } else {
+                // FALLO: Mostrar error en el modal
+                msgError.textContent = data.message;
+                msgError.style.display = 'block';
+                btnVerify.textContent = "Verificar y Crear Cuenta";
+                btnVerify.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error('Error de verificación:', err);
+            msgError.textContent = "Error de conexión o servidor.";
+            msgError.style.display = 'block';
+            btnVerify.textContent = "Verificar y Crear Cuenta";
+            btnVerify.disabled = false;
+        });
+    });
+    
+    // 2.2. Botón de Cancelar/Cerrar Modal
+    if (btnCancel) {
+        btnCancel.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    }
+
+    // 2.3. Lógica del botón Reenviar Código (Opcional, seguridad mejorada)
+    if (btnResend) {
+        btnResend.addEventListener('click', function() {
+            // Aquí puedes implementar una llamada AJAX separada
+            // a un nuevo método del controlador: AuthController::reenviarCodigo()
+            // Por ahora, solo simular carga y feedback, y luego pedir al usuario que reintente.
+            
+            btnResend.disabled = true;
+            btnResend.textContent = "Reenviando...";
+            msgError.style.display = 'none';
+
+            // Simulación de reenvío: Llama de nuevo a iniciarRegistro
+            const formData = new FormData(form);
+            formData.append('redirect', getRedirectParam()); // Mantener los datos originales
+            
+            fetch('/bytebox/public/auth/iniciarRegistro', { 
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    msgError.textContent = "¡Nuevo código enviado! Revisa tu bandeja.";
+                    msgError.style.color = 'green';
+                } else {
+                    msgError.textContent = data.message || "Error al reenviar. Intenta de nuevo más tarde.";
+                    msgError.style.color = 'red';
+                }
+            })
+            .catch(err => {
+                msgError.textContent = "Error de conexión al reenviar.";
+                msgError.style.color = 'red';
+            })
+            .finally(() => {
+                btnResend.textContent = "Reenviar código";
+                // Añadir un retardo de seguridad (ej. 30 segundos) antes de permitir otro reenvío
+                setTimeout(() => {
+                    btnResend.disabled = false;
+                    msgError.style.color = 'red'; // Restablecer color de error
+                }, 30000); 
+                msgError.style.display = 'block';
+            });
         });
     }
 

@@ -424,10 +424,21 @@ class AuthController extends BaseController
     }
 
     /**
-     * Procesar registro de nuevo usuario
+     * Procesar registro de nuevo usuario.
+     * Si la solicitud es AJAX, inicia el proceso de verificación de email.
+     * Si no es AJAX (comportamiento legacy), realiza el registro directo (NO RECOMENDADO).
      */
     public function procesarRegistro()
     {
+        // === NUEVO: Comprobación para ver si es una solicitud AJAX ===
+        $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+        
+        if ($isAjax) {
+            // Si es AJAX (desde el JS que implementamos), dirigimos al nuevo método de inicio.
+            // La lógica de iniciarRegistro es la que antes se sugirió como "iniciarRegistro".
+            return $this->iniciarRegistro();
+        }
+        
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . url('/auth/registro'));
             exit;
@@ -563,6 +574,164 @@ class AuthController extends BaseController
             header('Location: ' . url("/auth/registro?error=$error$redirectParam"));
             exit;
         }
+    }
+
+    /**
+     * Recibe datos (vía AJAX), valida, guarda en temporal y envía email.
+     * Este método reemplaza la lógica principal del anterior procesarRegistro.
+     */
+    public function iniciarRegistro() {
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+            exit;
+        }
+
+        // 1. Validar CSRF (Usamos 'false' en validateToken porque el token se usará dos veces: iniciar y verificar)
+        $csrfToken = $_POST['csrf_token'] ?? '';
+        if (empty($csrfToken) || !\Core\Helpers\CsrfHelper::validateToken($csrfToken, 'registro_form', false)) { 
+            echo json_encode(['success' => false, 'message' => 'Error de seguridad (Token inválido o expirado). Recarga la página.']);
+            // Nota: No usar SecurityLogger aquí para no exponer emails inexistentes en logs, ya que aún no se valida existencia.
+            exit;
+        }
+
+        $nombre = trim($_POST['nombre'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $confirm = $_POST['confirm_password'] ?? '';
+        
+        // 2. Validaciones básicas
+        $errores = [];
+        if (empty($nombre)) $errores[] = 'El nombre es requerido';
+        elseif (strlen($nombre) < 2) $errores[] = 'El nombre debe tener al menos 2 caracteres';
+        
+        if (empty($email)) $errores[] = 'El email es requerido';
+        elseif (!\Core\Helpers\Validator::email($email)) $errores[] = 'El email no es válido';
+        
+        if (empty($password)) $errores[] = 'La contraseña es requerida';
+        elseif (strlen($password) < 6) $errores[] = 'La contraseña debe tener al menos 6 caracteres';
+
+        if ($password !== $confirm) $errores[] = 'Las contraseñas no coinciden';
+
+
+        if (!empty($errores)) {
+            echo json_encode(['success' => false, 'message' => implode(', ', $errores)]);
+            exit;
+        }
+
+        // 3. Verificar si ya existe en la tabla REAL de usuarios
+        if ($this->usuarioModel->obtenerPorEmail($email)) {
+            echo json_encode(['success' => false, 'message' => 'Este correo ya está registrado. Intenta iniciar sesión.']);
+            exit;
+        }
+
+        // 4. Generar Código, Hash de Password y Expiración
+        $codigo = rand(100000, 999999); 
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+
+        // 5. Guardar/Actualizar en tabla TEMPORAL (registros_pendientes)
+        try {
+            $db = \Core\Database::getInstance()->getConnection();
+            
+            // Limpiar intentos previos de este email y luego insertar
+            $stmt = $db->prepare("DELETE FROM registros_pendientes WHERE email = ?");
+            $stmt->execute([$email]);
+
+            $sql = "INSERT INTO registros_pendientes (nombre, email, password, codigo, expira_en) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$nombre, $email, $passwordHash, $codigo, $expira]);
+
+            // 6. Enviar Email con el código de verificación
+            if (\Core\Helpers\MailHelper::enviarCodigoVerificacion($email, $nombre, $codigo)) {
+                echo json_encode(['success' => true, 'message' => 'Código enviado']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error al enviar el correo. Verifica tu dirección y reintenta.']);
+            }
+
+        } catch (\Exception $e) {
+            error_log("Error en iniciarRegistro: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Error interno del servidor al procesar el registro.']);
+        }
+        exit;
+    }
+
+    /**
+     * Recibe código, verifica y mueve a tabla usuarios real
+     */
+    public function verificarCodigoRegistro() {
+        header('Content-Type: application/json');
+        
+        $email = $_POST['email'] ?? '';
+        $codigo = $_POST['codigo'] ?? '';
+        $redirect = $_POST['redirect'] ?? '';
+
+        if (empty($email) || empty($codigo)) {
+            echo json_encode(['success' => false, 'message' => 'Datos incompletos']);
+            exit;
+        }
+
+        $db = \Core\Database::getInstance()->getConnection();
+
+        // 1. Buscar el registro pendiente y validar expiración
+        $stmt = $db->prepare("SELECT * FROM registros_pendientes WHERE email = ? AND expira_en > NOW() ORDER BY id DESC LIMIT 1");
+        $stmt->execute([$email]);
+        $pendiente = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$pendiente) {
+            echo json_encode(['success' => false, 'message' => 'El código ha expirado o el email no es válido. Regístrate de nuevo.']);
+            exit;
+        }
+
+        // 2. Verificar Código
+        if ($pendiente['codigo'] !== $codigo) {
+            // Incrementar intentos (seguridad básica)
+            $db->prepare("UPDATE registros_pendientes SET intentos = intentos + 1 WHERE id = ?")->execute([$pendiente['id']]);
+            echo json_encode(['success' => false, 'message' => 'Código incorrecto']);
+            exit;
+        }
+
+        // 3. ÉXITO: Crear usuario REAL (REUTILIZANDO EL MODELO)
+        try {
+            $usuarioData = [
+                'nombre' => $pendiente['nombre'],
+                'email' => $pendiente['email'],
+                'password' => $pendiente['password'], // Se pasa el hash, el modelo lo inserta directamente.
+                'rol_id' => 2, // Cliente por defecto
+                'activo' => 1
+                // Se omiten datos como 'telefono' porque no se recogieron en el formulario de registro
+            ];
+
+            // 📢 ¡REUTILIZACIÓN DEL MÉTODO DEL MODELO!
+            $usuarioId = $this->usuarioModel->crear($usuarioData);
+
+            if (!$usuarioId) {
+                // Esto podría ocurrir si la conexión falla o hay error de PDO.
+                throw new \Exception("Error al finalizar la creación del usuario en la base de datos.");
+            }
+
+            // 4. Borrar registro pendiente
+            // Este DELETE debe hacerse aquí (en el controlador) ya que la tabla 'registros_pendientes' es lógica temporal del proceso.
+            $db->prepare("DELETE FROM registros_pendientes WHERE email = ?")->execute([$email]);
+            
+            // 5. Auto-Login y Redirección
+            $usuario = $this->usuarioModel->obtenerPorId($usuarioId);
+            $rol = $this->rolModel->obtenerPorId($usuario['rol_id']);
+
+            \Core\Helpers\SessionHelper::login($usuario, $rol);
+            // El resto de la lógica de cookies, carrito y logs permanece...
+            \Core\Helpers\CartPersistenceHelper::transferGuestCartToUser($usuarioId);
+            
+            $targetUrl = !empty($redirect) ? url($redirect) : url('/auth/profile');
+            
+            echo json_encode(['success' => true, 'redirect' => $targetUrl]);
+
+        } catch (\Exception $e) {
+            error_log("Error finalizando registro: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Error interno al crear la cuenta.']);
+        }
+        exit;
     }
 
     /* ================================
