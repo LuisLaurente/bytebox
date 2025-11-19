@@ -25,6 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const msgError = document.getElementById('modalError');
     const msgSuccess = document.getElementById('modalSuccess');
 
+    if (passwordStrengthDiv && passwordHint && passwordStrengthDiv.parentNode === passwordHint.parentNode) {
+        // Mueve la etiqueta <p> (passwordHint) para que sea el último hijo del <div> (passwordStrengthDiv)
+        passwordStrengthDiv.appendChild(passwordHint);
+        // Esto consolida ambos elementos en el mismo contenedor padre lógico.
+        console.log("✅ Anidamiento DOM: El hint (P) ahora es hijo del strengthDiv (DIV).");
+    }
+
     // Función auxiliar para gestionar estados del botón principal
     function toggleSubmitButton(isLoading, message = 'Crear Cuenta Gratis') {
         if (isLoading) {
@@ -292,9 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
             strengthDiv.style.display = 'none';
             hintElement.textContent = 'Mínimo 6 caracteres';
             hintElement.className = 'hint';
-            hintElement.style.display = 'block';
         } else {
-            strengthDiv.style.display = 'block';
             strengthDiv.classList.add(strength.level);
             
             // Texto del indicador
@@ -315,14 +320,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Actualizar hint
             if (strength.feedback.length > 0) {
-                hintElement.textContent = strength.feedback.join(', ');
+                hintElement.textContent = strength.feedback.join(' • '); // Separador más limpio
                 hintElement.className = 'hint warning';
             } else {
                 hintElement.textContent = '✓ Contraseña segura';
                 hintElement.className = 'hint success';
             }
-
-            hintElement.style.display = 'block';
         }
     }
 
