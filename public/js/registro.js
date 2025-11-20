@@ -39,6 +39,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // ------------------------------------------------------
+    // 1. LÓGICA DE APERTURA AUTOMÁTICA (El "Flag")
+    // ------------------------------------------------------
+    const autoOpenFlag = document.getElementById('flag-auto-open-modal');
+    
+    if (autoOpenFlag) {
+        const savedEmail = autoOpenFlag.getAttribute('data-email');
+        
+        if (savedEmail) {
+            // Restaurar el email en el input principal por si se borró
+            if (emailInput) emailInput.value = savedEmail;
+            
+            // Configurar UI del modal
+            if (modalEmailDisplay) modalEmailDisplay.textContent = savedEmail;
+            
+            // Abrir el modal
+            if (modal) modal.style.display = 'flex';
+            
+            // Iniciar el timer de reenvío inmediatamente (UX)
+            startResendTimer(60); 
+            
+            // Enfocar el input del código
+            if (codeInput) codeInput.focus();
+            
+            console.log("✅ Modal abierto automáticamente tras reenvío.");
+        }
+    }
+
     // Forzamos a que la función se ejecute al inicio para ocultar los elementos vacíos
     if (passwordInput && passwordStrengthDiv && passwordHint) {
         // La función calculatePasswordStrength debe existir y devolver {level: 'none'}
@@ -267,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
             msgError.style.display = 'none';
 
             // 3. Recolectar datos
-            const email = document.getElementById('email').value;
+            //const email = document.getElementById('email').value;
             const redirect = getRedirectParam();
             
             // 4. Crear un formulario dinámico (mecanismo para POST síncrono)
@@ -275,29 +303,49 @@ document.addEventListener('DOMContentLoaded', function() {
             tempForm.method = 'POST';
             tempForm.action = '/bytebox/public/auth/reenviarCodigo'; // <--- APUNTAR A LA NUEVA RUTA
             
-            // Campos necesarios para el POST
-            const emailInput = document.createElement('input');
-            emailInput.type = 'hidden';
-            emailInput.name = 'email';
-            emailInput.value = email;
-            tempForm.appendChild(emailInput);
+            // Input Email
+            const inputEmail = document.createElement('input');
+            inputEmail.type = 'hidden';
+            inputEmail.name = 'email';
+            inputEmail.value = emailInput.value; // Tomar del formulario principal
+            tempForm.appendChild(inputEmail);
 
-            const redirectInput = document.createElement('input');
+            // Input CSRF (Tomado del formulario principal)
+            const csrfOriginal = form.querySelector('input[name="csrf_token"]');
+            if (csrfOriginal) {
+                const inputCsrf = document.createElement('input');
+                inputCsrf.type = 'hidden';
+                inputCsrf.name = 'csrf_token';
+                inputCsrf.value = csrfOriginal.value;
+                tempForm.appendChild(inputCsrf);
+            }
+            
+            // Input Redirect (si existe)
+            const redirectVal = getRedirectParam();
+            if (redirectVal) {
+                const inputRed = document.createElement('input');
+                inputRed.type = 'hidden';
+                inputRed.name = 'redirect';
+                inputRed.value = redirectVal;
+                tempForm.appendChild(inputRed);
+            }
+
+            /*const redirectInput = document.createElement('input');
             redirectInput.type = 'hidden';
             redirectInput.name = 'redirect';
             redirectInput.value = redirect;
-            tempForm.appendChild(redirectInput);
+            tempForm.appendChild(redirectInput);*/
 
             // Añadir token CSRF (Obtenido del formulario principal)
-            const csrfInput = document.createElement('input');
+            /*const csrfInput = document.createElement('input');
             csrfInput.type = 'hidden';
             csrfInput.name = 'csrf_token';
             // Asumimos que el formulario principal contiene el token
             csrfInput.value = form.querySelector('input[name="csrf_token"]').value; 
-            tempForm.appendChild(csrfInput);
+            tempForm.appendChild(csrfInput);*/
             
             // 5. Ocultar modal, añadir al body y enviar
-            modal.style.display = 'none';
+            //modal.style.display = 'none';
             document.body.appendChild(tempForm);
             tempForm.submit(); // <-- Fuerza la recarga, resolviendo el error de JSON
         });

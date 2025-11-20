@@ -12,7 +12,6 @@ use Core\Helpers\MailHelper;
 use Core\Database;
 
 // 2. Definir cabecera JSON y Output Buffering local
-ob_start(); 
 header('Content-Type: application/json');
 
 $response = ['success' => false, 'message' => 'Error de inicialización.'];

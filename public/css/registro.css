@@ -43,6 +43,21 @@ body {
   color: #2AC1DB;
 }
 
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    /* Si el width es 100% (o similar) en su CSS */
+    width: 100%; 
+    
+    /* CRÍTICO: El arreglo para el desbordamiento */
+    box-sizing: border-box; 
+}
+
+/* Opcional: Si desea aplicarlo de manera más global para todos los inputs */
+input {
+    box-sizing: border-box; 
+}
+
 /* Alertas */
 .alert {
   padding: 0.8rem;

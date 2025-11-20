@@ -985,6 +985,10 @@ class AuthController extends BaseController
     public function reenviarCodigo() {
         // SessionHelper::start() se llama en index.php
         
+        if (session_status() === PHP_SESSION_NONE) {
+            \Core\Helpers\SessionHelper::start();
+        }
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . url('/auth/registro'));
             exit;
@@ -994,10 +998,17 @@ class AuthController extends BaseController
         $redirect = $_POST['redirect'] ?? '';
         
         // 1. Validaciones básicas y CSRF (simplificado, pero necesario)
+        if (empty($email)) {
+            $_SESSION['flash_error'] = 'Email no proporcionado.';
+            header('Location: ' . url('/auth/registro'));
+            exit;
+        }
+
         $csrfToken = $_POST['csrf_token'] ?? '';
         if (empty($csrfToken) || !\Core\Helpers\CsrfHelper::validateToken($csrfToken, 'registro_form', false)) { 
             $_SESSION['flash_error'] = 'Error de seguridad: Token inválido o expirado. Por favor, inténtelo de nuevo.';
-            goto redirect_back;
+            header('Location: ' . url('/auth/registro'));
+            exit;
         }
 
         // 2. Buscamos el registro pendiente
@@ -1005,33 +1016,40 @@ class AuthController extends BaseController
         $stmt = $db->prepare("SELECT * FROM registros_pendientes WHERE email = ? AND expira_en > NOW()");
         $stmt->execute([$email]);
         $pendiente = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        if (!$pendiente) {
-            $_SESSION['flash_error'] = 'El tiempo para el reenvío ha expirado o el email no es válido.';
-            goto redirect_back;
-        }
         
         // 3. Generar y Guardar nuevo código
         $nuevoCodigo = rand(100000, 999999);
         $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+        $nombre = $pendiente['nombre'] ?? 'Usuario'; // Fallback si no se encuentra
         
-        $sql = "UPDATE registros_pendientes SET codigo = ?, expira_en = ? WHERE email = ?";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([$nuevoCodigo, $expira, $email]);
+        // Actualizar o Insertar (Upsert simplificado)
+        // Si ya existe, actualizamos. Si no (caso raro de expiración total), insertamos de nuevo si tenemos datos.
+        if ($pendiente) {
+            $sql = "UPDATE registros_pendientes SET codigo = ?, expira_en = ? WHERE email = ?";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$nuevoCodigo, $expira, $email]);
+        } else {
+             // Si no hay pendiente, redirigimos con error para que se registre de cero
+            $_SESSION['flash_error'] = 'Tu sesión de registro ha expirado. Por favor regístrate nuevamente.';
+            header('Location: ' . url('/auth/registro'));
+            exit;
+        }
 
-        // 4. Enviar Email (Usamos el MailHelper, que ya está protegido con ob_start/clean)
+        // 4. Enviar Email (Usamos el MailHelper, flujo normal)
         if (\Core\Helpers\MailHelper::enviarCodigoVerificacion($email, $pendiente['nombre'], $nuevoCodigo)) {
+            $_SESSION['registro_reenvio_exito'] = true;
+            $_SESSION['registro_email_temp'] = $email;
             $_SESSION['flash_success'] = '¡Nuevo código enviado correctamente! Revisa tu bandeja de entrada.';
         } else {
-            $_SESSION['flash_error'] = 'Error al enviar el correo. Verifique la configuración SMTP.';
+            $_SESSION['flash_error'] = 'Error al enviar el correo. Intenta más tarde.';
         }
 
-        redirect_back:
-        $targetUrl = url('/auth/registro');
+        // 5. Redirigir (Recargar página)
+        $urlDestino = url('/auth/registro');
         if (!empty($redirect)) {
-            $targetUrl .= '?redirect=' . urlencode($redirect);
+            $urlDestino .= '?redirect=' . urlencode($redirect);
         }
-        header('Location: ' . $targetUrl);
+        header('Location: ' . $urlDestino);
         exit;
     }
 }
