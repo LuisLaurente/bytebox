@@ -9,17 +9,15 @@
     <div class="container">
         <?php if (!empty($_SESSION['flash_error'])): ?>
             <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['flash_error']);
-                                            unset($_SESSION['flash_error']); ?></div>
+            unset($_SESSION['flash_error']); ?></div>
         <?php endif; ?>
 
         <!-- ======================================= -->
         <!-- GESTIÓN DE BANNERS PRINCIPALES (CARRUSEL) -->
         <!-- ======================================= -->
         <div id="banner-app-principal" class="banner-manager" data-tipo="principal"
-            data-ruta-ordenar="<?= url('banner/ordenar') ?>"
-            data-ruta-toggle="<?= url('banner/toggle') ?>"
-            data-ruta-eliminar="<?= url('banner/eliminar') ?>"
-            data-ruta-guardar="<?= url('banner/guardar') ?>"
+            data-ruta-ordenar="<?= url('banner/ordenar') ?>" data-ruta-toggle="<?= url('banner/toggle') ?>"
+            data-ruta-eliminar="<?= url('banner/eliminar') ?>" data-ruta-guardar="<?= url('banner/guardar') ?>"
             data-ruta-actualizar="<?= url('banner/actualizar-imagen') ?>"
             data-ruta-actualizar-enlace="<?= url('banner/actualizar_enlace') ?>"
             data-base-upload-url="<?= htmlspecialchars($baseUploadUrl, ENT_QUOTES) ?>">
@@ -28,7 +26,8 @@
                 <!-- IZQUIERDA: LISTA -->
                 <div class="banner-list-container">
                     <h1>Banners Principales (Carrusel)</h1>
-                    <p class="banner-description">Arrastra para cambiar el orden. Las imágenes deben ser de 1024 x 425 píxeles.</p>
+                    <p class="banner-description">Arrastra para cambiar el orden. Las imágenes deben ser de 1024 x 425
+                        píxeles.</p>
 
                     <div class="table-responsive">
                         <table class="admin-productos-table">
@@ -49,7 +48,7 @@
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($banners_principales as $i => $b): ?>
-                                        <tr data-id="<?= (int)$b['id'] ?>">
+                                        <tr data-id="<?= (int) $b['id'] ?>">
                                             <td class="order-controls">
                                                 <div class="drag-handle" title="Arrastrar">☰</div>
                                                 <div class="order-buttons">
@@ -58,17 +57,26 @@
                                                 </div>
                                             </td>
                                             <td class="row-index"><?= $i + 1 ?></td>
-                                            <td><img src="<?= url($baseUploadUrl . $b['nombre_imagen']) ?>" alt="banner" class="banner-preview"></td>
+                                            <td><img src="<?= url($baseUploadUrl . $b['nombre_imagen']) ?>" alt="banner"
+                                                    class="banner-preview"></td>
                                             <td>
-                                                <input type="text" class="input-enlace" value="<?= htmlspecialchars($b['enlace'] ?? '') ?>" placeholder="https://..." title="El enlace se guarda automáticamente">
+                                                <input type="text" class="input-enlace"
+                                                    value="<?= htmlspecialchars($b['enlace'] ?? '') ?>"
+                                                    placeholder="https://..." title="El enlace se guarda automáticamente">
                                             </td>
                                             <td>
-                                                <label class="switch"><input type="checkbox" class="switch-activo" <?= !empty($b['activo']) ? 'checked' : '' ?>><span class="slider"></span></label>
+                                                <label class="switch"><input type="checkbox" class="switch-activo"
+                                                        <?= !empty($b['activo']) ? 'checked' : '' ?>><span
+                                                        class="slider"></span></label>
                                             </td>
                                             <td>
-                                                <button class="btn-xs btn-primary-xs btn-reemplazar" title="Cambiar imagen del banner"><i class="fas fa-sync-alt"></i> Reemplazar</button>
+                                                <button class="btn-xs btn-primary-xs btn-reemplazar"
+                                                    title="Cambiar imagen del banner"><i class="fas fa-sync-alt"></i>
+                                                    Reemplazar</button>
                                                 <input type="file" class="file-reemplazo" accept=".jpg,.jpeg,.png,.webp,.gif">
-                                                <button class="btn-xs btn-danger-xs btn-eliminar" title="Eliminar este banner"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                                                <button class="btn-xs btn-danger-xs btn-eliminar"
+                                                    title="Eliminar este banner"><i class="fas fa-trash-alt"></i>
+                                                    Eliminar</button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -89,9 +97,11 @@
                     <div class="preview-nuevo" aria-live="polite"></div>
                     <div class="form-group">
                         <label for="nuevo-enlace-principal">Enlace (URL):</label>
-                        <input type="text" id="nuevo-enlace-principal" class="nuevo-enlace" placeholder="https://ejemplo.com" style="width: 100%; padding: 8px; margin-top: 5px;">
+                        <input type="text" id="nuevo-enlace-principal" class="nuevo-enlace"
+                            placeholder="https://ejemplo.com" style="width: 100%; padding: 8px; margin-top: 5px;">
                         <small style="color: #666; font-size: 0.85em; display: block; margin-top: 5px;">
-                            <i class="fas fa-info-circle"></i> Opcional. Si agregas un enlace, el banner será clickeable.
+                            <i class="fas fa-info-circle"></i> Opcional. Si agregas un enlace, el banner será
+                            clickeable.
                         </small>
                     </div>
                     <div class="active-toggle">
@@ -114,10 +124,8 @@
         <!-- GESTIÓN DE BANNERS SECUNDARIOS - IZQUIERDA -->
         <!-- ======================================= -->
         <div id="banner-app-secundario-izquierda" class="banner-manager" data-tipo="secundario_izquierda"
-            data-ruta-ordenar="<?= url('banner/ordenar') ?>"
-            data-ruta-toggle="<?= url('banner/toggle') ?>"
-            data-ruta-eliminar="<?= url('banner/eliminar') ?>"
-            data-ruta-guardar="<?= url('banner/guardar') ?>"
+            data-ruta-ordenar="<?= url('banner/ordenar') ?>" data-ruta-toggle="<?= url('banner/toggle') ?>"
+            data-ruta-eliminar="<?= url('banner/eliminar') ?>" data-ruta-guardar="<?= url('banner/guardar') ?>"
             data-ruta-actualizar="<?= url('banner/actualizar-imagen') ?>"
             data-ruta-actualizar-enlace="<?= url('banner/actualizar_enlace') ?>"
             data-base-upload-url="<?= htmlspecialchars($baseUploadUrl, ENT_QUOTES) ?>">
@@ -126,7 +134,8 @@
                 <!-- IZQUIERDA: LISTA -->
                 <div class="banner-list-container">
                     <h1>Banner Secundario (Izquierda)</h1>
-                    <p class="banner-description">Solo se mostrará el primer banner activo. Dimensiones recomendadas: 1024 x 425 píxeles</p>
+                    <p class="banner-description">Solo se mostrará el primer banner activo. Dimensiones recomendadas:
+                        1024 x 425 píxeles</p>
 
                     <div class="table-responsive">
                         <table class="admin-productos-table">
@@ -147,20 +156,29 @@
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($banners_secundarios_izquierda as $i => $b): ?>
-                                        <tr data-id="<?= (int)$b['id'] ?>">
+                                        <tr data-id="<?= (int) $b['id'] ?>">
                                             <td class="drag-handle" title="Arrastrar">☰</td>
                                             <td><?= $i + 1 ?></td>
-                                            <td><img src="<?= url($baseUploadUrl . $b['nombre_imagen']) ?>" alt="banner" class="banner-preview"></td>
+                                            <td><img src="<?= url($baseUploadUrl . $b['nombre_imagen']) ?>" alt="banner"
+                                                    class="banner-preview"></td>
                                             <td>
-                                                <input type="text" class="input-enlace" value="<?= htmlspecialchars($b['enlace'] ?? '') ?>" placeholder="https://..." title="El enlace se guarda automáticamente">
+                                                <input type="text" class="input-enlace"
+                                                    value="<?= htmlspecialchars($b['enlace'] ?? '') ?>"
+                                                    placeholder="https://..." title="El enlace se guarda automáticamente">
                                             </td>
                                             <td>
-                                                <label class="switch"><input type="checkbox" class="switch-activo" <?= !empty($b['activo']) ? 'checked' : '' ?>><span class="slider"></span></label>
+                                                <label class="switch"><input type="checkbox" class="switch-activo"
+                                                        <?= !empty($b['activo']) ? 'checked' : '' ?>><span
+                                                        class="slider"></span></label>
                                             </td>
                                             <td>
-                                                <button class="btn-xs btn-primary-xs btn-reemplazar" title="Cambiar imagen del banner"><i class="fas fa-sync-alt"></i> Reemplazar</button>
+                                                <button class="btn-xs btn-primary-xs btn-reemplazar"
+                                                    title="Cambiar imagen del banner"><i class="fas fa-sync-alt"></i>
+                                                    Reemplazar</button>
                                                 <input type="file" class="file-reemplazo" accept=".jpg,.jpeg,.png,.webp,.gif">
-                                                <button class="btn-xs btn-danger-xs btn-eliminar" title="Eliminar este banner"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                                                <button class="btn-xs btn-danger-xs btn-eliminar"
+                                                    title="Eliminar este banner"><i class="fas fa-trash-alt"></i>
+                                                    Eliminar</button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -181,9 +199,11 @@
                     <div class="preview-nuevo" aria-live="polite"></div>
                     <div class="form-group">
                         <label for="nuevo-enlace-sec-izq">Enlace (URL):</label>
-                        <input type="text" id="nuevo-enlace-sec-izq" class="nuevo-enlace" placeholder="https://ejemplo.com" style="width: 100%; padding: 8px; margin-top: 5px;">
+                        <input type="text" id="nuevo-enlace-sec-izq" class="nuevo-enlace"
+                            placeholder="https://ejemplo.com" style="width: 100%; padding: 8px; margin-top: 5px;">
                         <small style="color: #666; font-size: 0.85em; display: block; margin-top: 5px;">
-                            <i class="fas fa-info-circle"></i> Opcional. Si agregas un enlace, el banner será clickeable.
+                            <i class="fas fa-info-circle"></i> Opcional. Si agregas un enlace, el banner será
+                            clickeable.
                         </small>
                     </div>
                     <div class="active-toggle">
@@ -206,10 +226,8 @@
         <!-- GESTIÓN DE BANNERS SECUNDARIOS - DERECHA -->
         <!-- ======================================= -->
         <div id="banner-app-secundario-derecha" class="banner-manager" data-tipo="secundario_derecha"
-            data-ruta-ordenar="<?= url('banner/ordenar') ?>"
-            data-ruta-toggle="<?= url('banner/toggle') ?>"
-            data-ruta-eliminar="<?= url('banner/eliminar') ?>"
-            data-ruta-guardar="<?= url('banner/guardar') ?>"
+            data-ruta-ordenar="<?= url('banner/ordenar') ?>" data-ruta-toggle="<?= url('banner/toggle') ?>"
+            data-ruta-eliminar="<?= url('banner/eliminar') ?>" data-ruta-guardar="<?= url('banner/guardar') ?>"
             data-ruta-actualizar="<?= url('banner/actualizar-imagen') ?>"
             data-ruta-actualizar-enlace="<?= url('banner/actualizar_enlace') ?>"
             data-base-upload-url="<?= htmlspecialchars($baseUploadUrl, ENT_QUOTES) ?>">
@@ -218,7 +236,8 @@
                 <!-- IZQUIERDA: LISTA -->
                 <div class="banner-list-container">
                     <h1>Banner Secundario (Derecha)</h1>
-                    <p class="banner-description">Solo se mostrará el primer banner activo. Dimensiones recomendadas: 1024 x 425 píxeles</p>
+                    <p class="banner-description">Solo se mostrará el primer banner activo. Dimensiones recomendadas:
+                        1024 x 425 píxeles</p>
 
                     <div class="table-responsive">
                         <table class="admin-productos-table">
@@ -239,20 +258,29 @@
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($banners_secundarios_derecha as $i => $b): ?>
-                                        <tr data-id="<?= (int)$b['id'] ?>">
+                                        <tr data-id="<?= (int) $b['id'] ?>">
                                             <td class="drag-handle" title="Arrastrar">☰</td>
                                             <td><?= $i + 1 ?></td>
-                                            <td><img src="<?= url($baseUploadUrl . $b['nombre_imagen']) ?>" alt="banner" class="banner-preview"></td>
+                                            <td><img src="<?= url($baseUploadUrl . $b['nombre_imagen']) ?>" alt="banner"
+                                                    class="banner-preview"></td>
                                             <td>
-                                                <input type="text" class="input-enlace" value="<?= htmlspecialchars($b['enlace'] ?? '') ?>" placeholder="https://..." title="El enlace se guarda automáticamente">
+                                                <input type="text" class="input-enlace"
+                                                    value="<?= htmlspecialchars($b['enlace'] ?? '') ?>"
+                                                    placeholder="https://..." title="El enlace se guarda automáticamente">
                                             </td>
                                             <td>
-                                                <label class="switch"><input type="checkbox" class="switch-activo" <?= !empty($b['activo']) ? 'checked' : '' ?>><span class="slider"></span></label>
+                                                <label class="switch"><input type="checkbox" class="switch-activo"
+                                                        <?= !empty($b['activo']) ? 'checked' : '' ?>><span
+                                                        class="slider"></span></label>
                                             </td>
                                             <td>
-                                                <button class="btn-xs btn-primary-xs btn-reemplazar" title="Cambiar imagen del banner"><i class="fas fa-sync-alt"></i> Reemplazar</button>
+                                                <button class="btn-xs btn-primary-xs btn-reemplazar"
+                                                    title="Cambiar imagen del banner"><i class="fas fa-sync-alt"></i>
+                                                    Reemplazar</button>
                                                 <input type="file" class="file-reemplazo" accept=".jpg,.jpeg,.png,.webp,.gif">
-                                                <button class="btn-xs btn-danger-xs btn-eliminar" title="Eliminar este banner"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                                                <button class="btn-xs btn-danger-xs btn-eliminar"
+                                                    title="Eliminar este banner"><i class="fas fa-trash-alt"></i>
+                                                    Eliminar</button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -273,9 +301,11 @@
                     <div class="preview-nuevo" aria-live="polite"></div>
                     <div class="form-group">
                         <label for="nuevo-enlace-sec-der">Enlace (URL):</label>
-                        <input type="text" id="nuevo-enlace-sec-der" class="nuevo-enlace" placeholder="https://ejemplo.com" style="width: 100%; padding: 8px; margin-top: 5px;">
+                        <input type="text" id="nuevo-enlace-sec-der" class="nuevo-enlace"
+                            placeholder="https://ejemplo.com" style="width: 100%; padding: 8px; margin-top: 5px;">
                         <small style="color: #666; font-size: 0.85em; display: block; margin-top: 5px;">
-                            <i class="fas fa-info-circle"></i> Opcional. Si agregas un enlace, el banner será clickeable.
+                            <i class="fas fa-info-circle"></i> Opcional. Si agregas un enlace, el banner será
+                            clickeable.
                         </small>
                     </div>
                     <div class="active-toggle">
@@ -296,7 +326,7 @@
     <div id="toast"></div>
 
     <script>
-        (function() {
+        (function () {
             function initBannerManager(containerSelector) {
                 const app = document.querySelector(containerSelector);
                 if (!app) return;
@@ -429,8 +459,8 @@
                         const btnDown = tr.querySelector('.btn-move-down');
 
                         // Deshabilitar botones según posición
-                        btnUp.disabled = index === 0;
-                        btnDown.disabled = index === array.length - 1;
+                        if (btnUp) btnUp.disabled = index === 0;
+                        if (btnDown) btnDown.disabled = index === array.length - 1;
 
                         btnUp?.addEventListener('click', async () => {
                             if (index > 0) {
@@ -620,11 +650,11 @@
                     let timeoutEnlace = null;
                     inputEnlace?.addEventListener('input', e => {
                         clearTimeout(timeoutEnlace);
-                        
+
                         // Añadir clase "saving" para feedback visual
                         inputEnlace.classList.remove('saved');
                         inputEnlace.classList.add('saving');
-                        
+
                         timeoutEnlace = setTimeout(async () => {
                             const enlace = e.target.value.trim();
                             const fd = new FormData();
@@ -632,10 +662,10 @@
                             fd.append('enlace', enlace);
 
                             const resp = await postForm(rutas.actualizarEnlace, fd);
-                            
+
                             // Remover clase saving
                             inputEnlace.classList.remove('saving');
-                            
+
                             if (resp?.ok) {
                                 // Mostrar feedback visual de éxito
                                 inputEnlace.classList.add('saved');
@@ -655,7 +685,7 @@
             }
 
             // Inicializar ambos gestores de banners
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 initBannerManager('#banner-app-principal');
                 initBannerManager('#banner-app-secundario-izquierda');
                 initBannerManager('#banner-app-secundario-derecha');
