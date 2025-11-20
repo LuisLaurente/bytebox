@@ -266,9 +266,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Simulación de reenvío: Llama de nuevo a iniciarRegistro
             const formData = new FormData(form);
-            formData.append('redirect', getRedirectParam()); // Mantener los datos originales
+            formData.append('email', emailInput.value); // Solo necesitamos el email
             
-            fetch('/bytebox/public/resend_handler.php', { 
+            fetch('/bytebox/public/resend_code_handler.php', { 
                 method: 'POST',
                 body: formData
             })
