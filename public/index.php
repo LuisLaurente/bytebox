@@ -1,4 +1,5 @@
 <?php
+ob_start();
 // ===========================
 // CONFIGURACIÓN INICIAL
 // ===========================
@@ -14,8 +15,6 @@ ini_set('session.use_strict_mode', '1');
 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
     ini_set('session.cookie_secure', '1');
 }
-
-ob_start();
 
 // Zona horaria
 date_default_timezone_set('America/Lima');

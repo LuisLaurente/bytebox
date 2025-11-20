@@ -14,10 +14,9 @@ class MailHelper
         try {
             // Configuración del servidor
             $mail->isSMTP();
-            $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+            $mail->SMTPDebug = SMTP::DEBUG_OFF;
 
             $mail->Debugoutput = function($str, $level) {
-                // Escribir el output de debug de PHPMailer en el log de errores de PHP
                 error_log("PHPMailer Debug ($level): " . $str); 
             };
 

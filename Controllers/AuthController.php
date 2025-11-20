@@ -604,7 +604,7 @@ class AuthController extends BaseController
      */
     public function iniciarRegistro() {
         
-        // NOTA: Confiamos en que ob_start() está en public/index.php
+        ob_start();
         
         header('Content-Type: application/json');
         
