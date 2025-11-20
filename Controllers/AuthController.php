@@ -10,6 +10,7 @@ use Core\Helpers\CsrfHelper;
 use Core\Helpers\LoginRateHelper;
 use Core\Helpers\SecurityLogger;
 use Core\Helpers\MailHelper;
+use Core\Database;
 
 use Core\Helpers\CookieHelper;
 use Core\Helpers\RememberMeHelper;
@@ -604,69 +605,63 @@ class AuthController extends BaseController
     public function iniciarRegistro() {
         header('Content-Type: application/json');
         
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
-            exit;
-        }
+        // Inicializar la respuesta con un error por defecto (lo que se enviará al final)
+        $response = ['success' => false, 'message' => 'Error interno del servidor.'];
 
-        // 1. Validar CSRF (Usamos 'false' en validateToken porque el token se usará dos veces: iniciar y verificar)
-        $csrfToken = $_POST['csrf_token'] ?? '';
-        if (empty($csrfToken) || !\Core\Helpers\CsrfHelper::validateToken($csrfToken, 'registro_form', false)) { 
-            echo json_encode(['success' => false, 'message' => 'Error de seguridad (Token inválido o expirado). Recarga la página.']);
-            // Nota: No usar SecurityLogger aquí para no exponer emails inexistentes en logs, ya que aún no se valida existencia.
-            exit;
-        }
-
-        $nombre = trim($_POST['nombre'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $password = $_POST['password'] ?? '';
-        $confirm = $_POST['confirm_password'] ?? '';
-        
-        // 2. Validaciones básicas
-        $errores = [];
-
-        if (empty($nombre)) $errores[] = 'El nombre es requerido';
-        elseif (strlen($nombre) < 2) $errores[] = 'El nombre debe tener al menos 2 caracteres';
-        
-        if (empty($email)) $errores[] = 'El email es requerido';
-        elseif (!\Core\Helpers\Validator::email($email)) $errores[] = 'El email no es válido';
-        
-        if (empty($password)) $errores[] = 'La contraseña es requerida';
-        elseif (strlen($password) < 6) $errores[] = 'La contraseña debe tener al menos 6 caracteres';
-
-        if ($password !== $confirm) $errores[] = 'Las contraseñas no coinciden';
-
-        // Verificar si el email ya existe
-            if (empty($errores)) {
-                $usuarioExistente = $this->usuarioModel->obtenerPorEmail($email);
-                if ($usuarioExistente) {
-                    $errores[] = 'Ya existe un usuario con este email';
-                }
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                $response['message'] = 'Método no permitido';
+                goto send_response;
             }
 
-        if (!empty($errores)) {
-            echo json_encode(['success' => false, 'message' => implode(', ', $errores)]);
-            exit;
-        }
+            // 1. Validar CSRF
+            $csrfToken = $_POST['csrf_token'] ?? '';
+            if (empty($csrfToken) || !\Core\Helpers\CsrfHelper::validateToken($csrfToken, 'registro_form', false)) { 
+                $response['message'] = 'Error de seguridad: Token inválido o expirado. Recarga la página.';
+                goto send_response;
+            }
 
-        // 3. Verificar si ya existe en la tabla REAL de usuarios
-        if ($this->usuarioModel->obtenerPorEmail($email)) {
-            echo json_encode(['success' => false, 'message' => 'Este correo ya está registrado. Intenta iniciar sesión.']);
-            exit;
-        }
+            $nombre = trim($_POST['nombre'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $confirm = $_POST['confirm_password'] ?? '';
+            
+            // 2. Validaciones básicas
+            $errores = [];
 
-        // 4. Generar Código, Hash de Password y Expiración
-        $codigo = rand(100000, 999999); 
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+            if (empty($nombre) || strlen($nombre) < 2) {
+                $errores[] = 'El nombre debe tener al menos 2 caracteres';
+            }
+            if (empty($email) || !\Core\Helpers\Validator::email($email)) {
+                $errores[] = 'El email no es válido';
+            }
+            if (empty($password) || strlen($password) < 6) {
+                $errores[] = 'La contraseña debe tener al menos 6 caracteres';
+            }
+            if ($password !== $confirm) {
+                $errores[] = 'Las contraseñas no coinciden';
+            }
 
-        ob_start();
+            // Si hay errores de validación de campos
+            if (!empty($errores)) {
+                $response['message'] = implode(', ', $errores);
+                goto send_response;
+            }
+            
+            // 3. Verificar si el email ya existe en la tabla REAL
+            if ($this->usuarioModel->obtenerPorEmail($email)) {
+                $response['message'] = 'Este correo ya está registrado. Intenta iniciar sesión.';
+                goto send_response; // Salta al bloque final de respuesta
+            }
 
-        // 5. Guardar/Actualizar en tabla TEMPORAL (registros_pendientes)
-        try {
+            // 4. Generar Código, Hash de Password y Expiración
+            $codigo = rand(100000, 999999); 
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+            $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+
+            // 5. Guardar en tabla TEMPORAL (registros_pendientes)
             $db = \Core\Database::getInstance()->getConnection();
             
-            // Limpiar intentos previos de este email y luego insertar
             $stmt = $db->prepare("DELETE FROM registros_pendientes WHERE email = ?");
             $stmt->execute([$email]);
 
@@ -676,19 +671,31 @@ class AuthController extends BaseController
 
             // 6. Enviar Email con el código de verificación
             if (\Core\Helpers\MailHelper::enviarCodigoVerificacion($email, $nombre, $codigo)) {
-                ob_end_clean();
-                echo json_encode(['success' => true, 'message' => 'Código enviado']);
+                $response = ['success' => true, 'message' => 'Código enviado'];
             } else {
-                ob_end_clean();
-                echo json_encode(['success' => false, 'message' => 'Error al enviar el correo. Verifica tu dirección y reintenta.']);
+                // Fallo controlado del envío de correo (pero no excepción fatal)
+                $response['message'] = 'Error al enviar el correo. Verifica tu dirección y reintenta.';
             }
 
         } catch (\Exception $e) {
-            ob_end_clean();
-            error_log("Error en iniciarRegistro: " . $e->getMessage());
-            http_response_code(500); // Enviar código de error HTTP
-            echo json_encode(['success' => false, 'message' => 'Error interno del servidor al procesar el registro.']);
+            
+            // 📢 3. FALLO CRÍTICO: Capturado por excepción
+            error_log("Error en iniciarRegistro (CRÍTICO): " . $e->getMessage());
+            http_response_code(500); 
+            $response['message'] = 'Error interno del servidor.';
+            $response['success'] = false;
         }
+
+        // 📢 4. BLOQUE DE RESPUESTA GARANTIZADO
+        send_response:
+            // 📢 CRÍTICO: Limpiar el buffer de salida final (CUALQUIER HTML capturado)
+            if (ob_get_length() > 0) {
+                ob_end_clean();
+            }
+            
+            // Aquí garantizamos que solo se envíe JSON
+            echo json_encode($response);
+        
         exit;
     }
 

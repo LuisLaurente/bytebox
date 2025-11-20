@@ -15,6 +15,8 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
     ini_set('session.cookie_secure', '1');
 }
 
+ob_start();
+
 // Zona horaria
 date_default_timezone_set('America/Lima');
 
