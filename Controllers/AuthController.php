@@ -155,6 +155,23 @@ class AuthController extends BaseController
             $usuario = $this->usuarioModel->obtenerPorEmail($email);
 
             if (!$usuario) {
+                // Verificar si está en pendientes (Invitación de Admin o Registro no completado)
+                $db = \Core\Database::getInstance()->getConnection();
+                $stmt = $db->prepare("SELECT * FROM registros_pendientes WHERE email = ? AND expira_en > NOW()");
+                $stmt->execute([$email]);
+                $pendiente = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                if ($pendiente && password_verify($password, $pendiente['password'])) {
+                    // ¡Encontrado! Activar el modal en la vista de login
+                    $_SESSION['login_verificacion_pendiente'] = true;
+                    $_SESSION['login_email_temp'] = $email;
+                    
+                    $error = urlencode('Tu cuenta requiere verificación. Ingresa el código enviado a tu correo.');
+                    header('Location: ' . url("/auth/login?error=$error"));
+                    exit;
+                }
+
+                // Si no está en pendientes tampoco, es un fallo normal
                 // Registrar intento fallido
                 $attempts = LoginRateHelper::recordFailedAttempt($identifier);
 
@@ -428,12 +445,9 @@ class AuthController extends BaseController
     public function procesarRegistro()
     {
         // 1. Detección de AJAX (Método estándar para JavaScript fetch)
-        // La cabecera X-Requested-With puede no estar en todas las peticiones fetch modernas.
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
         
-        // Asumiremos que si el cliente ha implementado el JS del Paso 7, toda petición POST a esta URL 
         // DEBE ser para iniciar el proceso de verificación.
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // El JS llama a esta URL. Re-enrutamos internamente al nuevo endpoint AJAX.
             return $this->iniciarRegistro(); 
@@ -603,7 +617,7 @@ class AuthController extends BaseController
                 'nombre' => $pendiente['nombre'],
                 'email' => $pendiente['email'],
                 'password' => $pendiente['password'], // Se pasa el hash, el modelo lo inserta directamente.
-                'rol_id' => 2, // Cliente por defecto
+                'rol_id' => $pendiente['rol_id'] ?? 2, // Cliente por defecto
                 'activo' => 1
                 // Se omiten datos como 'telefono' porque no se recogieron en el formulario de registro
             ];
