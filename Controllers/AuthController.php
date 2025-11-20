@@ -603,11 +603,12 @@ class AuthController extends BaseController
      * Este método reemplaza la lógica principal del anterior procesarRegistro.
      */
     public function iniciarRegistro() {
-        ob_start();
+        
+        // NOTA: Confiamos en que ob_start() está en public/index.php
         
         header('Content-Type: application/json');
         
-        // Inicializar la respuesta con un error por defecto (lo que se enviará al final)
+        // Inicializar la respuesta con un error por defecto
         $response = ['success' => false, 'message' => 'Error interno del servidor.'];
 
         try {
@@ -653,7 +654,7 @@ class AuthController extends BaseController
             // 3. Verificar si el email ya existe en la tabla REAL
             if ($this->usuarioModel->obtenerPorEmail($email)) {
                 $response['message'] = 'Este correo ya está registrado. Intenta iniciar sesión.';
-                goto send_response; // Salta al bloque final de respuesta
+                goto send_response; 
             }
 
             // 4. Generar Código, Hash de Password y Expiración
@@ -675,9 +676,10 @@ class AuthController extends BaseController
             if (\Core\Helpers\MailHelper::enviarCodigoVerificacion($email, $nombre, $codigo)) {
                 $response = ['success' => true, 'message' => 'Código enviado'];
             } else {
-                // Fallo controlado del envío de correo (pero no excepción fatal)
+                // Fallo controlado del envío de correo
                 $response['message'] = 'Error al enviar el correo. Verifica tu dirección y reintenta.';
             }
+
         } catch (\Exception $e) {
             
             // 📢 3. FALLO CRÍTICO: Capturado por excepción

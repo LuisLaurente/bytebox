@@ -3,6 +3,7 @@ namespace Core\Helpers;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 class MailHelper
 {
@@ -13,7 +14,13 @@ class MailHelper
         try {
             // Configuración del servidor
             $mail->isSMTP();
-            $mail->SMTPDebug = \PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+
+            $mail->Debugoutput = function($str, $level) {
+                // Escribir el output de debug de PHPMailer en el log de errores de PHP
+                error_log("PHPMailer Debug ($level): " . $str); 
+            };
+
             $mail->Host = $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = $_ENV['SMTP_USER'];
@@ -47,7 +54,6 @@ class MailHelper
             $mail->AltBody = "Tu código de verificación es: $codigo";
 
             $mail->send();
-            $mail->SMTPDebug = \PHPMailer\PHPMailer\SMTP::DEBUG_OFF;
             return true;
         } catch (Exception $e) {
             error_log("Error detallado de PHPMailer: " . $mail->ErrorInfo); 
