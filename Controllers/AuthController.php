@@ -897,7 +897,18 @@ class AuthController extends BaseController
         
         // 3. Generar y Guardar nuevo código
         $nuevoCodigo = rand(100000, 999999);
-        $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+        $fechaCreacion = strtotime($pendiente['created_at']);
+        $fechaExpiracionOriginal = strtotime($pendiente['expira_en']);
+        $ventanaOriginal = $fechaExpiracionOriginal - $fechaCreacion;
+
+        // Si la ventana original era mayor a 24 horas (86400 segundos), asumimos que es invitación de Admin
+        // y mantenemos los 7 días desde AHORA. De lo contrario, usamos los 10 minutos estándar.
+        if ($ventanaOriginal > 86400) {
+            $expira = date('Y-m-d H:i:s', strtotime('+7 days'));
+        } else {
+            $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+        }
+
         $nombre = $pendiente['nombre'] ?? 'Usuario'; // Fallback si no se encuentra
         
         // Actualizar o Insertar (Upsert simplificado)
@@ -917,7 +928,8 @@ class AuthController extends BaseController
         if (\Core\Helpers\MailHelper::enviarCodigoVerificacion($email, $pendiente['nombre'], $nuevoCodigo)) {
             $_SESSION['registro_reenvio_exito'] = true;
             $_SESSION['registro_email_temp'] = $email;
-            $_SESSION['flash_success'] = '¡Nuevo código enviado correctamente! Revisa tu bandeja de entrada.';
+            $tiempoMensaje = ($ventanaOriginal > 86400) ? '7 días' : '10 minutos';
+            $_SESSION['flash_success'] = "Código reenviado. Tienes $tiempoMensaje para verificarlo.";
         } else {
             $_SESSION['flash_error'] = 'Error al enviar el correo. Intenta más tarde.';
         }
