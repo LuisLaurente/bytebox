@@ -142,8 +142,13 @@ if ($debeSincronizar && (!isset($_SESSION['carrito_vaciado']) || $_SESSION['carr
 // ===========================
 // MIDDLEWARE DE AUTENTICACIÓN
 // ===========================
-// Solo aplicamos middleware si no es login admin
-if ($url !== 'admin/login' && $url !== 'admin/authenticate') {
+// Solo aplicamos middleware si no es login admin O reenvío de código
+if ($url !== 'admin/login' 
+    && $url !== 'admin/authenticate' 
+    && $url !== 'auth/reenviarCodigo' // Ruta que acabamos de crear
+    && $url !== 'auth/registro' // <--- EXCLUSIÓN CRÍTICA
+    && $url !== 'auth/login') // <--- EXCLUSIÓN CRÍTICA
+{
     \Core\Helpers\AuthMiddleware::checkAuth($url);
 }
 
