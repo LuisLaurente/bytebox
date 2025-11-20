@@ -101,9 +101,6 @@ class UsuarioController extends BaseController
             $codigo = rand(100000, 999999);
             $expira = date('Y-m-d H:i:s', strtotime('+7 days'));
 
-            // Crear usuario
-            $resultado = $this->usuarioModel->crear($datos);
-
             // === INSERTAR EN REGISTROS PENDIENTES ===
             $db = Database::getInstance()->getConnection();
 

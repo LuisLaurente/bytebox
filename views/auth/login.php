@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Iniciar Sesión - Bytebox</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="<?= url('/css/registro.css') ?>">
         <style>
             .bg-gradient {
                 background: #2ac1db;
