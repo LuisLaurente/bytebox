@@ -5,8 +5,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Iniciar Sesión - Bytebox</title>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="<?= url('/css/registro.css') ?>">
+        <script src="https://cdn.tailwindcss.com"></script>
         <style>
             .bg-gradient {
                 background: #2ac1db;
@@ -144,9 +145,9 @@
                     <div id="modalSuccess" class="success-msg" style="display:none; color: green; margin-top: 10px;">¡Verificado! Ingresando...</div>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnVerify" type="button" class="btn-primary" style="width:100%; padding:12px; background: linear-gradient(45deg, #00d2ff, #0078ff); color:white; border:none; border-radius:5px; cursor:pointer;">Verificar</button>
-                    <button id="btnResend" type="button" class="btn-link" style="background:none; border:none; color:#888; margin-top:10px; cursor:pointer;">Reenviar código</button>
-                    <button id="btnCancel" type="button" class="btn-link close-modal" style="background:none; border:none; color:#888; margin-top:10px; cursor:pointer;">Cancelar</button>
+                    <button id="btnVerify" type="button" class="btn-primary">Verificar</button>
+                    <button id="btnResend" type="button" class="btn-link">Reenviar código</button>
+                    <button id="btnCancel" type="button" class="btn-link close-modal">Cancelar</button>
                 </div>
             </div>
             <form id="formReenvio" method="POST" action="<?= url('auth/reenviarCodigo') ?>" style="display:none;">
@@ -161,8 +162,29 @@
         </div>
 
         <style>
-            .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-            .modal-content { background: #1a1a1a; border: 1px solid #333; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; color: white; box-shadow: 0 0 20px rgba(0, 210, 255, 0.2); }
+            /* Estilos rápidos para el modal (Mover a registro.css idealmente) */
+            .modal-overlay {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.85); z-index: 9999;
+                display: flex; align-items: center; justify-content: center;
+                backdrop-filter: blur(5px);
+            }
+            .modal-content {
+                background: #1a1a1a; border: 1px solid #333; padding: 30px;
+                border-radius: 15px; width: 90%; max-width: 400px;
+                text-align: center; color: white;
+                box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+            }
+            #verificationCode {
+                width: 100%; padding: 15px; font-size: 24px; text-align: center;
+                letter-spacing: 8px; background: #000; border: 2px solid #333;
+                color: #00d2ff; border-radius: 8px; margin-top: 15px;
+                box-sizing: border-box;
+            }
+            #verificationCode:focus { border-color: #00d2ff; outline: none; }
+            .modal-footer { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+            .btn-primary { background: linear-gradient(45deg, #00d2ff, #0078ff); border: none; padding: 12px; color: white; border-radius: 5px; cursor: pointer; font-weight: bold; }
+            .btn-link { background: none; border: none; padding: 12px; color: #888; cursor: pointer; text-decoration: underline; }
         </style>
 
         <?php
