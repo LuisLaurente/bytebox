@@ -127,6 +127,38 @@ $total_final = max(0, $totales['total'] - $descuento_cupon + $costo_envio_inicia
 <script>
     window.mpBrickInstance = null;
     window.mpInitializing = false;
+
+    window.mpPreferenciaCache = null;
+    window.mpFormularioHash = null;
+
+
+    /**
+     * Genera un hash único basado en los datos del formulario y carrito
+     * para detectar si el usuario cambió algo importante
+     */
+    function generarHashFormulario() {
+        const datos = obtenerDatosFormularioActuales();
+        const carrito = <?= json_encode($_SESSION['carrito'] ?? []) ?>;
+        const total = obtenerTotalActual();
+
+        // Crear string único con todos los datos relevantes
+        const datosCompletos = JSON.stringify({
+            datos: datos,
+            carrito: carrito,
+            total: total.toFixed(2)
+        });
+
+        // Generar hash simple
+        let hash = 0;
+        for (let i = 0; i < datosCompletos.length; i++) {
+            const char = datosCompletos.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        return hash.toString();
+    }
+
+
     document.getElementById("checkoutForm").addEventListener("submit", function(event) {
         let camposObligatorios = [
             "input-nombre",
@@ -354,10 +386,16 @@ $total_final = max(0, $totales['total'] - $descuento_cupon + $costo_envio_inicia
         const provinciaSelect = document.getElementById('provincia');
         if (provinciaSelect) {
             provinciaSelect.addEventListener('change', function() {
+                // ✅ LIMPIAR CACHE AL CAMBIAR PROVINCIA
+                window.mpPreferenciaCache = null;
+                window.mpFormularioHash = null;
+                console.log('🗑️ Cache limpiado por cambio de provincia');
+
                 actualizarMetodosPago();
                 actualizarCostoEnvio();
             });
         }
+
 
         // Configuración de guardar dirección
         const guardarCheckbox = document.getElementById('guardar_direccion');
@@ -2392,7 +2430,10 @@ $total_final = max(0, $totales['total'] - $descuento_cupon + $costo_envio_inicia
             if (metodoActual !== 'tarjeta') {
                 console.log('⚠️ Mercado Pago no inicializado - método actual:', metodoActual);
 
-                // ✅ LIMPIAR INSTANCIA SI EXISTE
+                // ✅ LIMPIAR CACHE AL SALIR DE TARJETA
+                window.mpPreferenciaCache = null;
+                window.mpFormularioHash = null;
+
                 if (mpBrickInstance) {
                     console.log('🧹 Limpiando instancia previa de MercadoPago');
                     mpBrickInstance = null;
@@ -2408,6 +2449,23 @@ $total_final = max(0, $totales['total'] - $descuento_cupon + $costo_envio_inicia
 
             const walletContainer = document.getElementById('wallet_container');
             const statusMessage = document.getElementById('mp-status-message');
+
+            // ✅ GENERAR HASH DEL FORMULARIO ACTUAL
+            const hashActual = generarHashFormulario();
+            console.log('🔑 Hash formulario actual:', hashActual);
+            console.log('🔑 Hash formulario cache:', window.mpFormularioHash);
+
+            // ✅ VERIFICAR SI PODEMOS REUTILIZAR LA PREFERENCIA CACHEADA
+            if (window.mpPreferenciaCache && window.mpFormularioHash === hashActual) {
+                console.log('♻️ Reutilizando preferencia cacheada:', window.mpPreferenciaCache.preference_id);
+
+                // ✅ CARGAR SDK Y CREAR BOTÓN CON PREFERENCIA CACHEADA (SIN LLAMAR AL BACKEND)
+                cargarSdkYCrearBoton(window.mpPreferenciaCache);
+                return; // ✅ SALIR SIN HACER PETICIÓN AL BACKEND
+            }
+
+            // ✅ SI NO HAY CACHE O CAMBIÓ EL FORMULARIO, CREAR NUEVA PREFERENCIA
+            console.log('🆕 Creando nueva preferencia - formulario cambió o no hay cache');
 
             // ✅ LIMPIAR CONTENEDORES COMPLETAMENTE
             if (walletContainer) {
@@ -2443,7 +2501,6 @@ $total_final = max(0, $totales['total'] - $descuento_cupon + $costo_envio_inicia
             console.log("📤 Enviando datos a backend...");
 
             // ✅ PETICIÓN AL BACKEND
-            //fetch('https://bytebox.pe/pago/crear-pago-mercado-pago', { ANTES
             fetch('<?= url("/pago/crear-pago-mercado-pago") ?>', {
                     method: 'POST',
                     headers: {
@@ -2471,6 +2528,11 @@ $total_final = max(0, $totales['total'] - $descuento_cupon + $costo_envio_inicia
 
                     console.log('✅ Preference ID recibido:', data.preference_id);
 
+                    // ✅ GUARDAR EN CACHE
+                    window.mpPreferenciaCache = data;
+                    window.mpFormularioHash = hashActual;
+                    console.log('💾 Preferencia guardada en cache');
+
                     // ✅ CARGAR SDK Y CREAR BOTÓN
                     cargarSdkYCrearBoton(data);
 
@@ -2478,20 +2540,28 @@ $total_final = max(0, $totales['total'] - $descuento_cupon + $costo_envio_inicia
                 .catch(err => {
                     console.error('❌ Error en comunicación:', err);
 
-                    // ✅ LIBERAR FLAG EN CASO DE ERROR
                     window.mpInitializing = false;
 
                     if (walletContainer) {
                         walletContainer.innerHTML = `
-                            <div style="color:#dc3545;text-align:center;padding:20px;">
-                                ❌ ${err.message || 'Error al procesar el pago'}
-                                <br>
-                                <button onclick="inicializarMercadoPago()" style="...">Reintentar</button>
-                            </div>
-                        `;
+                    <div style="color:#dc3545;text-align:center;padding:20px;">
+                        ❌ ${err.message || 'Error al procesar el pago'}
+                        <br>
+                        <button onclick="inicializarMercadoPago()" style="
+                            background: #007bff; 
+                            color: white; 
+                            border: none; 
+                            padding: 8px 16px; 
+                            border-radius: 5px; 
+                            cursor: pointer;
+                            margin-top: 10px;
+                        ">Reintentar</button>
+                    </div>
+                `;
                     }
                 });
         }
+
 
         // ✅ FUNCIÓN MEJORADA PARA CARGAR SDK Y CREAR BOTÓN
         function cargarSdkYCrearBoton(data) {
@@ -2841,6 +2911,11 @@ $total_final = max(0, $totales['total'] - $descuento_cupon + $costo_envio_inicia
             const direccionData = JSON.parse(card.dataset.direccion);
             document.getElementById('direccion_id_seleccionada').value = direccionData.id;
             isLoadingFromSavedAddress = true;
+
+            window.mpPreferenciaCache = null;
+            window.mpFormularioHash = null;
+
+
             showSavedPhoneMode();
             const departamentoOriginal = direccionData.departamento || '';
             const departamentoLower = departamentoOriginal.toLowerCase().trim();
@@ -3216,6 +3291,12 @@ $total_final = max(0, $totales['total'] - $descuento_cupon + $costo_envio_inicia
 
                         // ✅ SOLO actualizar métodos de pago, NO el costo de envío
                         // (el costo ya se calculó correctamente en selectAddress)
+
+                        // ✅ LIMPIAR CACHE AL CAMBIAR PROVINCIA
+                        window.mpPreferenciaCache = null;
+                        window.mpFormularioHash = null;
+                        console.log('🗑️ Cache limpiado por cambio de provincia');
+
                         actualizarMetodosPago();
                         // ❌ NO llamar actualizarCostoEnvio() aquí para evitar conflictos
                     }, 100);
