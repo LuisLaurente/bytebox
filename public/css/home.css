@@ -282,8 +282,8 @@ body {
 .promo-banner-item img {
   display: block;
   width: 100%;
-  height: 300px; /* Altura aumentada */
-  object-fit: cover;
+  height: auto;       /* CAMBIO: Antes era 300px. Auto respeta la proporción */
+  object-fit: contain; /* CAMBIO: Antes era cover. Contain asegura que se vea todo */
   transition: transform 0.4s ease;
 }
 
@@ -298,10 +298,6 @@ body {
   .banners-grid {
     gap: 1rem;
   }
-
-  .promo-banner-item img {
-    height: 250px;
-  }
 }
 
 /* Para móviles grandes y tablets en vertical */
@@ -315,9 +311,6 @@ body {
     gap: 1.5rem;
   }
 
-  .promo-banner-item img {
-    height: 200px;
-  }
 }
 
 /* Para móviles pequeños */
@@ -326,9 +319,6 @@ body {
     padding: 1rem 0;
   }
 
-  .promo-banner-item img {
-    height: 180px;
-  }
 }
 
 
