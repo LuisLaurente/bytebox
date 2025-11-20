@@ -9,6 +9,8 @@ use Core\Helpers\Validator;
 use Core\Helpers\CsrfHelper;
 use Core\Helpers\LoginRateHelper;
 use Core\Helpers\SecurityLogger;
+use Core\Helpers\MailHelper;
+use Core\Database;
 
 use Core\Helpers\CookieHelper;
 use Core\Helpers\RememberMeHelper;
@@ -153,6 +155,23 @@ class AuthController extends BaseController
             $usuario = $this->usuarioModel->obtenerPorEmail($email);
 
             if (!$usuario) {
+                // Verificar si está en pendientes (Invitación de Admin o Registro no completado)
+                $db = \Core\Database::getInstance()->getConnection();
+                $stmt = $db->prepare("SELECT * FROM registros_pendientes WHERE email = ? AND expira_en > NOW()");
+                $stmt->execute([$email]);
+                $pendiente = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                if ($pendiente && password_verify($password, $pendiente['password'])) {
+                    // ¡Encontrado! Activar el modal en la vista de login
+                    $_SESSION['login_verificacion_pendiente'] = true;
+                    $_SESSION['login_email_temp'] = $email;
+                    
+                    $error = urlencode('Tu cuenta requiere verificación. Ingresa el código enviado a tu correo.');
+                    header('Location: ' . url("/auth/login?error=$error"));
+                    exit;
+                }
+
+                // Si no está en pendientes tampoco, es un fallo normal
                 // Registrar intento fallido
                 $attempts = LoginRateHelper::recordFailedAttempt($identifier);
 
@@ -423,146 +442,219 @@ class AuthController extends BaseController
         require_once __DIR__ . '/../views/auth/registro.php';
     }
 
-    /**
-     * Procesar registro de nuevo usuario
-     */
     public function procesarRegistro()
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: ' . url('/auth/registro'));
-            exit;
+        // 1. Detección de AJAX (Método estándar para JavaScript fetch)
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+        
+        // DEBE ser para iniciar el proceso de verificación.
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // El JS llama a esta URL. Re-enrutamos internamente al nuevo endpoint AJAX.
+            return $this->iniciarRegistro(); 
         }
 
+        // Si es GET o no es POST, se asume que es una navegación normal de fallback.
+        header('Location: ' . url('/auth/registro'));
+        exit;
+    }
+
+    /**
+     * Recibe datos (vía AJAX), valida, guarda en temporal y envía email.
+     * Este método reemplaza la lógica principal del anterior procesarRegistro.
+     */
+    public function iniciarRegistro() {
+        
+        ob_start();
+        
+        header('Content-Type: application/json');
+        
+        // Inicializar la respuesta con un error por defecto
+        $response = ['success' => false, 'message' => 'Error interno del servidor.'];
+
         try {
-            // Verificar token CSRF
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                $response['message'] = 'Método no permitido';
+                goto send_response;
+            }
+
+            // 1. Validar CSRF
             $csrfToken = $_POST['csrf_token'] ?? '';
-            if (empty($csrfToken) || !CsrfHelper::validateToken($csrfToken, 'registro_form')) {
-                SecurityLogger::log(SecurityLogger::CSRF_ERROR, 'Token CSRF inválido en registro', [
-                    'email' => $_POST['email'] ?? 'no proporcionado'
-                ]);
-                $error = urlencode('Error de seguridad: Token inválido o expirado.');
-                header('Location: ' . url("/auth/registro?error=$error"));
-                exit;
+            if (empty($csrfToken) || !\Core\Helpers\CsrfHelper::validateToken($csrfToken, 'registro_form', false)) { 
+                $response['message'] = 'Error de seguridad: Token inválido o expirado. Recarga la página.';
+                goto send_response;
             }
 
             $nombre = trim($_POST['nombre'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
-            $confirmPassword = $_POST['confirm_password'] ?? '';
-            $redirect = $_POST['redirect'] ?? '';
-
-            // Validaciones
+            $confirm = $_POST['confirm_password'] ?? '';
+            
+            // 2. Validaciones básicas
             $errores = [];
 
-            if (empty($nombre)) {
-                $errores[] = 'El nombre es requerido';
-            } elseif (strlen($nombre) < 2) {
+            if (empty($nombre) || strlen($nombre) < 2) {
                 $errores[] = 'El nombre debe tener al menos 2 caracteres';
             }
-
-            if (empty($email)) {
-                $errores[] = 'El email es requerido';
-            } elseif (!Validator::email($email)) {
+            if (empty($email) || !\Core\Helpers\Validator::email($email)) {
                 $errores[] = 'El email no es válido';
             }
-
-            if (empty($password)) {
-                $errores[] = 'La contraseña es requerida';
-            } elseif (strlen($password) < 6) {
+            if (empty($password) || strlen($password) < 6) {
                 $errores[] = 'La contraseña debe tener al menos 6 caracteres';
             }
-
-            if ($password !== $confirmPassword) {
+            if ($password !== $confirm) {
                 $errores[] = 'Las contraseñas no coinciden';
             }
 
-            // Verificar si el email ya existe
-            if (empty($errores)) {
-                $usuarioExistente = $this->usuarioModel->obtenerPorEmail($email);
-                if ($usuarioExistente) {
-                    $errores[] = 'Ya existe un usuario con este email';
-                }
-            }
-
+            // Si hay errores de validación de campos
             if (!empty($errores)) {
-                $error = urlencode(implode(', ', $errores));
-                $redirectParam = !empty($redirect) ? '&redirect=' . urlencode($redirect) : '';
-                header('Location: ' . url("/auth/registro?error=$error$redirectParam"));
-                exit;
+                $response['message'] = implode(', ', $errores);
+                goto send_response;
+            }
+            
+            // 3. Verificar si el email ya existe en la tabla REAL
+            if ($this->usuarioModel->obtenerPorEmail($email)) {
+                $response['message'] = 'Este correo ya está registrado. Intenta iniciar sesión.';
+                goto send_response; 
             }
 
-            // Crear usuario
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            // 4. Generar Código, Hash de Password y Expiración
+            $codigo = rand(100000, 999999); 
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+            $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+
+            // 5. Guardar en tabla TEMPORAL (registros_pendientes)
+            $db = \Core\Database::getInstance()->getConnection();
+            
+            $stmt = $db->prepare("DELETE FROM registros_pendientes WHERE email = ?");
+            $stmt->execute([$email]);
+
+            $sql = "INSERT INTO registros_pendientes (nombre, email, password, codigo, expira_en) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$nombre, $email, $passwordHash, $codigo, $expira]);
+
+            // 6. Enviar Email con el código de verificación
+            if (\Core\Helpers\MailHelper::enviarCodigoVerificacion($email, $nombre, $codigo)) {
+                $response = ['success' => true, 'message' => 'Código enviado'];
+            } else {
+                // Fallo controlado del envío de correo
+                $response['message'] = 'Error al enviar el correo. Verifica tu dirección y reintenta.';
+            }
+
+        } catch (\Exception $e) {
+            
+            // 📢 3. FALLO CRÍTICO: Capturado por excepción
+            error_log("Error en iniciarRegistro (CRÍTICO): " . $e->getMessage());
+            http_response_code(500); 
+            $response['message'] = 'Error interno del servidor.';
+            $response['success'] = false;
+        }
+
+        // 📢 4. BLOQUE DE RESPUESTA GARANTIZADO
+        send_response:
+            // 📢 CRÍTICO: Limpiar el buffer de salida final (CUALQUIER HTML capturado)
+            if (ob_get_length() > 0) {
+                ob_end_clean();
+            }
+            
+            // Aquí garantizamos que solo se envíe JSON
+            echo json_encode($response);
+        
+        exit;
+    }
+
+    /**
+     * Método SÍNCRONO para verificar código y crear usuario.
+     * Reemplaza la versión AJAX para evitar errores de JSON.
+     */
+    public function verificarCodigoRegistro() {
+        // Asegurar sesión iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            \Core\Helpers\SessionHelper::start();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . url('/auth/registro'));
+            exit;
+        }
+        
+        $email = $_POST['email'] ?? '';
+        $codigo = $_POST['codigo'] ?? '';
+        $redirect = $_POST['redirect'] ?? '';
+
+        // 1. Validaciones básicas
+        if (empty($email) || empty($codigo)) {
+            $_SESSION['flash_error'] = 'Datos incompletos.';
+            goto error_redirect;
+        }
+
+        $db = \Core\Database::getInstance()->getConnection();
+
+        // 2. Buscar el registro pendiente
+        $stmt = $db->prepare("SELECT * FROM registros_pendientes WHERE email = ? AND expira_en > NOW() ORDER BY id DESC LIMIT 1");
+        $stmt->execute([$email]);
+        $pendiente = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$pendiente) {
+            $_SESSION['flash_error'] = 'El código ha expirado o el email no es válido. Regístrate de nuevo.';
+            goto error_redirect;
+        }
+
+        // 3. Verificar Código
+        if ($pendiente['codigo'] !== $codigo) {
+            // Incrementar intentos (seguridad básica)
+            $db->prepare("UPDATE registros_pendientes SET intentos = intentos + 1 WHERE id = ?")->execute([$pendiente['id']]);
+            $_SESSION['flash_error'] = 'Código incorrecto. Inténtalo de nuevo.';
+            // FLAG IMPORTANTE: Para que la vista sepa que debe abrir el modal de nuevo
+            $_SESSION['abrir_modal_verificacion'] = true; 
+            $_SESSION['registro_email_temp'] = $email; // Guardar email para rellenarlo
+
+            goto error_redirect;
+        }
+
+        // 4. ÉXITO: Crear usuario REAL
+        try {
             $usuarioData = [
-                'nombre' => $nombre,
-                'email' => $email,
-                'password' => $hashedPassword,
-                'rol_id' => 2, // Cliente por defecto
+                'nombre' => $pendiente['nombre'],
+                'email' => $pendiente['email'],
+                'password' => $pendiente['password'], // Se pasa el hash, el modelo lo inserta directamente.
+                'rol_id' => $pendiente['rol_id'] ?? 2, // Cliente por defecto
                 'activo' => 1
+                // Se omiten datos como 'telefono' porque no se recogieron en el formulario de registro
             ];
 
+            // Usamos el modelo para crear
             $usuarioId = $this->usuarioModel->crear($usuarioData);
 
             if (!$usuarioId) {
-                $error = urlencode('Error al crear el usuario');
-                $redirectParam = !empty($redirect) ? '&redirect=' . urlencode($redirect) : '';
-                header('Location: ' . url("/auth/registro?error=$error$redirectParam"));
-                exit;
+                throw new \Exception("No se pudo insertar el usuario.");
             }
 
-            // Crear registro en usuario_detalles si las tablas están migradas
-            try {
-                $detallesSql = "INSERT INTO usuario_detalles (usuario_id) VALUES (?)";
-                $stmt = \Core\Database::getConexion()->prepare($detallesSql);
-                $stmt->execute([$usuarioId]);
-            } catch (\Exception $e) {
-                // Si falla, es porque las tablas no están migradas aún, continuamos
-            }
-
-            // Iniciar sesión automáticamente
+            // 4. Borrar registro pendiente
+            // Este DELETE debe hacerse aquí (en el controlador) ya que la tabla 'registros_pendientes' es lógica temporal del proceso.
+            $db->prepare("DELETE FROM registros_pendientes WHERE email = ?")->execute([$email]);
+            
+            // Auto-Login
             $usuario = $this->usuarioModel->obtenerPorId($usuarioId);
             $rol = $this->rolModel->obtenerPorId($usuario['rol_id']);
+            \Core\Helpers\SessionHelper::login($usuario, $rol);
 
-            SessionHelper::login($usuario, $rol);
-            $_SESSION['mostrar_popup'] = true;
-
-            // ✅ ✅ ✅ NUEVO CÓDIGO AQUÍ - COOKIES Y CARRITO PERSISTENTE ✅ ✅ ✅
-
-            // Sistema "Recordarme" para nuevos registros
-            if (isset($_POST['remember_me'])) {
-                $token = \Core\Helpers\RememberMeHelper::generateToken();
-
-                // Guardar token en la base de datos
-                $this->usuarioModel->actualizarRememberToken($usuarioId, $token);
-
-                // Crear cookie "Recordarme"
-                \Core\Helpers\RememberMeHelper::setRememberCookie($usuarioId, $token);
-            }
-
-            // Transferir carrito de invitado a usuario
+            // Transferir carrito
             \Core\Helpers\CartPersistenceHelper::transferGuestCartToUser($usuarioId);
-
-            // Registrar evento
-            SecurityLogger::log(SecurityLogger::LOGIN_SUCCESS, 'Usuario registrado e iniciado sesión exitosamente', [
-                'user_id' => $usuarioId,
-                'email' => $email,
-                'auto_login' => true
-            ]);
-
-            // Redirigir según el parámetro redirect
-            if (!empty($redirect)) {
-                header('Location: ' . url($redirect));
-            } else {
-                header('Location: ' . url('/auth/profile'));
-            }
+            
+            // ✅ REDIRECCIÓN FINAL (Éxito)
+            $targetUrl = !empty($redirect) ? url($redirect) : url('/auth/profile');
+            header('Location: ' . $targetUrl);
             exit;
         } catch (\Exception $e) {
-            error_log("Error en AuthController::procesarRegistro: " . $e->getMessage());
-            $error = urlencode('Error interno del servidor');
-            $redirectParam = !empty($redirect) ? '&redirect=' . urlencode($redirect) : '';
-            header('Location: ' . url("/auth/registro?error=$error$redirectParam"));
-            exit;
+            error_log("Error finalizando registro: " . $e->getMessage());
+            $_SESSION['flash_error'] = 'Error del servidor al crear la cuenta. Intenta de nuevo.';
+            goto error_redirect;
         }
+        
+        error_redirect:
+        // Redirigir al registro para mostrar el error
+        header('Location: ' . url('/auth/registro'));
+        exit;
     }
 
     /* ================================
@@ -765,6 +857,89 @@ class AuthController extends BaseController
                 'message' => 'Error al generar token'
             ]);
         }
+        exit;
+    }
+
+    public function reenviarCodigo() {
+        // SessionHelper::start() se llama en index.php
+        
+        if (session_status() === PHP_SESSION_NONE) {
+            \Core\Helpers\SessionHelper::start();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . url('/auth/registro'));
+            exit;
+        }
+
+        $email = $_POST['email'] ?? '';
+        $redirect = $_POST['redirect'] ?? '';
+        
+        // 1. Validaciones básicas y CSRF (simplificado, pero necesario)
+        if (empty($email)) {
+            $_SESSION['flash_error'] = 'Email no proporcionado.';
+            header('Location: ' . url('/auth/registro'));
+            exit;
+        }
+
+        $csrfToken = $_POST['csrf_token'] ?? '';
+        if (empty($csrfToken) || !\Core\Helpers\CsrfHelper::validateToken($csrfToken, 'registro_form', false)) { 
+            $_SESSION['flash_error'] = 'Error de seguridad: Token inválido o expirado. Por favor, inténtelo de nuevo.';
+            header('Location: ' . url('/auth/registro'));
+            exit;
+        }
+
+        // 2. Buscamos el registro pendiente
+        $db = \Core\Database::getInstance()->getConnection();
+        $stmt = $db->prepare("SELECT * FROM registros_pendientes WHERE email = ? AND expira_en > NOW()");
+        $stmt->execute([$email]);
+        $pendiente = $stmt->fetch(\PDO::FETCH_ASSOC);
+        
+        // 3. Generar y Guardar nuevo código
+        $nuevoCodigo = rand(100000, 999999);
+        $fechaCreacion = strtotime($pendiente['created_at']);
+        $fechaExpiracionOriginal = strtotime($pendiente['expira_en']);
+        $ventanaOriginal = $fechaExpiracionOriginal - $fechaCreacion;
+
+        // Si la ventana original era mayor a 24 horas (86400 segundos), asumimos que es invitación de Admin
+        // y mantenemos los 7 días desde AHORA. De lo contrario, usamos los 10 minutos estándar.
+        if ($ventanaOriginal > 86400) {
+            $expira = date('Y-m-d H:i:s', strtotime('+7 days'));
+        } else {
+            $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+        }
+
+        $nombre = $pendiente['nombre'] ?? 'Usuario'; // Fallback si no se encuentra
+        
+        // Actualizar o Insertar (Upsert simplificado)
+        // Si ya existe, actualizamos. Si no (caso raro de expiración total), insertamos de nuevo si tenemos datos.
+        if ($pendiente) {
+            $sql = "UPDATE registros_pendientes SET codigo = ?, expira_en = ? WHERE email = ?";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$nuevoCodigo, $expira, $email]);
+        } else {
+             // Si no hay pendiente, redirigimos con error para que se registre de cero
+            $_SESSION['flash_error'] = 'Tu sesión de registro ha expirado. Por favor regístrate nuevamente.';
+            header('Location: ' . url('/auth/registro'));
+            exit;
+        }
+
+        // 4. Enviar Email (Usamos el MailHelper, flujo normal)
+        if (\Core\Helpers\MailHelper::enviarCodigoVerificacion($email, $pendiente['nombre'], $nuevoCodigo)) {
+            $_SESSION['registro_reenvio_exito'] = true;
+            $_SESSION['registro_email_temp'] = $email;
+            $tiempoMensaje = ($ventanaOriginal > 86400) ? '7 días' : '10 minutos';
+            $_SESSION['flash_success'] = "Código reenviado. Tienes $tiempoMensaje para verificarlo.";
+        } else {
+            $_SESSION['flash_error'] = 'Error al enviar el correo. Intenta más tarde.';
+        }
+
+        // 5. Redirigir (Recargar página)
+        $urlDestino = url('/auth/registro');
+        if (!empty($redirect)) {
+            $urlDestino .= '?redirect=' . urlencode($redirect);
+        }
+        header('Location: ' . $urlDestino);
         exit;
     }
 }

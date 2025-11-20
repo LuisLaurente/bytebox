@@ -1,5 +1,4 @@
 <?php
-// Core/LoadEnv.php
 namespace Core;
 
 class LoadEnv
