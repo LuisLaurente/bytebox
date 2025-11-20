@@ -220,53 +220,48 @@ document.addEventListener('DOMContentLoaded', function() {
     // ---------------------------------------------------------------------
 
     // 2.1. Botón de Verificar (Finalizar Registro)
-    btnVerify.addEventListener('click', function() {
-        const code = codeInput.value.trim();
-        
-        if (code.length !== 6) {
-            msgError.textContent = "El código debe tener 6 dígitos.";
-            msgError.style.display = 'block';
-            return;
-        }
-
-        btnVerify.textContent = "Verificando...";
-        btnVerify.disabled = true;
-        msgError.style.display = 'none';
-
-        const formData = new FormData();
-        formData.append('email', emailInput.value);
-        formData.append('codigo', code);
-        formData.append('redirect', getRedirectParam());
-
-        // Petición AJAX al endpoint de VERIFICACIÓN (Paso 2 del Backend)
-        fetch('/bytebox/public/auth/verificarCodigoRegistro', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // ÉXITO: Redirección final
-                msgSuccess.style.display = 'block';
-                setTimeout(() => {
-                    window.location.href = data.redirect;
-                }, 1000);
-            } else {
-                // FALLO: Mostrar error en el modal
-                msgError.textContent = data.message;
+    if (btnVerify) {
+        btnVerify.addEventListener('click', function() {
+            const code = codeInput.value.trim();
+            
+            if (code.length !== 6) {
+                msgError.textContent = "El código debe tener 6 dígitos.";
                 msgError.style.display = 'block';
-                btnVerify.textContent = "Verificar y Crear Cuenta";
-                btnVerify.disabled = false;
+                return;
             }
-        })
-        .catch(err => {
-            console.error('Error de verificación:', err);
-            msgError.textContent = "Error de conexión o servidor.";
-            msgError.style.display = 'block';
-            btnVerify.textContent = "Verificar y Crear Cuenta";
-            btnVerify.disabled = false;
+
+            // Feedback visual
+            btnVerify.textContent = "Verificando...";
+            btnVerify.disabled = true;
+            msgError.style.display = 'none';
+
+            // 1. Crear formulario dinámico
+            const tempForm = document.createElement('form');
+            tempForm.method = 'POST';
+            tempForm.action = '/bytebox/public/auth/verificarCodigoRegistro'; // Ruta al nuevo método PHP
+
+            // 2. Añadir inputs necesarios
+            const inputs = [
+                { name: 'email', value: emailInput.value },
+                { name: 'codigo', value: code },
+                { name: 'redirect', value: getRedirectParam() }
+                // El CSRF no es estrictamente necesario si tu AuthController no lo valida en este paso específico,
+                // pero es buena práctica incluirlo si puedes tomarlo del form principal.
+            ];
+
+            inputs.forEach(item => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = item.name;
+                input.value = item.value;
+                tempForm.appendChild(input);
+            });
+
+            // 3. Enviar (Recarga la página)
+            document.body.appendChild(tempForm);
+            tempForm.submit();
         });
-    });
+    }
     
     // 2.2. Botón de Cancelar/Cerrar Modal
     if (btnCancel) {
@@ -330,24 +325,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 tempForm.appendChild(inputRed);
             }
 
-            /*const redirectInput = document.createElement('input');
-            redirectInput.type = 'hidden';
-            redirectInput.name = 'redirect';
-            redirectInput.value = redirect;
-            tempForm.appendChild(redirectInput);*/
-
-            // Añadir token CSRF (Obtenido del formulario principal)
-            /*const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = 'csrf_token';
-            // Asumimos que el formulario principal contiene el token
-            csrfInput.value = form.querySelector('input[name="csrf_token"]').value; 
-            tempForm.appendChild(csrfInput);*/
-            
-            // 5. Ocultar modal, añadir al body y enviar
-            //modal.style.display = 'none';
             document.body.appendChild(tempForm);
-            tempForm.submit(); // <-- Fuerza la recarga, resolviendo el error de JSON
+            tempForm.submit();
         });
     }
 
@@ -395,49 +374,6 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {HTMLElement} strengthDiv 
      * @param {HTMLElement} hintElement 
      */
-    /* function updatePasswordStrengthUI(strength, strengthDiv, hintElement) {
-        // Limpiar clases anteriores
-        strengthDiv.className = 'password-strength';
-        
-        let strengthTextSpan = strengthDiv.querySelector('.strength-label');
-
-        if (strength.level === 'none' || passwordInput.value.length === 0) {
-            strengthDiv.style.display = 'none';
-            hintElement.textContent = 'Mínimo 6 caracteres';
-            hintElement.className = 'hint';
-            hintElement.style.display = 'block';
-            if (strengthTextSpan) strengthTextSpan.remove();
-            return;
-        } else {
-            strengthDiv.classList.add(strength.level);
-            
-            // Texto del indicador
-            let strengthText = '';
-            switch (strength.level) {
-                case 'weak':
-                    strengthText = 'Débil';
-                    break;
-                case 'medium':
-                    strengthText = 'Media';
-                    break;
-                case 'strong':
-                    strengthText = 'Fuerte';
-                    break;
-            }
-            
-            strengthDiv.textContent = `Fortaleza: ${strengthText}`;
-            
-            // Actualizar hint
-            if (strength.feedback.length > 0) {
-                hintElement.textContent = strength.feedback.join(' • '); // Separador más limpio
-                hintElement.className = 'hint warning';
-            } else {
-                hintElement.textContent = '✓ Contraseña segura';
-                hintElement.className = 'hint success';
-            }
-        }
-    } */
-
     function updatePasswordStrengthUI(strength, strengthDiv, hintElement) {
         // 1. Limpiar y configurar el DIV padre
         strengthDiv.className = 'password-strength';

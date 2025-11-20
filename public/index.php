@@ -147,6 +147,7 @@ $public_unauthenticated_routes = [
     'admin/login',
     'admin/authenticate', // Permitir que el admin se autentique
     'auth/reenviarCodigo', // Permitir el POST de reenvío
+    'auth/verificarCodigoRegistro', 
     'auth/registro',       // Permitir el GET a la página de registro
     'auth/login',          // Permitir el GET a la página de login
     'auth/authenticate',   // Permitir el POST de login

@@ -137,17 +137,22 @@
         <?php endif; ?>
 
         <?php
-            // Verificar si hay un flag de reenvío automático
+            // Lógica unificada para abrir el modal automáticamente
             $autoOpenModal = false;
             $tempEmail = '';
             
-            if (isset($_SESSION['registro_reenvio_exito']) && $_SESSION['registro_reenvio_exito'] === true) {
+            // Caso 1: Viene de "Reenviar Código" (Éxito)
+            if (isset($_SESSION['registro_reenvio_exito'])) {
                 $autoOpenModal = true;
                 $tempEmail = $_SESSION['registro_email_temp'] ?? '';
-                
-                // Limpiar las variables de sesión para que no se abra siempre al recargar
                 unset($_SESSION['registro_reenvio_exito']);
-                // No borramos el email todavía por si acaso, o lo guardamos en el input
+            }
+
+            // Caso 2: Viene de "Verificar Código" (Error, código incorrecto)
+            if (isset($_SESSION['abrir_modal_verificacion'])) {
+                $autoOpenModal = true;
+                $tempEmail = $_SESSION['registro_email_temp'] ?? '';
+                unset($_SESSION['abrir_modal_verificacion']);
             }
         ?>
 

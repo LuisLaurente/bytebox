@@ -19,6 +19,7 @@ class AuthMiddleware
         'auth/getCsrfToken',  // ← Permitir obtener token CSRF sin autenticación
         'auth/registro',
         'auth/reenviarCodigo',
+        'auth/verificarCodigoRegistro',
         'auth/procesarRegistro',
         'googleauth/login',
         'auth/oauth/google',
