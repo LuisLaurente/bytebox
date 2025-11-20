@@ -138,6 +138,7 @@
     width: 100%; padding: 15px; font-size: 24px; text-align: center;
     letter-spacing: 8px; background: #000; border: 2px solid #333;
     color: #00d2ff; border-radius: 8px; margin-top: 15px;
+    box-sizing: border-box;
 }
 #verificationCode:focus { border-color: #00d2ff; outline: none; }
 .modal-footer { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }

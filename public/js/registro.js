@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitText = document.getElementById('submitText');
     const submitSpinner = document.getElementById('submitSpinner');
 
+    const nameInput = document.getElementById('nombre');
+    const termsCheckbox = document.getElementById('terms');
+
     // === NUEVAS CONSTANTES DEL MODAL ===
     const modal = document.getElementById('verificationModal');
     const modalEmailDisplay = document.getElementById('modalEmailDisplay');
@@ -67,6 +70,24 @@ document.addEventListener('DOMContentLoaded', function() {
     function getRedirectParam() {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('redirect') || '';
+    }
+
+    // ---------------------------------------------------------------------
+    // ASIGNACIÓN DE LISTENERS Y ESTADO INICIAL
+    // ---------------------------------------------------------------------
+    
+    // 1. Asignar la función de chequeo a todos los eventos relevantes
+    [nameInput, emailInput, passwordInput, confirmPasswordInput, termsCheckbox].forEach(element => {
+        if (element) {
+            // El evento 'input' captura escritura. El evento 'change' (para checkbox) captura el clic.
+            element.addEventListener(element.type === 'checkbox' ? 'change' : 'input', checkFormValidity);
+        }
+    });
+
+    // 2. Asegurar el estado inicial
+    if (submitBtn) {
+        submitBtn.disabled = true; // Deshabilitar por defecto en caso de que el HTML no lo haga
+        checkFormValidity(); // Ejecutar inmediatamente al cargar para actualizar el estado
     }
 
     // === VALIDACIONES EN TIEMPO REAL ===
@@ -461,6 +482,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         return isValid;
+    }
+
+    // ---------------------------------------------------------------------
+    // 🛑 NUEVA LÓGICA DE CONTROL UX: Habilitación del Botón 🛑
+    // ---------------------------------------------------------------------
+
+    function checkFormValidity() {
+        // 1. Verificar contenido y longitud mínima (debe ser consistente con el backend)
+        const isNameValid = nameInput && nameInput.value.trim().length >= 2;
+        const isPasswordLengthValid = passwordInput && passwordInput.value.length >= 6;
+        
+        // 2. Verificar formato simple de email (para UX, la validación estricta queda en el backend)
+        const isEmailFormatValid = emailInput && emailInput.value.includes('@') && emailInput.value.includes('.'); 
+        
+        // 3. Verificar match de contraseñas
+        const doPasswordsMatch = passwordInput && confirmPasswordInput && 
+                                 passwordInput.value.length > 0 && 
+                                 passwordInput.value === confirmPasswordInput.value;
+        
+        // 4. Verificar aceptación de términos
+        const isTermsAccepted = termsCheckbox && termsCheckbox.checked;
+
+        const isFormReady = isNameValid && isEmailFormatValid && isPasswordLengthValid && doPasswordsMatch && isTermsAccepted;
+
+        // Habilitar / Deshabilitar el botón
+        if (submitBtn) {
+            submitBtn.disabled = !isFormReady;
+        }
     }
 
     // Auto-ocultar mensajes de alerta después de 5 segundos
