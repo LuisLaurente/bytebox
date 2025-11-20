@@ -168,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     btnVerify.textContent = "Verificar y Crear Cuenta";
                     btnVerify.disabled = false;
                     codeInput.focus();
+                    startResendTimer(RESEND_DELAY_SECONDS);
                 } else {
                     // 1.4. FALLO: Mostrar error en el formulario principal
                     alert('Error en el registro: ' + data.message);
@@ -250,7 +251,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // 2.3. Lógica del botón Reenviar Código (Opcional, seguridad mejorada)
     if (btnResend) {
         btnResend.addEventListener('click', function() {
-            if (resendCooldown > 0) return;
+            const msgError = document.getElementById('modalError');
+
+            if (resendCooldown > 0) {
+                msgError.textContent = `Por favor, espera ${resendCooldown} segundos para reenviar.`;
+                msgError.style.color = 'orange';
+                msgError.style.display = 'block';
+                return; 
+            }
             
             btnResend.disabled = true;
             btnResend.textContent = "Reenviando...";
@@ -288,6 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     btnResend.textContent = "Reenviar código"; 
                     btnResend.disabled = false;
                 }
+                msgError.style.display = 'block';
             })
             .catch(err => {
                 // Este catch se activa en caso de fallo de red o si el backend devuelve HTML de error (PHP)
@@ -300,15 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 btnResend.textContent = "Reenviar código"; 
                 btnResend.disabled = false;
             })
-            .finally(() => {
-                // Delay de seguridad de 30 segundos
-                setTimeout(() => {
-                    btnResend.textContent = "Reenviar código";
-                    btnResend.disabled = false;
-                    msgError.style.color = 'red'; // Restablecer color de error
-                }, 30000); 
-                msgError.style.display = 'block';
-            });
         });
     }
 
@@ -461,6 +461,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function startResendTimer(seconds) {
         const btnResend = document.getElementById('btnResend');
+        const msgError = document.getElementById('modalError');
         resendCooldown = seconds;
         btnResend.disabled = true;
 
@@ -481,6 +482,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 msgError.style.color = 'orange';
                 msgError.textContent = "El tiempo de espera para el reenvío ha terminado. Puedes volver a enviarlo.";
                 msgError.style.display = 'block';
+                setTimeout(() => {
+                    msgError.style.display = 'none';
+                }, 5000);
             } else {
                 btnResend.textContent = `Reenviar en (${resendCooldown}s)`;
             }
