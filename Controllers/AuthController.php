@@ -660,6 +660,8 @@ class AuthController extends BaseController
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
         $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
+        ob_start();
+
         // 5. Guardar/Actualizar en tabla TEMPORAL (registros_pendientes)
         try {
             $db = \Core\Database::getInstance()->getConnection();
@@ -674,13 +676,17 @@ class AuthController extends BaseController
 
             // 6. Enviar Email con el código de verificación
             if (\Core\Helpers\MailHelper::enviarCodigoVerificacion($email, $nombre, $codigo)) {
+                ob_end_clean();
                 echo json_encode(['success' => true, 'message' => 'Código enviado']);
             } else {
+                ob_end_clean();
                 echo json_encode(['success' => false, 'message' => 'Error al enviar el correo. Verifica tu dirección y reintenta.']);
             }
 
         } catch (\Exception $e) {
+            ob_end_clean();
             error_log("Error en iniciarRegistro: " . $e->getMessage());
+            http_response_code(500); // Enviar código de error HTTP
             echo json_encode(['success' => false, 'message' => 'Error interno del servidor al procesar el registro.']);
         }
         exit;

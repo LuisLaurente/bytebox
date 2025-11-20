@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submitBtn');
     const submitText = document.getElementById('submitText');
     const submitSpinner = document.getElementById('submitSpinner');
-
     const nameInput = document.getElementById('nombre');
     const termsCheckbox = document.getElementById('terms');
 
@@ -27,6 +26,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnCancel = document.getElementById('btnCancel');
     const msgError = document.getElementById('modalError');
     const msgSuccess = document.getElementById('modalSuccess');
+
+    const RESEND_DELAY_SECONDS = 60; // 60 segundos de espera
+    let resendCooldown = 0; 
+    let resendTimer = null;
 
     // ANIDAMIENTO DE LA P DENTRO DEL DIV MEDIANTE DOM
     if (passwordStrengthDiv && passwordHint) {
@@ -247,6 +250,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 2.3. Lógica del botón Reenviar Código (Opcional, seguridad mejorada)
     if (btnResend) {
         btnResend.addEventListener('click', function() {
+            if (resendCooldown > 0) return;
+            
             btnResend.disabled = true;
             btnResend.textContent = "Reenviando...";
             msgError.style.display = 'none';
@@ -259,19 +264,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    // Si el servidor responde con 4xx o 5xx, disparamos el error de conexión
+                    throw new Error(`Error HTTP: ${response.status} - El servidor devolvió un error.`);
+                }
+                return response.json(); // Intentar procesar JSON
+            })
             .then(data => {
                 if (data.success) {
+                    // ÉXITO: Iniciar el temporizador
+                    startResendTimer(RESEND_DELAY_SECONDS); 
                     msgError.textContent = "¡Nuevo código enviado! Revisa tu bandeja.";
                     msgError.style.color = 'green';
+                    msgError.style.display = 'block';
                 } else {
-                    msgError.textContent = data.message || "Error al reenviar. Intenta de nuevo más tarde.";
+                    // FALLO LÓGICO: El backend devolvió un error de validación (ej. email ya existe)
+                    msgError.textContent = data.message;
                     msgError.style.color = 'red';
+                    msgError.style.display = 'block';
+                    
+                    // Restaurar botón (ya que el problema no es el envío sino la lógica)
+                    btnResend.textContent = "Reenviar código"; 
+                    btnResend.disabled = false;
                 }
             })
             .catch(err => {
-                msgError.textContent = "Error de conexión al reenviar.";
+                // Este catch se activa en caso de fallo de red o si el backend devuelve HTML de error (PHP)
+                console.error('Error al reenviar:', err);
+                msgError.textContent = "Error de conexión o JSON inválido. Revisa el log del servidor.";
                 msgError.style.color = 'red';
+                msgError.style.display = 'block';
+                
+                // Restaurar botón (permitir reintento inmediato si fue fallo de red)
+                btnResend.textContent = "Reenviar código"; 
+                btnResend.disabled = false;
             })
             .finally(() => {
                 // Delay de seguridad de 30 segundos
@@ -430,6 +457,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         hintElement.style.display = 'block';
+    }
+    
+    function startResendTimer(seconds) {
+        const btnResend = document.getElementById('btnResend');
+        resendCooldown = seconds;
+        btnResend.disabled = true;
+
+        // Detiene cualquier temporizador anterior
+        if (resendTimer) {
+            clearInterval(resendTimer);
+        }
+        
+        // Inicia el nuevo temporizador
+        resendTimer = setInterval(() => {
+            resendCooldown--;
+            if (resendCooldown <= 0) {
+                clearInterval(resendTimer);
+                btnResend.disabled = false;
+                btnResend.textContent = "Reenviar código";
+                // Mensaje de feedback de que el tiempo de espera terminó
+                const msgError = document.getElementById('modalError');
+                msgError.style.color = 'orange';
+                msgError.textContent = "El tiempo de espera para el reenvío ha terminado. Puedes volver a enviarlo.";
+                msgError.style.display = 'block';
+            } else {
+                btnResend.textContent = `Reenviar en (${resendCooldown}s)`;
+            }
+        }, 1000);
     }
 
     /**
