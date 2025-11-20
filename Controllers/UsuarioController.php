@@ -178,18 +178,25 @@ class UsuarioController extends BaseController
                 exit;
             }
 
-            // Sanitizar datos
+            // 1. Recoger datos básicos
             $datos = [
                 'nombre' => Sanitizer::cleanString($_POST['nombre'] ?? ''),
                 'email' => Sanitizer::sanitizeEmail($_POST['email'] ?? ''),
-                'password' => $_POST['password'] ?? '',
-                'confirmar_password' => $_POST['confirmar_password'] ?? '',
                 'rol_id' => (int)($_POST['rol'] ?? 2),
                 'activo' => isset($_POST['activo']) ? 1 : 0
             ];
 
-            // Validar datos (para actualización)
-            $errores = $this->validarDatos($datos, false, $id);
+            // 2. Recoger contraseñas por separado para validar
+            $passwordInput = $_POST['password'] ?? '';
+            $confirmarPassword = $_POST['confirmar_password'] ?? '';
+
+            // Añadir al array temporalmente solo para la validación
+            $datosParaValidar = $datos;
+            $datosParaValidar['password'] = $passwordInput;
+            $datosParaValidar['confirmar_password'] = $confirmarPassword;
+
+            // Validar datos (false indica que es edición, no creación)
+            $errores = $this->validarDatos($datosParaValidar, false, $id);
 
             if (!empty($errores)) {
                 $error = urlencode(implode(', ', $errores));
@@ -197,12 +204,20 @@ class UsuarioController extends BaseController
                 exit;
             }
 
-            // Verificar si el email ya existe (excluyendo el usuario actual)
+            // Verificar si el email ya existe (excluyendo el ID actual)
             if ($this->usuarioModel->existeEmail($datos['email'], $id)) {
                 $error = urlencode('El email ya está registrado por otro usuario');
                 header('Location: ' . url("/usuario/editar/$id?error=$error"));
                 exit;
             }
+
+            // 🔒 CRÍTICO: ENCRIPTADO DE CONTRASEÑA
+            // Si el campo de password NO está vacío, lo hasheamos.
+            if (!empty($passwordInput)) {
+                $datos['password'] = password_hash($passwordInput, PASSWORD_DEFAULT);
+            }
+            // Si está vacío, NO lo añadimos al array $datos.
+            // El modelo Usuario::actualizar ignorará el campo si no existe, manteniendo la contraseña vieja.
 
             // Actualizar usuario
             $resultado = $this->usuarioModel->actualizar($id, $datos);
