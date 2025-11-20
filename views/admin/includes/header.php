@@ -708,41 +708,80 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
       });
     }
 
-    /* ---------- Categories dropdown open/close with small delay ---------- */
+    /* ---------- Categories dropdown open/close logic (Mobile & Desktop fix) ---------- */
     const allCategoriesButton = document.getElementById('allCategoriesButton');
     const categoriesDropdown = document.getElementById('categoriesDropdown');
     let categoriesCloseTimeout = null;
+    // Bandera para detectar si la interacción es táctil
+    let isTouchInteraction = false;
 
     if (allCategoriesButton && categoriesDropdown) {
+      
+      // 1. Detectar interacción táctil para desactivar el hover
+      allCategoriesButton.addEventListener('touchstart', function() {
+        isTouchInteraction = true;
+      }, { passive: true });
+
+      // 2. Lógica de Mouse (Escritorio)
       allCategoriesButton.addEventListener('mouseenter', () => {
+        if (isTouchInteraction) return; // Ignorar si es táctil
         clearTimeout(categoriesCloseTimeout);
-        categoriesDropdown.classList.add('open');
-        allCategoriesButton.setAttribute('aria-expanded', 'true');
-        categoriesDropdown.setAttribute('aria-hidden', 'false');
+        openCategories();
       });
 
       allCategoriesButton.addEventListener('mouseleave', () => {
-        categoriesCloseTimeout = setTimeout(() => {
-          categoriesDropdown.classList.remove('open');
-          allCategoriesButton.setAttribute('aria-expanded', 'false');
-          categoriesDropdown.setAttribute('aria-hidden', 'true');
-        }, 200);
+        if (isTouchInteraction) return; // Ignorar si es táctil
+        scheduleCloseCategories();
       });
 
       categoriesDropdown.addEventListener('mouseenter', () => {
+        if (isTouchInteraction) return; // Ignorar si es táctil
+        clearTimeout(categoriesCloseTimeout);
+        openCategories();
+      });
+
+      categoriesDropdown.addEventListener('mouseleave', () => {
+        if (isTouchInteraction) return; // Ignorar si es táctil
+        scheduleCloseCategories();
+      });
+
+      // 3. Lógica de Clic (Móvil y Escritorio)
+      allCategoriesButton.addEventListener('click', (e) => {
+        // En móvil, el clic es el evento principal para abrir/cerrar
+        // En escritorio, permite hacer clic para alternar si el usuario lo prefiere
+        e.stopPropagation();
+        
+        if (categoriesDropdown.classList.contains('open')) {
+          closeCategories();
+        } else {
+          openCategories();
+        }
+      });
+
+      // 4. Cerrar al hacer clic fuera (Esencial para móvil)
+      document.addEventListener('click', (e) => {
+        if (!allCategoriesButton.contains(e.target) && !categoriesDropdown.contains(e.target)) {
+          closeCategories();
+        }
+      });
+
+      // --- Funciones auxiliares para no repetir código ---
+      function openCategories() {
         clearTimeout(categoriesCloseTimeout);
         categoriesDropdown.classList.add('open');
         allCategoriesButton.setAttribute('aria-expanded', 'true');
         categoriesDropdown.setAttribute('aria-hidden', 'false');
-      });
+      }
 
-      categoriesDropdown.addEventListener('mouseleave', () => {
-        categoriesCloseTimeout = setTimeout(() => {
-          categoriesDropdown.classList.remove('open');
-          allCategoriesButton.setAttribute('aria-expanded', 'false');
-          categoriesDropdown.setAttribute('aria-hidden', 'true');
-        }, 200);
-      });
+      function closeCategories() {
+        categoriesDropdown.classList.remove('open');
+        allCategoriesButton.setAttribute('aria-expanded', 'false');
+        categoriesDropdown.setAttribute('aria-hidden', 'true');
+      }
+
+      function scheduleCloseCategories() {
+        categoriesCloseTimeout = setTimeout(closeCategories, 200);
+      }
     }
 
     /* ---------- Login modal logic ---------- */
