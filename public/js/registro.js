@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(form);
             formData.append('redirect', getRedirectParam()); // Mantener los datos originales
             
-            fetch('/bytebox/public/auth/iniciarRegistro', { 
+            fetch('/bytebox/public/resend_handler.php', { 
                 method: 'POST',
                 body: formData
             })

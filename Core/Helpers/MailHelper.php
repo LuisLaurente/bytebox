@@ -11,6 +11,8 @@ class MailHelper
     {
         $mail = new PHPMailer(true);
 
+        ob_start();
+
         try {
             // Configuración del servidor
             $mail->isSMTP();
@@ -53,8 +55,14 @@ class MailHelper
             $mail->AltBody = "Tu código de verificación es: $codigo";
 
             $mail->send();
+            ob_end_clean();
             return true;
         } catch (Exception $e) {
+            
+            if (ob_get_length() > 0) {
+                ob_end_clean();
+            }
+            
             error_log("Error detallado de PHPMailer: " . $mail->ErrorInfo); 
             return false;
         }
