@@ -603,6 +603,8 @@ class AuthController extends BaseController
      * Este método reemplaza la lógica principal del anterior procesarRegistro.
      */
     public function iniciarRegistro() {
+        ob_start();
+        
         header('Content-Type: application/json');
         
         // Inicializar la respuesta con un error por defecto (lo que se enviará al final)
@@ -676,7 +678,6 @@ class AuthController extends BaseController
                 // Fallo controlado del envío de correo (pero no excepción fatal)
                 $response['message'] = 'Error al enviar el correo. Verifica tu dirección y reintenta.';
             }
-
         } catch (\Exception $e) {
             
             // 📢 3. FALLO CRÍTICO: Capturado por excepción

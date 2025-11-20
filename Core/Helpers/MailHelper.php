@@ -13,6 +13,7 @@ class MailHelper
         try {
             // Configuración del servidor
             $mail->isSMTP();
+            $mail->SMTPDebug = \PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
             $mail->Host = $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = $_ENV['SMTP_USER'];
@@ -46,9 +47,10 @@ class MailHelper
             $mail->AltBody = "Tu código de verificación es: $codigo";
 
             $mail->send();
+            $mail->SMTPDebug = \PHPMailer\PHPMailer\SMTP::DEBUG_OFF;
             return true;
         } catch (Exception $e) {
-            error_log("Error enviando email: {$mail->ErrorInfo}");
+            error_log("Error detallado de PHPMailer: " . $mail->ErrorInfo); 
             return false;
         }
     }
