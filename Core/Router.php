@@ -25,6 +25,7 @@ class Router
         // === NUEVAS RUTAS DE REGISTRO AJAX ===
         'auth/iniciarRegistro' => ['controller' => 'AuthController', 'method' => 'iniciarRegistro'],
         'auth/verificarCodigoRegistro' => ['controller' => 'AuthController', 'method' => 'verificarCodigoRegistro'],
+        'auth/reenviarCodigo' => ['controller' => 'AuthController', 'method' => 'reenviarCodigo'], // <-- NUEVA RUTA SÍNCRONA
         // ======================================
 
         // Pagos

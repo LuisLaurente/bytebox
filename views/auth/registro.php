@@ -98,27 +98,43 @@
     </div>
 
     <div id="verificationModal" class="modal-overlay" style="display: none;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3><span class="icon">✉️</span> Verifica tu correo</h3>
-            <p>Hemos enviado un código a <strong id="modalEmailDisplay"></strong></p>
-        </div>
-        
-        <div class="modal-body">
-            <div class="code-inputs">
-                <input type="text" id="verificationCode" placeholder="123456" maxlength="6" autocomplete="off">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><span class="icon">✉️</span> Verifica tu correo</h3>
+                <p>Hemos enviado un código a <strong id="modalEmailDisplay"></strong></p>
             </div>
-            <div id="modalError" class="error-msg" style="display:none; color: red; margin-top: 10px;"></div>
-            <div id="modalSuccess" class="success-msg" style="display:none; color: green; margin-top: 10px;">¡Verificado! Redirigiendo...</div>
-        </div>
+            
+            <div class="modal-body">
+                <div class="code-inputs">
+                    <input type="text" id="verificationCode" placeholder="123456" maxlength="6" autocomplete="off">
+                </div>
+                <div id="modalError" class="error-msg" style="display:none; color: red; margin-top: 10px;"></div>
+                <div id="modalSuccess" class="success-msg" style="display:none; color: green; margin-top: 10px;">¡Verificado! Redirigiendo...</div>
+            </div>
 
-        <div class="modal-footer">
-            <button id="btnVerify" type="button" class="btn-primary">Verificar y Crear Cuenta</button>
-            <button id="btnResend" type="button" class="btn-link">Reenviar código</button>
-            <button id="btnCancel" type="button" class="btn-link close-modal">Cancelar</button>
+            <div class="modal-footer">
+                <button id="btnVerify" type="button" class="btn-primary">Verificar y Crear Cuenta</button>
+                <button id="btnResend" type="button" class="btn-link">Reenviar código</button>
+                <button id="btnCancel" type="button" class="btn-link close-modal">Cancelar</button>
+            </div>
         </div>
     </div>
-</div>
+
+    <?php 
+        // Recuperar mensajes de la sesión y borrarlos (Flash Message)
+        $flash_error = \Core\Helpers\SessionHelper::get('flash_error');
+        $flash_success = \Core\Helpers\SessionHelper::get('flash_success');
+        \Core\Helpers\SessionHelper::remove('flash_error');
+        \Core\Helpers\SessionHelper::remove('flash_success');
+    ?>
+
+    <?php if (!empty($error) || !empty($flash_error)): ?>
+        <div class="alert error"><?= htmlspecialchars($error ?? $flash_error) ?></div>
+    <?php endif; ?>
+
+    <?php if (!empty($success) || !empty($flash_success)): ?>
+        <div class="alert success"><?= htmlspecialchars($success ?? $flash_success) ?></div>
+    <?php endif; ?>
 
 <style>
 /* Estilos rápidos para el modal (Mover a registro.css idealmente) */

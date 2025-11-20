@@ -253,6 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btnResend.addEventListener('click', function() {
             const msgError = document.getElementById('modalError');
 
+            // 1. Validar Cooldown
             if (resendCooldown > 0) {
                 msgError.textContent = `Por favor, espera ${resendCooldown} segundos para reenviar.`;
                 msgError.style.color = 'orange';
@@ -260,55 +261,45 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; 
             }
             
+            // 2. Prevenir DOBLE-CLICK y ocultar mensaje
             btnResend.disabled = true;
             btnResend.textContent = "Reenviando...";
             msgError.style.display = 'none';
 
-            // Simulación de reenvío: Llama de nuevo a iniciarRegistro
-            const formData = new FormData(form);
-            formData.append('email', emailInput.value); // Solo necesitamos el email
+            // 3. Recolectar datos
+            const email = document.getElementById('email').value;
+            const redirect = getRedirectParam();
             
-            fetch('/bytebox/public/resend_code_handler.php', { 
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    // Si el servidor responde con 4xx o 5xx, disparamos el error de conexión
-                    throw new Error(`Error HTTP: ${response.status} - El servidor devolvió un error.`);
-                }
-                return response.json(); // Intentar procesar JSON
-            })
-            .then(data => {
-                if (data.success) {
-                    // ÉXITO: Iniciar el temporizador
-                    startResendTimer(RESEND_DELAY_SECONDS); 
-                    msgError.textContent = "¡Nuevo código enviado! Revisa tu bandeja.";
-                    msgError.style.color = 'green';
-                    msgError.style.display = 'block';
-                } else {
-                    // FALLO LÓGICO: El backend devolvió un error de validación (ej. email ya existe)
-                    msgError.textContent = data.message;
-                    msgError.style.color = 'red';
-                    msgError.style.display = 'block';
-                    
-                    // Restaurar botón (ya que el problema no es el envío sino la lógica)
-                    btnResend.textContent = "Reenviar código"; 
-                    btnResend.disabled = false;
-                }
-                msgError.style.display = 'block';
-            })
-            .catch(err => {
-                // Este catch se activa en caso de fallo de red o si el backend devuelve HTML de error (PHP)
-                console.error('Error al reenviar:', err);
-                msgError.textContent = "Error de conexión o JSON inválido. Revisa el log del servidor.";
-                msgError.style.color = 'red';
-                msgError.style.display = 'block';
-                
-                // Restaurar botón (permitir reintento inmediato si fue fallo de red)
-                btnResend.textContent = "Reenviar código"; 
-                btnResend.disabled = false;
-            })
+            // 4. Crear un formulario dinámico (mecanismo para POST síncrono)
+            const tempForm = document.createElement('form');
+            tempForm.method = 'POST';
+            tempForm.action = '/bytebox/public/auth/reenviarCodigo'; // <--- APUNTAR A LA NUEVA RUTA
+            
+            // Campos necesarios para el POST
+            const emailInput = document.createElement('input');
+            emailInput.type = 'hidden';
+            emailInput.name = 'email';
+            emailInput.value = email;
+            tempForm.appendChild(emailInput);
+
+            const redirectInput = document.createElement('input');
+            redirectInput.type = 'hidden';
+            redirectInput.name = 'redirect';
+            redirectInput.value = redirect;
+            tempForm.appendChild(redirectInput);
+
+            // Añadir token CSRF (Obtenido del formulario principal)
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            // Asumimos que el formulario principal contiene el token
+            csrfInput.value = form.querySelector('input[name="csrf_token"]').value; 
+            tempForm.appendChild(csrfInput);
+            
+            // 5. Ocultar modal, añadir al body y enviar
+            modal.style.display = 'none';
+            document.body.appendChild(tempForm);
+            tempForm.submit(); // <-- Fuerza la recarga, resolviendo el error de JSON
         });
     }
 

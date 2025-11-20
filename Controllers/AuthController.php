@@ -981,4 +981,57 @@ class AuthController extends BaseController
         }
         exit;
     }
+
+    public function reenviarCodigo() {
+        // SessionHelper::start() se llama en index.php
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . url('/auth/registro'));
+            exit;
+        }
+
+        $email = $_POST['email'] ?? '';
+        $redirect = $_POST['redirect'] ?? '';
+        
+        // 1. Validaciones básicas y CSRF (simplificado, pero necesario)
+        $csrfToken = $_POST['csrf_token'] ?? '';
+        if (empty($csrfToken) || !\Core\Helpers\CsrfHelper::validateToken($csrfToken, 'registro_form', false)) { 
+            $_SESSION['flash_error'] = 'Error de seguridad: Token inválido o expirado. Por favor, inténtelo de nuevo.';
+            goto redirect_back;
+        }
+
+        // 2. Buscamos el registro pendiente
+        $db = \Core\Database::getInstance()->getConnection();
+        $stmt = $db->prepare("SELECT * FROM registros_pendientes WHERE email = ? AND expira_en > NOW()");
+        $stmt->execute([$email]);
+        $pendiente = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$pendiente) {
+            $_SESSION['flash_error'] = 'El tiempo para el reenvío ha expirado o el email no es válido.';
+            goto redirect_back;
+        }
+        
+        // 3. Generar y Guardar nuevo código
+        $nuevoCodigo = rand(100000, 999999);
+        $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+        
+        $sql = "UPDATE registros_pendientes SET codigo = ?, expira_en = ? WHERE email = ?";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$nuevoCodigo, $expira, $email]);
+
+        // 4. Enviar Email (Usamos el MailHelper, que ya está protegido con ob_start/clean)
+        if (\Core\Helpers\MailHelper::enviarCodigoVerificacion($email, $pendiente['nombre'], $nuevoCodigo)) {
+            $_SESSION['flash_success'] = '¡Nuevo código enviado correctamente! Revisa tu bandeja de entrada.';
+        } else {
+            $_SESSION['flash_error'] = 'Error al enviar el correo. Verifique la configuración SMTP.';
+        }
+
+        redirect_back:
+        $targetUrl = url('/auth/registro');
+        if (!empty($redirect)) {
+            $targetUrl .= '?redirect=' . urlencode($redirect);
+        }
+        header('Location: ' . $targetUrl);
+        exit;
+    }
 }
