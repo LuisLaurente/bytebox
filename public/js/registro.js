@@ -103,6 +103,50 @@ document.addEventListener('DOMContentLoaded', function() {
         return urlParams.get('redirect') || '';
     }
 
+    function checkPasswordsMatch() {
+        // Si no existen los elementos, salir (protección)
+        if (!passwordInput || !confirmPasswordInput || !passwordMatch) return;
+
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        // Condición: Ambos campos deben tener al menos un carácter
+        if (password.length > 0 && confirmPassword.length > 0) {
+            if (password === confirmPassword) {
+                passwordMatch.textContent = '✓ Las contraseñas coinciden';
+                passwordMatch.className = 'hint success';
+            } else {
+                passwordMatch.textContent = '✗ Las contraseñas no coinciden';
+                passwordMatch.className = 'hint error';
+            }
+        } else {
+            // Si alguno está vacío, limpiamos el mensaje para no confundir
+            passwordMatch.textContent = '';
+            passwordMatch.className = 'hint';
+        }
+    }
+
+    // 1. Listener para el campo 'Contraseña' (Fortaleza + Coincidencia)
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function() {
+            // A. Lógica existente de fortaleza
+            if (passwordStrengthDiv) {
+                const strength = calculatePasswordStrength(this.value);
+                updatePasswordStrengthUI(strength, passwordStrengthDiv, passwordHint);
+            }
+
+            // B. Nueva lógica: Verificar coincidencia en tiempo real
+            checkPasswordsMatch();
+        });
+    }
+
+    // 2. Listener para el campo 'Confirmar Contraseña' (Solo Coincidencia)
+    if (confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('input', function() {
+            checkPasswordsMatch();
+        });
+    }
+
     // ---------------------------------------------------------------------
     // ASIGNACIÓN DE LISTENERS Y ESTADO INICIAL
     // ---------------------------------------------------------------------
@@ -132,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Validación de confirmación de contraseña
-    if (confirmPasswordInput && passwordMatch) {
+    /*if (confirmPasswordInput && passwordMatch) {
         confirmPasswordInput.addEventListener('input', function() {
             const password = passwordInput.value;
             const confirmPassword = this.value;
@@ -150,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 passwordMatch.className = 'hint';
             }
         });
-    }
+    }*/
 
     // ---------------------------------------------------------------------
     // 1. MANEJO DE ENVÍO DEL FORMULARIO (NUEVA LÓGICA AJAX)

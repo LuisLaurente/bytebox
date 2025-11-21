@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-WickedPrueba',
         'version' => 'dev-WickedPrueba',
-        'reference' => '2b08c8e7ebfb1ecbd918b8e3ed80c72533654bd2',
+        'reference' => '74b6c386acaea390a919c973f78d08b7d96b9785',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-WickedPrueba',
             'version' => 'dev-WickedPrueba',
-            'reference' => '2b08c8e7ebfb1ecbd918b8e3ed80c72533654bd2',
+            'reference' => '74b6c386acaea390a919c973f78d08b7d96b9785',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

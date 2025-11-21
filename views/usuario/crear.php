@@ -124,6 +124,7 @@
                                             required 
                                             class="usuario-crear-select">
                                         <?php foreach ($roles as $rol): ?>
+                                            <?php if ($rol['id'] == 2) continue; ?>
                                             <option value="<?= htmlspecialchars($rol['id']) ?>" 
                                                     <?= ($_POST['rol'] ?? '') == $rol['id'] ? 'selected' : '' ?>>
                                                 <?= htmlspecialchars($rol['nombre']) ?>
