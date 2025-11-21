@@ -256,73 +256,33 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const modal = document.getElementById('verificationModal');
-                const emailDisplay = document.getElementById('modalEmailDisplay');
-                const btnVerify = document.getElementById('btnVerify');
-                const btnResend = document.getElementById('btnResend');
-                const btnCancel = document.getElementById('btnCancel');
-                const codeInput = document.getElementById('verificationCode');
-                
-                // Variables PHP inyectadas
-                const shouldOpen = <?= $openModal ? 'true' : 'false' ?>;
-                const userEmail = "<?= htmlspecialchars($emailPendiente) ?>";
+                console.log("Script de login cargado"); // Debugging
 
-                if (shouldOpen) {
-                    emailDisplay.textContent = userEmail;
-                    modal.style.display = 'flex';
-                    
-                    // Setup Forms
-                    document.getElementById('inputEmailReenvio').value = userEmail;
-                    document.getElementById('inputEmailVerificar').value = userEmail;
+                // --- 1. REFERENCIAS GENERALES ---
+                const emailLoginInput = document.getElementById('email');
+                if(emailLoginInput) emailLoginInput.focus();
+
+                // Formulario principal de Login
+                const loginForm = document.querySelector('form');
+                if (loginForm) {
+                    loginForm.addEventListener('submit', function(e) {
+                        const email = document.getElementById('email').value;
+                        const password = document.getElementById('password').value;
+
+                        if (!email || !password) {
+                            e.preventDefault();
+                            alert('Por favor, completa todos los campos');
+                            return;
+                        }
+                        if (!email.includes('@')) {
+                            e.preventDefault();
+                            alert('Por favor, ingresa un email válido');
+                            return;
+                        }
+                    });
                 }
 
-                btnVerify.addEventListener('click', function() {
-                    const code = codeInput.value.trim();
-                    if(code.length !== 6) { alert('Código inválido'); return; }
-                    
-                    document.getElementById('inputCodigoVerificar').value = code;
-                    document.getElementById('formVerificar').submit();
-                });
-
-                btnResend.addEventListener('click', function() {
-                    btnResend.textContent = "Enviando...";
-                    document.getElementById('formReenvio').submit();
-                });
-
-                btnCancel.addEventListener('click', function() {
-                    modal.style.display = 'none';
-                });
-            });
-            </script>
-
-        <script>
-            // Enfocar el primer campo al cargar la página
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById('email').focus();
-            });
-
-            // Validación del lado del cliente
-            document.querySelector('form').addEventListener('submit', function(e) {
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-
-                if (!email || !password) {
-                    e.preventDefault();
-                    alert('Por favor, completa todos los campos');
-                    return;
-                }
-
-                if (!email.includes('@')) {
-                    e.preventDefault();
-                    alert('Por favor, ingresa un email válido');
-                    return;
-                }
-            });
-        </script>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Referencias DOM
+                // --- 2. VARIABLES PARA EL FLUJO DE RECUPERACIÓN ---
                 const viewLogin = document.getElementById('view-login');
                 const viewStep1 = document.getElementById('view-forgot-step1');
                 const viewStep2 = document.getElementById('view-forgot-step2');
@@ -334,127 +294,192 @@
                 let currentEmail = '';
                 let currentCode = '';
 
-                // 1. Mostrar Recuperación
+                // --- 3. LÓGICA DE RECUPERACIÓN DE CONTRASEÑA ---
+                // 1. Click en "¿Olvidaste tu contraseña?"
                 if(btnForgot) {
                     btnForgot.addEventListener('click', (e) => {
                         e.preventDefault();
-                        viewLogin.style.display = 'none';
-                        viewStep1.style.display = 'block';
+                        console.log("Iniciando recuperación...");
+                        if(viewLogin) viewLogin.style.display = 'none';
+                        if(viewStep1) viewStep1.style.display = 'block';
                     });
+                } else {
+                    console.error("No se encontró el botón btn-forgot-password");
                 }
 
-                // Volver al login
+                // 2. Volver al login
                 btnsBack.forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.preventDefault();
-                        viewStep1.style.display = 'none';
-                        viewStep2.style.display = 'none';
-                        viewStep3.style.display = 'none';
-                        viewLogin.style.display = 'block';
+                        [viewStep1, viewStep2, viewStep3].forEach(el => { if(el) el.style.display = 'none'; });
+                        if(viewLogin) viewLogin.style.display = 'block';
                     });
                 });
 
-                // PASO 1: Enviar Correo
-                document.getElementById('form-forgot-step1').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const email = document.getElementById('forgot-email').value;
-                    const btn = this.querySelector('button[type="submit"]');
-                    const msg = document.getElementById('forgot-msg-1');
-                    
-                    btn.disabled = true; btn.textContent = "Enviando...";
-                    msg.style.display = 'none';
+                // 3. Enviar Correo (Paso 1)
+                const formStep1 = document.getElementById('form-forgot-step1');
 
-                    const formData = new FormData();
-                    formData.append('email', email);
+                if(formStep1) {
+                    formStep1.addEventListener('submit', function(e) {
+                        e.preventDefault();
 
-                    fetch('/bytebox/public/auth/iniciarRecuperacion', { method: 'POST', body: formData })
-                    .then(r => r.json())
-                    .then(data => {
-                        if(data.success) {
-                            currentEmail = email;
-                            document.getElementById('forgot-email-display').textContent = email;
-                            viewStep1.style.display = 'none';
-                            viewStep2.style.display = 'block';
-                        } else {
-                            msg.textContent = data.message;
+                        const emailInput = document.getElementById('forgot-email');
+                        const email = emailInput.value;
+                        const btn = this.querySelector('button[type="submit"]');
+                        const msg = document.getElementById('forgot-msg-1');
+
+                        btn.disabled = true; btn.textContent = "Enviando...";
+                        msg.style.display = 'none';
+
+                        const formData = new FormData();
+                        formData.append('email', email);
+
+                        fetch('/bytebox/public/auth/iniciarRecuperacion', { method: 'POST', body: formData })
+                        .then(r => r.json())
+                        .then(data => {
+                            if(data.success) {
+                                currentEmail = email;
+                                document.getElementById('forgot-email-display').textContent = email;
+                                viewStep1.style.display = 'none';
+                                viewStep2.style.display = 'block';
+                            } else {
+                                msg.textContent = data.message;
+                                msg.style.display = 'block';
+                                btn.disabled = false; btn.textContent = "Enviar Código";
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            msg.textContent = "Error de conexión";
                             msg.style.display = 'block';
                             btn.disabled = false; btn.textContent = "Enviar Código";
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        msg.textContent = "Error de conexión";
-                        msg.style.display = 'block';
-                        btn.disabled = false; btn.textContent = "Enviar Código";
+                        });
                     });
-                });
+                }
 
-                // PASO 2: Verificar Código
-                document.getElementById('form-forgot-step2').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const code = document.getElementById('forgot-code').value;
-                    const btn = this.querySelector('button[type="submit"]');
-                    const msg = document.getElementById('forgot-msg-2');
+                // 4. Verificar Código (Paso 2)
+                const formStep2 = document.getElementById('form-forgot-step2');
 
-                    btn.disabled = true; btn.textContent = "Verificando...";
-                    
-                    const formData = new FormData();
-                    formData.append('email', currentEmail);
-                    formData.append('codigo', code);
+                if(formStep2) {
+                    formStep2.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const code = document.getElementById('forgot-code').value;
+                        const btn = this.querySelector('button[type="submit"]');
+                        const msg = document.getElementById('forgot-msg-2');
 
-                    fetch('/bytebox/public/auth/verificarCodigoRecuperacion', { method: 'POST', body: formData })
-                    .then(r => r.json())
-                    .then(data => {
-                        if(data.success) {
-                            currentCode = code;
-                            viewStep2.style.display = 'none';
-                            viewStep3.style.display = 'block';
-                        } else {
-                            msg.textContent = data.message;
-                            msg.style.display = 'block';
+                        btn.disabled = true; btn.textContent = "Verificando...";
+                        
+                        const formData = new FormData();
+                        formData.append('email', currentEmail);
+                        formData.append('codigo', code);
+
+                        fetch('/bytebox/public/auth/verificarCodigoRecuperacion', { method: 'POST', body: formData })
+                        .then(r => r.json())
+                        .then(data => {
+                            if(data.success) {
+                                currentCode = code;
+                                viewStep2.style.display = 'none';
+                                viewStep3.style.display = 'block';
+                            } else {
+                                msg.textContent = data.message;
+                                msg.style.display = 'block';
+                                btn.disabled = false; btn.textContent = "Verificar";
+                            }
+                        })
+                        .catch(() => {
                             btn.disabled = false; btn.textContent = "Verificar";
-                        }
-                    })
-                    .catch(() => {
-                        btn.disabled = false; btn.textContent = "Verificar";
+                        });
                     });
-                });
+                }
 
-                // PASO 3: Cambiar Contraseña
-                document.getElementById('form-forgot-step3').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const p1 = document.getElementById('forgot-pass').value;
-                    const p2 = document.getElementById('forgot-confirm').value;
-                    const btn = this.querySelector('button[type="submit"]');
-                    const msg = document.getElementById('forgot-msg-3');
+                // 5. Cambiar Contraseña (Paso 3)
+                const formStep3 = document.getElementById('form-forgot-step3');
 
-                    if(p1 !== p2) {
-                        msg.textContent = "Las contraseñas no coinciden";
-                        msg.style.display = 'block';
-                        return;
+                if(formStep3) {
+                    formStep3.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const p1 = document.getElementById('forgot-pass').value;
+                        const p2 = document.getElementById('forgot-confirm').value;
+                        const btn = this.querySelector('button[type="submit"]');
+                        const msg = document.getElementById('forgot-msg-3');
+
+                        if(p1 !== p2) {
+                            msg.textContent = "Las contraseñas no coinciden";
+                            msg.style.display = 'block';
+                            return;
+                        }
+
+                        btn.disabled = true; btn.textContent = "Actualizando...";
+
+                        const formData = new FormData();
+                        formData.append('email', currentEmail);
+                        formData.append('codigo', currentCode);
+                        formData.append('password', p1);
+                        formData.append('confirm_password', p2);
+
+                        fetch('/bytebox/public/auth/finalizarRecuperacion', { method: 'POST', body: formData })
+                        .then(r => r.json())
+                        .then(data => {
+                            if(data.success) {
+                                alert("¡Contraseña actualizada! Ingresando...");
+                                window.location.reload();
+                            } else {
+                                msg.textContent = data.message;
+                                msg.style.display = 'block';
+                                btn.disabled = false; btn.textContent = "Cambiar y Acceder";
+                            }
+                        });
+                    });
+                }
+
+                // --- 4. LÓGICA DEL MODAL DE VERIFICACIÓN (Login) ---
+                const modal = document.getElementById('verificationModal');
+                
+                if (modal) {
+                    const emailDisplay = document.getElementById('modalEmailDisplay');
+                    const btnVerify = document.getElementById('btnVerify');
+                    const btnResend = document.getElementById('btnResend');
+                    const btnCancel = document.getElementById('btnCancel');
+                    const codeInput = document.getElementById('verificationCode');
+
+                    // Variables PHP inyectadas
+                    const shouldOpen = <?= $openModal ? 'true' : 'false' ?>;
+                    const userEmail = "<?= htmlspecialchars($emailPendiente) ?>";
+
+                    if (shouldOpen && modal) {
+                        emailDisplay.textContent = userEmail;
+                        modal.style.display = 'flex';
+                        document.getElementById('inputEmailReenvio').value = userEmail;
+                        document.getElementById('inputEmailVerificar').value = userEmail;
                     }
 
-                    btn.disabled = true; btn.textContent = "Actualizando...";
+                    const btnCancelModal = document.getElementById('btnCancel');
+                    const btnVerify = document.getElementById('btnVerify');
+                    const btnResend = document.getElementById('btnResend');
+                    
+                    if(btnCancelModal) {
+                        btnCancelModal.addEventListener('click', function() {
+                            if(modal) modal.style.display = 'none';
+                        });
+                    }
 
-                    const formData = new FormData();
-                    formData.append('email', currentEmail);
-                    formData.append('codigo', currentCode);
-                    formData.append('password', p1);
-                    formData.append('confirm_password', p2);
+                    if(btnVerify) {
+                        btnVerify.addEventListener('click', function() {
+                            const code = codeInput.value.trim();
+                            if(code.length !== 6) { alert('Código inválido'); return; }
+                            
+                            document.getElementById('inputCodigoVerificar').value = code;
+                            document.getElementById('formVerificar').submit();
+                        });
+                    }
 
-                    fetch('/bytebox/public/auth/finalizarRecuperacion', { method: 'POST', body: formData })
-                    .then(r => r.json())
-                    .then(data => {
-                        if(data.success) {
-                            alert("¡Contraseña actualizada! Ingresando...");
-                            window.location.reload(); // O redirigir al perfil
-                        } else {
-                            msg.textContent = data.message;
-                            msg.style.display = 'block';
-                            btn.disabled = false; btn.textContent = "Cambiar y Acceder";
-                        }
-                    });
-                });
+                    if(btnResend) {
+                        btnResend.addEventListener('click', function() {
+                            btnResend.textContent = "Enviando...";
+                            document.getElementById('formReenvio').submit();
+                        });
+                    }
+                }
             });
         </script>
     </body>
