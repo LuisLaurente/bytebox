@@ -91,10 +91,53 @@
                             </label>
                         </div>
 
-                        <div class="text-sm">
-                            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
-                                ¿Olvidaste tu contraseña?
-                            </a>
+                        <div id="view-login">
+                            <div class="text-right" style="margin-top: 10px;">
+                                <a href="#" id="btn-forgot-password" style="color: #00d2ff; text-decoration: none; font-size: 0.9em;">
+                                    ¿Olvidaste tu contraseña?
+                                </a>
+                            </div>
+                        </div>
+
+                        <div id="view-forgot-step1" style="display: none;">
+                            <h3 style="text-align:center; color: white;">Recuperar Contraseña</h3>
+                            <p style="color: #ccc; text-align: center; font-size: 0.9em; margin-bottom: 20px;">Ingresa tu correo para recibir un código de verificación.</p>
+                            
+                            <form id="form-forgot-step1">
+                                <div class="form-group">
+                                    <input type="email" id="forgot-email" placeholder="tu@email.com" required style="width: 100%; padding: 12px; box-sizing: border-box; margin-bottom: 15px;">
+                                </div>
+                                <div id="forgot-msg-1" style="color: red; display: none; margin-bottom: 10px; text-align: center;"></div>
+                                <button type="submit" class="btn-primary" style="width: 100%; padding: 12px;">Enviar Código</button>
+                                <button type="button" class="btn-link btn-back-login" style="margin-top: 10px; width: 100%;">Volver al Login</button>
+                            </form>
+                        </div>
+
+                        <div id="view-forgot-step2" style="display: none;">
+                            <h3 style="text-align:center; color: white;">Verificar Código</h3>
+                            <p style="color: #ccc; text-align: center; font-size: 0.9em; margin-bottom: 20px;">Ingresa el código enviado a <strong id="forgot-email-display"></strong></p>
+                            
+                            <form id="form-forgot-step2">
+                                <div class="form-group">
+                                    <input type="text" id="forgot-code" placeholder="123456" maxlength="6" required style="width: 100%; padding: 12px; text-align: center; letter-spacing: 5px; font-size: 1.2em; box-sizing: border-box; margin-bottom: 15px;">
+                                </div>
+                                <div id="forgot-msg-2" style="color: red; display: none; margin-bottom: 10px; text-align: center;"></div>
+                                <button type="submit" class="btn-primary" style="width: 100%; padding: 12px;">Verificar</button>
+                            </form>
+                        </div>
+
+                        <div id="view-forgot-step3" style="display: none;">
+                            <h3 style="text-align:center; color: white;">Nueva Contraseña</h3>
+                            <form id="form-forgot-step3">
+                                <div class="form-group">
+                                    <input type="password" id="forgot-pass" placeholder="Nueva contraseña" required style="width: 100%; padding: 12px; box-sizing: border-box; margin-bottom: 10px;">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" id="forgot-confirm" placeholder="Confirmar contraseña" required style="width: 100%; padding: 12px; box-sizing: border-box; margin-bottom: 15px;">
+                                </div>
+                                <div id="forgot-msg-3" style="color: red; display: none; margin-bottom: 10px; text-align: center;"></div>
+                                <button type="submit" class="btn-primary" style="width: 100%; padding: 12px;">Cambiar y Acceder</button>
+                            </form>
                         </div>
                     </div>
 
@@ -274,6 +317,144 @@
                     alert('Por favor, ingresa un email válido');
                     return;
                 }
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Referencias DOM
+                const viewLogin = document.getElementById('view-login');
+                const viewStep1 = document.getElementById('view-forgot-step1');
+                const viewStep2 = document.getElementById('view-forgot-step2');
+                const viewStep3 = document.getElementById('view-forgot-step3');
+                
+                const btnForgot = document.getElementById('btn-forgot-password');
+                const btnsBack = document.querySelectorAll('.btn-back-login');
+                
+                let currentEmail = '';
+                let currentCode = '';
+
+                // 1. Mostrar Recuperación
+                if(btnForgot) {
+                    btnForgot.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        viewLogin.style.display = 'none';
+                        viewStep1.style.display = 'block';
+                    });
+                }
+
+                // Volver al login
+                btnsBack.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        viewStep1.style.display = 'none';
+                        viewStep2.style.display = 'none';
+                        viewStep3.style.display = 'none';
+                        viewLogin.style.display = 'block';
+                    });
+                });
+
+                // PASO 1: Enviar Correo
+                document.getElementById('form-forgot-step1').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('forgot-email').value;
+                    const btn = this.querySelector('button[type="submit"]');
+                    const msg = document.getElementById('forgot-msg-1');
+                    
+                    btn.disabled = true; btn.textContent = "Enviando...";
+                    msg.style.display = 'none';
+
+                    const formData = new FormData();
+                    formData.append('email', email);
+
+                    fetch('/bytebox/public/auth/iniciarRecuperacion', { method: 'POST', body: formData })
+                    .then(r => r.json())
+                    .then(data => {
+                        if(data.success) {
+                            currentEmail = email;
+                            document.getElementById('forgot-email-display').textContent = email;
+                            viewStep1.style.display = 'none';
+                            viewStep2.style.display = 'block';
+                        } else {
+                            msg.textContent = data.message;
+                            msg.style.display = 'block';
+                            btn.disabled = false; btn.textContent = "Enviar Código";
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        msg.textContent = "Error de conexión";
+                        msg.style.display = 'block';
+                        btn.disabled = false; btn.textContent = "Enviar Código";
+                    });
+                });
+
+                // PASO 2: Verificar Código
+                document.getElementById('form-forgot-step2').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const code = document.getElementById('forgot-code').value;
+                    const btn = this.querySelector('button[type="submit"]');
+                    const msg = document.getElementById('forgot-msg-2');
+
+                    btn.disabled = true; btn.textContent = "Verificando...";
+                    
+                    const formData = new FormData();
+                    formData.append('email', currentEmail);
+                    formData.append('codigo', code);
+
+                    fetch('/bytebox/public/auth/verificarCodigoRecuperacion', { method: 'POST', body: formData })
+                    .then(r => r.json())
+                    .then(data => {
+                        if(data.success) {
+                            currentCode = code;
+                            viewStep2.style.display = 'none';
+                            viewStep3.style.display = 'block';
+                        } else {
+                            msg.textContent = data.message;
+                            msg.style.display = 'block';
+                            btn.disabled = false; btn.textContent = "Verificar";
+                        }
+                    })
+                    .catch(() => {
+                        btn.disabled = false; btn.textContent = "Verificar";
+                    });
+                });
+
+                // PASO 3: Cambiar Contraseña
+                document.getElementById('form-forgot-step3').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const p1 = document.getElementById('forgot-pass').value;
+                    const p2 = document.getElementById('forgot-confirm').value;
+                    const btn = this.querySelector('button[type="submit"]');
+                    const msg = document.getElementById('forgot-msg-3');
+
+                    if(p1 !== p2) {
+                        msg.textContent = "Las contraseñas no coinciden";
+                        msg.style.display = 'block';
+                        return;
+                    }
+
+                    btn.disabled = true; btn.textContent = "Actualizando...";
+
+                    const formData = new FormData();
+                    formData.append('email', currentEmail);
+                    formData.append('codigo', currentCode);
+                    formData.append('password', p1);
+                    formData.append('confirm_password', p2);
+
+                    fetch('/bytebox/public/auth/finalizarRecuperacion', { method: 'POST', body: formData })
+                    .then(r => r.json())
+                    .then(data => {
+                        if(data.success) {
+                            alert("¡Contraseña actualizada! Ingresando...");
+                            window.location.reload(); // O redirigir al perfil
+                        } else {
+                            msg.textContent = data.message;
+                            msg.style.display = 'block';
+                            btn.disabled = false; btn.textContent = "Cambiar y Acceder";
+                        }
+                    });
+                });
             });
         </script>
     </body>

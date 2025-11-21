@@ -28,6 +28,12 @@ class Router
         'auth/reenviarCodigo' => ['controller' => 'AuthController', 'method' => 'reenviarCodigo'], // <-- NUEVA RUTA SÍNCRONA
         // ======================================
 
+        // === NUEVAS RUTAS PARA RECUPERACION DE CUENTA ===
+        'auth/iniciarRecuperacion' => ['controller' => 'AuthController', 'method' => 'iniciarRecuperacion'],
+        'auth/verificarCodigoRecuperacion' => ['controller' => 'AuthController', 'method' => 'verificarCodigoRecuperacion'],
+        'auth/finalizarRecuperacion' => ['controller' => 'AuthController', 'method' => 'finalizarRecuperacion'],
+        // ======================================
+
         // Pagos
         'pago/crear-pago-mercado-pago' => ['controller' => 'PagoController', 'method' => 'crearPagoMercadoPago'],
         'pago/exito' => ['controller' => 'PagoController', 'method' => 'exito'],

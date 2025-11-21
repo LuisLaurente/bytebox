@@ -69,26 +69,10 @@ $isRegularUser = isset($usuario['rol_nombre']) && $usuario['rol_nombre'] === 'us
             </div>
 
             <!-- Seguridad -->
-            <?php
-            $isSocial = false;
-            if (isset($usuario['password']) && strlen($usuario['password']) >= 50) {
-                $isSocial = true;
-            }
-            ?>
-
             <div class="profile-card">
                 <div class="password-card">
                     <h3>Seguridad</h3>
-
-                    <?php if (!$isSocial): ?>
-                        <a href="<?= url('/auth/changePassword') ?>" class="button orders-button">
-                            Cambiar contraseña
-                        </a>
-                    <?php else: ?>
-                        <div class="button-disabled text-center text-gray-500 font-semibold cursor-not-allowed">
-                            Cambiar contraseña (No disponible cuando se usa inicio de sesión social)
-                        </div>
-                    <?php endif; ?>
+                    <a href="<?= url('/auth/changePassword') ?>" class="button orders-button"> Cambiar contraseña </a>
                 </div>
             </div>
 

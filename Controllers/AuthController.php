@@ -699,6 +699,148 @@ class AuthController extends BaseController
         $google->callback();
     }
 
+    // --- MÉTODOS PARA RECUPERACIÓN DE CONTRASEÑA (AJAX) ---
+
+    /**
+     * Paso 1: Recibe email, genera código y lo envía
+     */
+    public function iniciarRecuperacion() {
+        ob_start();
+        header('Content-Type: application/json');
+        $response = ['success' => false, 'message' => 'Error interno.'];
+
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') goto send_resp;
+
+            $email = trim($_POST['email'] ?? '');
+            
+            // Verificar si el usuario existe
+            $usuario = $this->usuarioModel->obtenerPorEmail($email);
+            if (!$usuario) {
+                // Por seguridad, no decimos si el correo existe o no, pero simulamos éxito
+                // O si prefieres UX sobre seguridad estricta:
+                $response['message'] = 'No encontramos una cuenta con ese correo.';
+                goto send_resp;
+            }
+
+            // Generar código
+            $codigo = rand(100000, 999999);
+            $expira = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+
+            // Guardar en password_resets
+            $db = \Core\Database::getInstance()->getConnection();
+            $db->prepare("DELETE FROM password_resets WHERE email = ?")->execute([$email]);
+            
+            $stmt = $db->prepare("INSERT INTO password_resets (email, codigo, expira_en) VALUES (?, ?, ?)");
+            $stmt->execute([$email, $codigo, $expira]);
+
+            // Enviar Correo
+            if (\Core\Helpers\MailHelper::enviarCorreoRecuperacion($email, $usuario['nombre'], $codigo)) {
+                $response = ['success' => true, 'message' => 'Código enviado.'];
+            } else {
+                $response['message'] = 'Error al enviar el correo.';
+            }
+
+        } catch (\Exception $e) {
+            error_log("Error iniciarRecuperacion: " . $e->getMessage());
+            $response['message'] = 'Error del servidor.';
+        }
+
+        send_resp:
+        if (ob_get_length() > 0) ob_end_clean();
+        echo json_encode($response);
+        exit;
+    }
+
+    /**
+     * Paso 2: Verifica que el código sea correcto
+     */
+    public function verificarCodigoRecuperacion() {
+        ob_start();
+        header('Content-Type: application/json');
+        $response = ['success' => false, 'message' => 'Código inválido.'];
+
+        try {
+            $email = $_POST['email'] ?? '';
+            $codigo = $_POST['codigo'] ?? '';
+
+            $db = \Core\Database::getInstance()->getConnection();
+            $stmt = $db->prepare("SELECT * FROM password_resets WHERE email = ? AND expira_en > NOW() ORDER BY id DESC LIMIT 1");
+            $stmt->execute([$email]);
+            $reset = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if ($reset && $reset['codigo'] === $codigo) {
+                $response = ['success' => true, 'message' => 'Código verificado.'];
+            } else {
+                $response['message'] = 'Código incorrecto o expirado.';
+            }
+        } catch (\Exception $e) {
+            error_log("Error verificarCodigoRecuperacion: " . $e->getMessage());
+        }
+
+        if (ob_get_length() > 0) ob_end_clean();
+        echo json_encode($response);
+        exit;
+    }
+
+    /**
+     * Paso 3: Cambia la contraseña final
+     */
+    public function finalizarRecuperacion() {
+        ob_start();
+        header('Content-Type: application/json');
+        $response = ['success' => false, 'message' => 'Error al actualizar.'];
+
+        try {
+            $email = $_POST['email'] ?? '';
+            $codigo = $_POST['codigo'] ?? ''; // Re-verificamos por seguridad
+            $password = $_POST['password'] ?? '';
+            $confirm = $_POST['confirm_password'] ?? '';
+
+            if (strlen($password) < 6) {
+                $response['message'] = 'La contraseña debe tener al menos 6 caracteres.';
+                goto final_resp;
+            }
+            if ($password !== $confirm) {
+                $response['message'] = 'Las contraseñas no coinciden.';
+                goto final_resp;
+            }
+
+            // Re-verificar código (para evitar que alguien se salte el paso 2)
+            $db = \Core\Database::getInstance()->getConnection();
+            $stmt = $db->prepare("SELECT * FROM password_resets WHERE email = ? AND codigo = ? AND expira_en > NOW()");
+            $stmt->execute([$email, $codigo]);
+            if (!$stmt->fetch()) {
+                $response['message'] = 'Sesión de recuperación inválida.';
+                goto final_resp;
+            }
+
+            // Actualizar Usuario
+            $usuario = $this->usuarioModel->obtenerPorEmail($email);
+            if ($usuario) {
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                $this->usuarioModel->actualizar($usuario['id'], ['password' => $hashedPassword]);
+                
+                // Borrar token usado
+                $db->prepare("DELETE FROM password_resets WHERE email = ?")->execute([$email]);
+                
+                // Opcional: Iniciar sesión automáticamente
+                $rol = $this->rolModel->obtenerPorId($usuario['rol_id']);
+                \Core\Helpers\SessionHelper::login($usuario, $rol);
+
+                $response = ['success' => true, 'message' => 'Contraseña actualizada.'];
+            }
+
+        } catch (\Exception $e) {
+            error_log("Error finalizarRecuperacion: " . $e->getMessage());
+        }
+
+        final_resp:
+        if (ob_get_length() > 0) ob_end_clean();
+        echo json_encode($response);
+        exit;
+    }
+
     /* ================================
      * CAMBIO DE CONTRASEÑA
      * ================================ */
@@ -726,22 +868,6 @@ class AuthController extends BaseController
             }
         }
 
-        // password vacío → social
-        if (!isset($usuarioDb['password']) || empty($usuarioDb['password'])) {
-            $isSocial = true;
-        }
-
-        // password muy largo (hash típico bcrypt/argon2 ≥ 50)
-        if (isset($usuarioDb['password']) && strlen($usuarioDb['password']) >= 50) {
-            $isSocial = true;
-        }
-
-        if ($isSocial) {
-            $error = urlencode('No puedes cambiar la contraseña en cuentas vinculadas con Google o Facebook.');
-            header('Location: ' . url('/auth/profile?error=' . $error));
-            exit;
-        }
-
         require_once __DIR__ . '/../views/auth/changePassword.php';
     }
     public function updatePassword()
@@ -760,41 +886,23 @@ class AuthController extends BaseController
             $usuario = SessionHelper::getUser();
             $usuarioDb = $this->usuarioModel->obtenerPorId($usuario['id']);
 
-            // Bloquear si es social o si password es hash largo
-            $isSocial = false;
-            $checks = ['google_id', 'facebook_id', 'auth_provider', 'provider', 'oauth_provider', 'provider_name', 'social_provider'];
-            foreach ($checks as $k) {
-                if (isset($usuarioDb[$k]) && !empty($usuarioDb[$k]) && $usuarioDb[$k] !== 'local') {
-                    $isSocial = true;
-                    break;
-                }
-            }
-            if (!isset($usuarioDb['password']) || empty($usuarioDb['password'])) {
-                $isSocial = true;
-            }
-            if (isset($usuarioDb['password']) && strlen($usuarioDb['password']) >= 60) {
-                $isSocial = true;
-            }
-
-            if ($isSocial) {
-                $error = urlencode('No puedes cambiar la contraseña en cuentas vinculadas con Google o Facebook.');
-                header('Location: ' . url('/auth/profile?error=' . $error));
-                exit;
-            }
-
-            // aceptar distintos nombres de input en caso tu vista varíe
+            // aceptar distintos nombres de input en caso la vista varíe
             $passwordActual = $_POST['password_actual'] ?? $_POST['actual'] ?? '';
             $passwordNueva = $_POST['password_nueva'] ?? $_POST['nueva'] ?? '';
             $passwordConfirm = $_POST['password_confirm'] ?? $_POST['confirmar'] ?? '';
 
             $errores = [];
 
-            // Validar contraseña actual
-            if (empty($passwordActual) || !password_verify($passwordActual, $usuarioDb['password'])) {
-                $errores[] = 'La contraseña actual es incorrecta';
+            // 1. Validar contraseña actual (LÓGICA INTELIGENTE)
+            // Solo validamos la contraseña actual SI el usuario YA TIENE una contraseña en la BD.
+            // Si entró con Google y nunca puso clave, este paso se salta para permitirle crear una.
+            if (!empty($usuarioDb['password'])) {
+                if (empty($passwordActual) || !password_verify($passwordActual, $usuarioDb['password'])) {
+                    $errores[] = 'La contraseña actual es incorrecta';
+                }
             }
 
-            // Validar nueva contraseña
+            // 2. Validar nueva contraseña
             if (empty($passwordNueva) || strlen($passwordNueva) < 6) {
                 $errores[] = 'La nueva contraseña debe tener al menos 6 caracteres';
             }
@@ -809,7 +917,7 @@ class AuthController extends BaseController
                 exit;
             }
 
-            // Actualizar contraseña
+            // 3. Actualizar contraseña
             $hashedPassword = password_hash($passwordNueva, PASSWORD_DEFAULT);
             $this->usuarioModel->actualizar($usuario['id'], [
                 'password' => $hashedPassword
