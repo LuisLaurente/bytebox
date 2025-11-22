@@ -6,6 +6,8 @@ use Models\Usuario;
 use Models\Rol;
 use Core\Helpers\Validator;
 use Core\Helpers\Sanitizer;
+use Core\Database;
+use Core\Helpers\MailHelper;
 
 class UsuarioController extends BaseController
 {
@@ -73,7 +75,7 @@ class UsuarioController extends BaseController
                 'password' => $_POST['password'] ?? '',
                 'confirmar_password' => $_POST['confirmar_password'] ?? '',
                 'rol_id' => (int)($_POST['rol'] ?? 2), // Por defecto rol 'usuario'
-                'activo' => isset($_POST['activo']) ? 1 : 0
+                'activo' => 0
             ];
 
             // Validar datos
@@ -85,28 +87,46 @@ class UsuarioController extends BaseController
                 exit;
             }
 
-            // Verificar si el email ya existe
+            // Verificar si ya existe en usuarios REALES
             if ($this->usuarioModel->existeEmail($datos['email'])) {
-                $error = urlencode('El email ya está registrado');
+                $error = urlencode('El email ya está registrado y activo.');
                 header('Location: ' . url("/usuario/crear?error=$error"));
                 exit;
             }
 
-            // Hash de la contraseña ANTES de crear el usuario
-            $datos['password'] = password_hash($datos['password'], PASSWORD_DEFAULT);
+            // Hash password
+            $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
 
-            // Crear usuario
-            $resultado = $this->usuarioModel->crear($datos);
+            // Generar Código y Expiración (7 Días para invitaciones administrativas)
+            $codigo = rand(100000, 999999);
+            $expira = date('Y-m-d H:i:s', strtotime('+7 days'));
 
-            if ($resultado) {
-                $success = urlencode('Usuario creado exitosamente');
+            // === INSERTAR EN REGISTROS PENDIENTES ===
+            $db = Database::getInstance()->getConnection();
+
+            // Limpiar previos
+            $db->prepare("DELETE FROM registros_pendientes WHERE email = ?")->execute([$datos['email']]);
+
+            $sql = "INSERT INTO registros_pendientes (nombre, email, password, rol_id, codigo, expira_en) VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([
+                $datos['nombre'], 
+                $datos['email'], 
+                $passwordHash, 
+                $datos['rol_id'], 
+                $codigo, 
+                $expira
+            ]);
+
+            // Enviar Correo
+            if (MailHelper::enviarCodigoVerificacion($datos['email'], $datos['nombre'], $codigo)) {
+                $success = urlencode('Usuario invitado. Se ha enviado un código de verificación a su correo.');
                 header('Location: ' . url("/usuario?success=$success"));
-                exit;
             } else {
-                $error = urlencode('Error al crear el usuario');
-                header('Location: ' . url("/usuario/crear?error=$error"));
-                exit;
+                $error = urlencode('Datos guardados, pero hubo un error al enviar el correo.');
+                header('Location: ' . url("/usuario?error=$error"));
             }
+            exit;
         } catch (\Exception $e) {
             error_log("Error en UsuarioController::store: " . $e->getMessage());
             $error = urlencode('Error interno del servidor');
@@ -158,18 +178,25 @@ class UsuarioController extends BaseController
                 exit;
             }
 
-            // Sanitizar datos
+            // 1. Recoger datos básicos
             $datos = [
                 'nombre' => Sanitizer::cleanString($_POST['nombre'] ?? ''),
                 'email' => Sanitizer::sanitizeEmail($_POST['email'] ?? ''),
-                'password' => $_POST['password'] ?? '',
-                'confirmar_password' => $_POST['confirmar_password'] ?? '',
                 'rol_id' => (int)($_POST['rol'] ?? 2),
                 'activo' => isset($_POST['activo']) ? 1 : 0
             ];
 
-            // Validar datos (para actualización)
-            $errores = $this->validarDatos($datos, false, $id);
+            // 2. Recoger contraseñas por separado para validar
+            $passwordInput = $_POST['password'] ?? '';
+            $confirmarPassword = $_POST['confirmar_password'] ?? '';
+
+            // Añadir al array temporalmente solo para la validación
+            $datosParaValidar = $datos;
+            $datosParaValidar['password'] = $passwordInput;
+            $datosParaValidar['confirmar_password'] = $confirmarPassword;
+
+            // Validar datos (false indica que es edición, no creación)
+            $errores = $this->validarDatos($datosParaValidar, false, $id);
 
             if (!empty($errores)) {
                 $error = urlencode(implode(', ', $errores));
@@ -177,12 +204,20 @@ class UsuarioController extends BaseController
                 exit;
             }
 
-            // Verificar si el email ya existe (excluyendo el usuario actual)
+            // Verificar si el email ya existe (excluyendo el ID actual)
             if ($this->usuarioModel->existeEmail($datos['email'], $id)) {
                 $error = urlencode('El email ya está registrado por otro usuario');
                 header('Location: ' . url("/usuario/editar/$id?error=$error"));
                 exit;
             }
+
+            // 🔒 CRÍTICO: ENCRIPTADO DE CONTRASEÑA
+            // Si el campo de password NO está vacío, lo hasheamos.
+            if (!empty($passwordInput)) {
+                $datos['password'] = password_hash($passwordInput, PASSWORD_DEFAULT);
+            }
+            // Si está vacío, NO lo añadimos al array $datos.
+            // El modelo Usuario::actualizar ignorará el campo si no existe, manteniendo la contraseña vieja.
 
             // Actualizar usuario
             $resultado = $this->usuarioModel->actualizar($id, $datos);
@@ -844,7 +879,6 @@ class UsuarioController extends BaseController
             exit;
         }
     }
-
 
     /**
      * Convertir ID de departamento a nombre

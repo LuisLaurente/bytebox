@@ -21,6 +21,19 @@ class Router
         'facebookauth/login' => ['controller' => 'FacebookAuthController', 'method' => 'login'], // ← NUEVA
         'auth/facebook/login' => ['controller' => 'FacebookAuthController', 'method' => 'login'],
         'auth/facebook/callback' => ['controller' => 'FacebookAuthController', 'method' => 'callback'],
+
+        // === NUEVAS RUTAS DE REGISTRO AJAX ===
+        'auth/iniciarRegistro' => ['controller' => 'AuthController', 'method' => 'iniciarRegistro'],
+        'auth/verificarCodigoRegistro' => ['controller' => 'AuthController', 'method' => 'verificarCodigoRegistro'],
+        'auth/reenviarCodigo' => ['controller' => 'AuthController', 'method' => 'reenviarCodigo'], // <-- NUEVA RUTA SÍNCRONA
+        // ======================================
+
+        // === NUEVAS RUTAS PARA RECUPERACION DE CUENTA ===
+        'auth/iniciarRecuperacion' => ['controller' => 'AuthController', 'method' => 'iniciarRecuperacion'],
+        'auth/verificarCodigoRecuperacion' => ['controller' => 'AuthController', 'method' => 'verificarCodigoRecuperacion'],
+        'auth/finalizarRecuperacion' => ['controller' => 'AuthController', 'method' => 'finalizarRecuperacion'],
+        // ======================================
+
         // Pagos
         'pago/crear-pago-mercado-pago' => ['controller' => 'PagoController', 'method' => 'crearPagoMercadoPago'],
         'pago/exito' => ['controller' => 'PagoController', 'method' => 'exito'],

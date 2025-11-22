@@ -415,7 +415,7 @@ class Usuario
             $expira_en = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60));
 
             $insertQuery = "INSERT INTO usuario_tokens (usuario_id, token, expira_en) 
-                       VALUES (:usuario_id, :token, :expira_en)";
+                                VALUES (:usuario_id, :token, :expira_en)";
             $insertStmt = $this->db->prepare($insertQuery);
 
             return $insertStmt->execute([

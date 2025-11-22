@@ -1,4 +1,5 @@
 <?php
+ob_start();
 // ===========================
 // CONFIGURACIÓN INICIAL
 // ===========================
@@ -141,8 +142,24 @@ if ($debeSincronizar && (!isset($_SESSION['carrito_vaciado']) || $_SESSION['carr
 // ===========================
 // MIDDLEWARE DE AUTENTICACIÓN
 // ===========================
-// Solo aplicamos middleware si no es login admin
-if ($url !== 'admin/login' && $url !== 'admin/authenticate') {
+// 📢 CRÍTICO: Lista de rutas que NO requieren que el usuario esté logueado (públicas)
+$public_unauthenticated_routes = [
+    'admin/login',
+    'admin/authenticate', // Permitir que el admin se autentique
+    'auth/reenviarCodigo', // Permitir el POST de reenvío
+    'auth/verificarCodigoRegistro',
+    'auth/iniciarRecuperacion',
+    'auth/verificarCodigoRecuperacion',
+    'auth/finalizarRecuperacion',
+    'auth/registro',       // Permitir el GET a la página de registro
+    'auth/login',          // Permitir el GET a la página de login
+    'auth/authenticate',   // Permitir el POST de login
+    'home/index',          // Home (generalmente pública)
+    // Agregue aquí cualquier otra ruta que deba ser pública (ej. 'producto/ver')
+];
+
+// Comprobación: Si la URL NO está en la lista de rutas públicas y NO es una ruta de administración
+if (!in_array($url, $public_unauthenticated_routes) && strpos($url, 'admin/') !== 0) {
     \Core\Helpers\AuthMiddleware::checkAuth($url);
 }
 

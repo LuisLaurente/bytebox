@@ -17,7 +17,7 @@ class Database
             $config = require __DIR__ . '/../config/database.php';
 
             // Construcción del DSN (Data Source Name)
-            $dsn = "mysql:host={$config['host']};port=3306;dbname={$config['dbname']};charset=utf8mb4"; //port 3307 Cambiar de ser necesario
+            $dsn = "mysql:host={$config['host']};port=3307;dbname={$config['dbname']};charset=utf8mb4"; //port 3307 Cambiar de ser necesario
 
 
             // Conexión PDO usando los parámetros de configuración
@@ -48,8 +48,4 @@ class Database
     {
         return self::getInstance()->getConnection();
     }
-    
-
-    
 }
-
