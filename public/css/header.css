@@ -259,9 +259,9 @@
   gap: 10px;
   transition: background-color 0.2s;
 }
-
+/*box shadows categorias*/
 .all-categories-button:hover {
-  background-color: #008fbf;
+  box-shadow: #1B1B1B;
 }
 
 .dropdown-arrow-icon {

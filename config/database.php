@@ -16,10 +16,10 @@ if ($isProduction) {
     ];
 } else {
     return [
-        'host'     => $_ENV['DB_HOST_LOCAL'] ?? 'localhost:3307',
+        'host'     => $_ENV['DB_HOST_LOCAL'] ?? '127.0.0.1',
         'dbname'   => $_ENV['DB_NAME_LOCAL'] ?? 'ylxfwfte_bytebox',
         'username' => $_ENV['DB_USER_LOCAL'] ?? 'root',
         'password' => $_ENV['DB_PASS_LOCAL'] ?? '',
-        'port'     => $_ENV['DB_PORT_LOCAL'] ?? 3307
+        'port'     => $_ENV['DB_PORT_LOCAL'] ?? 3306
     ];
 }
