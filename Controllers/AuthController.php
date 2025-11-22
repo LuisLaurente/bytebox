@@ -250,6 +250,11 @@ class AuthController extends BaseController
                 error_log("✅ Token remember_me creado para usuario: " . $usuario['id']);
             }
 
+            if ($rol['nombre'] === 'admin') {
+                header('Location: ' . url('auth/profile')); 
+                exit;
+            }
+
             // Redirigir según el parámetro redirect o al perfil por defecto
             if (!empty($redirect)) {
                 // Si redirect ya contiene la base, redirigir directamente

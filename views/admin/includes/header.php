@@ -10,7 +10,7 @@ if (!isset($cantidadEnCarrito)) {
   $cantidadEnCarrito = 0;
   if (isset($_SESSION['carrito']) && is_array($_SESSION['carrito'])) {
     foreach ($_SESSION['carrito'] as $item) {
-      $cantidadEnCarrito += (int)($item['cantidad'] ?? 0);
+      $cantidadEnCarrito += (int) ($item['cantidad'] ?? 0);
     }
   }
 }
@@ -22,7 +22,7 @@ function isClienteHeader()
 
   // Si el rol es un array, obtener el nombre
   if (is_array($userRole) && isset($userRole['nombre'])) {
-    return $userRole['nombre'] === 'usuario';                              
+    return $userRole['nombre'] === 'usuario';
   }
 
   // Si es una cadena, verificar directamente
@@ -66,16 +66,18 @@ try {
 
   $itemsByParent = [];
   foreach ($allCategories as $c) {
-    $pid = isset($c['id_padre']) && ($c['id_padre'] !== '') ? (int)$c['id_padre'] : 0;
+    $pid = isset($c['id_padre']) && ($c['id_padre'] !== '') ? (int) $c['id_padre'] : 0;
     $itemsByParent[$pid][] = $c;
   }
 
   $buildTree = function ($parentId) use (&$itemsByParent, &$buildTree) {
     $branch = [];
-    if (!isset($itemsByParent[$parentId])) return [];
+    if (!isset($itemsByParent[$parentId]))
+      return [];
     foreach ($itemsByParent[$parentId] as $item) {
-      $children = $buildTree((int)$item['id']);
-      if (!empty($children)) $item['children'] = $children;
+      $children = $buildTree((int) $item['id']);
+      if (!empty($children))
+        $item['children'] = $children;
       $branch[] = $item;
     }
     return $branch;
@@ -128,17 +130,11 @@ if (!empty($_GET['open_login']) && $_GET['open_login'] == '1') {
 
       <!-- Center: search -->
       <nav class="main-nav">
-        <form class="search-form" action="<?= url('producto/busqueda') ?>" method="GET" role="search" autocomplete="off">
-          <input
-            type="search"
-            name="q"
-            class="search-input"
-            placeholder="Buscar productos..."
+        <form class="search-form" action="<?= url('producto/busqueda') ?>" method="GET" role="search"
+          autocomplete="off">
+          <input type="search" name="q" class="search-input" placeholder="Buscar productos..."
             value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q'], ENT_QUOTES, 'UTF-8') : '' ?>"
-            aria-label="Buscar productos"
-            spellcheck="false"
-            autocapitalize="off"
-            autocomplete="off" />
+            aria-label="Buscar productos" spellcheck="false" autocapitalize="off" autocomplete="off" />
           <div id="autocomplete-results" class="autocomplete-results" role="listbox" aria-expanded="false"></div>
           <button type="submit" class="search-button" aria-label="Buscar">
             <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
@@ -151,12 +147,15 @@ if (!empty($_GET['open_login']) && $_GET['open_login'] == '1') {
 
       <!-- Perfil: contenedor envuelve botón + dropdown (para evitar gaps) -->
       <div class="user-profile-container" id="userProfileContainer">
-        <button class="user-profile-button" id="userProfileButton" aria-haspopup="true" aria-expanded="false" aria-label="Abrir menú de usuario">
-          <svg class="user-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="32" height="32" aria-hidden="true">
+        <button class="user-profile-button" id="userProfileButton" aria-haspopup="true" aria-expanded="false"
+          aria-label="Abrir menú de usuario">
+          <svg class="user-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="32" height="32"
+            aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z" />
           </svg>
-          <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18"
+            aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
@@ -171,12 +170,14 @@ if (!empty($_GET['open_login']) && $_GET['open_login'] == '1') {
               <a href="<?= url('auth/logout') ?>" class="dropdown-item logout-item" role="menuitem">Cerrar Sesión</a>
             <?php else: ?>
               <!-- Botón que abre el modal -->
-              <button type="button" class="dropdown-item login-item" id="openLoginModalBtn" role="menuitem" aria-haspopup="dialog">
-                <svg class="dropdown-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5 12h14M12 5l7 7-7 7" />
+              <button type="button" class="dropdown-item login-item" id="openLoginModalBtn" role="menuitem"
+                aria-haspopup="dialog"
+                style="width: fit-content; display: flex; align-items: center; gap: 10px; padding: 10px 15px;">
+                <svg class="dropdown-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18"
+                  height="18" aria-hidden="true" style="flex-shrink: 0;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
-                <span class="dropdown-item-text">Iniciar Sesión</span>
+                <span class="dropdown-item-text" style="line-height: 1;">Iniciar Sesión</span>
               </button>
             <?php endif; ?>
           </div>
@@ -186,7 +187,8 @@ if (!empty($_GET['open_login']) && $_GET['open_login'] == '1') {
       <!-- Carrito (a la derecha del perfil) -->
       <div class="cart-section">
         <a href="<?= url('carrito/ver') ?>" class="cart-button" aria-label="Ver carrito">
-          <svg class="cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="32" height="32" aria-hidden="true">
+          <svg class="cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="32" height="32"
+            aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M2 6h2l2 12h12l2-8H6M16 18a2 2 0 11-4 0 2 2 0 014 0zm-6 0a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
@@ -204,7 +206,8 @@ if (!empty($_GET['open_login']) && $_GET['open_login'] == '1') {
   <div class="categories-bar">
     <div class="categories-content">
       <div class="all-categories-dropdown-container">
-        <button class="all-categories-button ml-[15px]" id="allCategoriesButton" aria-haspopup="true" aria-expanded="false">
+        <button class="all-categories-button ml-[15px]" id="allCategoriesButton" aria-haspopup="true"
+          aria-expanded="false">
           Todas las Categorías
           <svg class="dropdown-arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -269,11 +272,9 @@ if (!empty($_GET['open_login']) && $_GET['open_login'] == '1') {
 
       <nav class="category-links">
         <?php
-        // Mostrar las primeras N categorías en la barra superior (p. ej. 8)
         $topN = 8;
         $top = !empty($categoriasTree) ? array_slice($categoriasTree, 0, $topN) : array_slice($allCategories, 0, $topN);
         if (empty($top)) {
-          // Fallback: enlace estático opcional
           echo '<a href="#" class="category-link">SIN CATEGORÍAS</a>';
         } else {
           foreach ($top as $t) {
@@ -286,307 +287,193 @@ if (!empty($_GET['open_login']) && $_GET['open_login'] == '1') {
       </nav>
     </div>
   </div>
-</div> <!-- <<-- CERRAR EL DIV ENVOLVENTE -->
+</div>
 
-<!-- Exponer BASE_URL para JS -->
 <script>
   const BASE_URL = "<?= rtrim(url(''), '/') ?>";
   const OPEN_LOGIN_MODAL_ON_LOAD = <?= $openLoginModalOnLoad ? 'true' : 'false' ?>;
 </script>
 
 <!-- Modal de login (insertado en header para no navegar a nueva página) -->
-<div id="loginModal" class="login-modal " aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
-  <div class="max-w-md w-full space-y-8 p-8">
-    <div class="login-modal-overlay" id="loginModalOverlay" tabindex="-1"></div>
+<div id="loginModal" class="fixed inset-0 z-[9999] hidden" aria-labelledby="loginModalTitle" role="dialog"
+  aria-modal="true">
 
-    <div class="login-modal-panel" id="loginModalPanel" role="document" aria-describedby="loginModalDesc">
-      <button type="button" class="login-modal-close" id="loginModalClose" aria-label="Cerrar">&times;</button>
+  <div id="loginModalOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity cursor-pointer">
+  </div>
 
-      <!-- Header -->
-      <div class="text-center" style="margin-bottom:1rem;">
-        <h2 id="loginModalTitle" class="mt-2 text-3xl font-extrabold text-gray-900">Bytebox</h2>
-        <p id="loginModalDesc" class="mt-1 text-sm text-gray-600">Inicia sesión en tu cuenta</p>
-      </div>
+  <div class="fixed inset-0 z-10 overflow-y-auto">
+    <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
 
-      <!-- Mensajes de error -->
-      <?php if (!empty($loginErrorMsg)): ?>
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 login-error" role="alert">
-          <?= htmlspecialchars($loginErrorMsg) ?>
-        </div>
-      <?php endif; ?>
+      <div id="loginModalPanel"
+        class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-md border border-gray-100">
 
-      <!-- Botones de login social -->
-      <?php
-      // Intentar incluir partial login_social desde varias ubicaciones razonables
-      $loginSocialIncluded = false;
-      $pathsToTry = [
-        __DIR__ . '/login_social.php',                // donde podría estar si pusiste el partial junto al header
-        __DIR__ . '/../auth/login_social.php',       // views/includes -> views/auth
-        __DIR__ . '/../../views/auth/login_social.php',
-        __DIR__ . '/../../auth/login_social.php',
-        __DIR__ . '/../../views/includes/login_social.php'
-      ];
+        <button type="button" id="loginModalClose"
+          class="absolute top-4 right-4 rounded-full bg-gray-100 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-200 focus:outline-none transition-colors z-20">
+          <span class="sr-only">Cerrar</span>
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
 
-      foreach ($pathsToTry as $p) {
-        if (file_exists($p)) {
-          include $p;
-          $loginSocialIncluded = true;
-          break;
-        }
-      }
+        <div class="px-6 py-8 sm:px-8">
 
-      // Si no se encontró el partial, mostramos un fallback (enlaces a endpoints OAuth).
-      if (!$loginSocialIncluded):
-      ?>
-        <div class="login-social-row" style="display:flex;gap:0.5rem;flex-direction:column;margin-bottom:1rem;">
-          <a href="<?= url('auth/oauth/google') ?>" class="social-btn google-btn"
-            style="display:inline-flex;align-items:center;gap:8px;padding:10px;border-radius:6px;border:1px solid #d1d5db;text-decoration:none;">
-            <!-- Google SVG simple -->
-            <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
-              <path fill="#EA4335" d="M24 9.5c3.54 0 6.7 1.23 9.2 3.24l6.86-6.86C36.43 3.01 30.55 1 24 1 14.97 1 6.96 6.6 3.06 14.86l7.83 6.09C12.9 16.05 18.85 9.5 24 9.5z" />
-            </svg>
-            <span style="font-size:14px;color:#111;">Continuar con Google</span>
-          </a>
-
-          <a href="<?= url('auth/facebook/login') ?>" class="social-btn fb-btn"
-            style="display:inline-flex;align-items:center;gap:8px;padding:10px;border-radius:6px;border:1px solid #d1d5db;text-decoration:none;">
-            <!-- Facebook simple -->
-            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#1877F2" d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07C2 17.09 5.66 21.21 10.44 22v-7.07H8.08v-2.86h2.36V9.84c0-2.34 1.39-3.63 3.52-3.63 1.02 0 2.09.18 2.09.18v2.3h-1.18c-1.16 0-1.52.72-1.52 1.46v1.76h2.59l-.41 2.86h-2.18V22C18.34 21.21 22 17.09 22 12.07z" />
-            </svg>
-            <span style="font-size:14px;color:#111;">Continuar con Facebook</span>
-          </a>
-        </div>
-      <?php
-      endif;
-      ?>
-
-
-      <!-- Formulario de login -->
-      <form id="loginModalForm" method="POST" action="<?= url('auth/authenticate') ?>">
-        <?php
-        // Generar token CSRF para el formulario de login
-        if (class_exists('\Core\Helpers\CsrfHelper')) {
-          echo \Core\Helpers\CsrfHelper::tokenField('login_form');
-        }
-        ?>
-
-        <input type="hidden" name="redirect"
-  value="<?php 
-    // USANDO TU SISTEMA DE RUTAS EXISTENTE
-    $url = isset($_GET['url']) ? trim($_GET['url'], '/') : '';
-    
-    // Si no hay URL específica, usar la actual
-    if (empty($url)) {
-      $currentUri = $_SERVER['REQUEST_URI'] ?? '';
-      // Extraer solo la parte después de public/
-      if (preg_match('#/public/(.*)$#', $currentUri, $matches)) {
-        $url = $matches[1] ?? 'home/index';
-      } else {
-        $url = 'home/index';
-      }
-    }
-    
-    echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
-  ?>">
-
-        <div class="modal-row">
-          <label for="loginEmail">Correo Electrónico</label>
-          <input id="email"
-            name="email"
-            type="email"
-            autocomplete="email"
-            required
-            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-            placeholder="tu@email.com"
-            value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
-        </div>
-
-        <div class="modal-row">
-          <label for="loginPassword">Contraseña</label>
-          <input id="password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required
-            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-            placeholder="••••••••">
-        </div>
-
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <input id="remember"
-              name="remember"
-              type="checkbox"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-            <label for="remember" class="ml-2 block text-sm text-gray-700">
-              Recordarme
-            </label>
+          <div class="text-center mb-6">
+            <h2 id="loginModalTitle" class="text-2xl font-bold text-gray-900 font-orbitron">BYTEBOX</h2>
+            <p id="loginModalDesc" class="mt-2 text-sm text-gray-500">Bienvenido de nuevo</p>
           </div>
 
-          <div class="text-sm">
-            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
-              ¿Olvidaste tu contraseña?
-            </a>
-          </div>
-        </div>
-
-        <!-- Submit button -->
-        <div>
-          <button type="submit"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">
-            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-              <svg class="h-5 w-5 text-blue-500 group-hover:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+          <?php if (!empty($loginErrorMsg)): ?>
+            <div class="mb-4 rounded-lg bg-red-50 p-4 border border-red-100 flex items-center gap-3">
+              <svg class="h-5 w-5 text-red-500 flex-shrink-0" fill="viewBox" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd" />
               </svg>
-            </span>
-            Iniciar Sesión
-          </button>
-          <div class="text-center text-sm text-gray-700"> ¿No tienes una cuenta?
-            <a href="<?= url('auth/registro?redirect=' . urlencode('carrito/ver')) ?>" class="btn-secondary font-medium text-blue-600 hover:text-blue-500">
-              Crea una
-            </a>.
-          </div>
-        </div>
-      </form>
-      <!-- Botón para regresar a la tienda -->
-      <div class="mt-6 text-center">
-        <a href="<?= url('home/index') ?>" class="inline-block px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded font-medium transition">&larr; Regresar a la tienda</a>
-      </div>
+              <span class="text-sm text-red-700 font-medium"><?= htmlspecialchars($loginErrorMsg) ?></span>
+            </div>
+          <?php endif; ?>
 
-    </div>
-    <!-- Footer -->
-    <div class="text-center">
-      <p class="text-sm text-white opacity-75">
-        © <?= date('Y') ?> Bytebox. Todos los derechos reservados.
-      </p>
+          <?php
+          $loginSocialIncluded = false;
+          $pathsToTry = [__DIR__ . '/login_social.php', __DIR__ . '/../auth/login_social.php'];
+          foreach ($pathsToTry as $p)
+            if (file_exists($p)) {
+              include $p;
+              $loginSocialIncluded = true;
+              break;
+            }
+
+          if (!$loginSocialIncluded): ?>
+            <div class="space-y-3 mb-6">
+              <a href="<?= url('auth/oauth/google') ?>"
+                class="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all">
+                <svg class="h-5 w-5" viewBox="0 0 48 48">
+                  <path fill="#EA4335"
+                    d="M24 9.5c3.54 0 6.7 1.23 9.2 3.24l6.86-6.86C36.43 3.01 30.55 1 24 1 14.97 1 6.96 6.6 3.06 14.86l7.83 6.09C12.9 16.05 18.85 9.5 24 9.5z" />
+                  <path fill="#4285F4"
+                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                  <path fill="#FBBC05"
+                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                  <path fill="#34A853"
+                    d="M24 48c6.48 0 11.95-2.16 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                </svg>
+                Continuar con Google
+              </a>
+              <a href="<?= url('auth/facebook/login') ?>"
+                class="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all">
+                <svg class="h-5 w-5 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+                Continuar con Facebook
+              </a>
+            </div>
+
+            <div class="relative mb-6">
+              <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                <div class="w-full border-t border-gray-200"></div>
+              </div>
+              <div class="relative flex justify-center"><span class="bg-white px-2 text-sm text-gray-400">o con tu
+                  correo</span></div>
+            </div>
+          <?php endif; ?>
+
+          <form id="loginModalForm" method="POST" action="<?= url('auth/authenticate') ?>" class="space-y-5">
+            <?php if (class_exists('\Core\Helpers\CsrfHelper'))
+              echo \Core\Helpers\CsrfHelper::tokenField('login_form'); ?>
+            <input type="hidden" name="redirect" value="<?php
+            $url = isset($_GET['url']) ? trim($_GET['url'], '/') : '';
+            if (empty($url)) {
+              $currentUri = $_SERVER['REQUEST_URI'] ?? '';
+              if (preg_match('#/public/(.*)$#', $currentUri, $matches)) {
+                $url = $matches[1] ?? 'home/index';
+              } else {
+                $url = 'home/index';
+              }
+            }
+            echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+            ?>">
+
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+              <div class="mt-1">
+                <input id="email" name="email" type="email" autocomplete="email" required
+                  class="block w-full rounded-lg border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50 focus:bg-white transition-colors"
+                  placeholder="nombre@ejemplo.com" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+              </div>
+            </div>
+
+            <div>
+              <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+              <div class="mt-1">
+                <input id="password" name="password" type="password" autocomplete="current-password" required
+                  class="block w-full rounded-lg border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50 focus:bg-white transition-colors"
+                  placeholder="••••••••">
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <input id="remember" name="remember" type="checkbox"
+                  class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                <label for="remember" class="ml-2 block text-sm text-gray-600">Recordarme</label>
+              </div>
+              <div class="text-sm">
+                <a href="#" class="font-medium text-gray-900 hover:text-gray-900">¿Olvidaste tu contraseña?</a>
+              </div>
+            </div>
+
+            <button type="submit"
+              class="flex w-full justify-center rounded-lg bg-gray-900 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all transform active:scale-[0.98]">
+              Iniciar Sesión
+            </button>
+          </form>
+
+          <p class="mt-6 text-center text-sm text-gray-600">
+            ¿No tienes cuenta?
+            <a href="<?= url('auth/registro?redirect=' . urlencode('carrito/ver')) ?>"
+              class="font-semibold text-gray-900 hover:text-blue-500">Regístrate gratis</a>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-
 <!-- Estilos del modal (puedes mover a header.css) -->
 <style>
-  .login-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 2200;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 3rem 1rem;
+  #loginModal.open {
+    display: block !important;
   }
 
-  .login-modal.open {
-    display: flex;
+
+  #loginModal.open #loginModalPanel {
+    animation: modalPop 0.3s ease-out forwards;
   }
 
-  .login-modal-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(2px);
-  }
-
-  .login-modal-panel {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 520px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-    padding: 1.25rem;
-  }
-
-  .login-modal-close {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    border: 0;
-    background: transparent;
-    font-size: 20px;
-    cursor: pointer;
-  }
-
-  .login-error {
-    background: #ffe6e6;
-    border: 1px solid #ffbdbd;
-    color: #700;
-    padding: 0.6rem;
-    border-radius: 6px;
-    margin-bottom: 0.8rem;
-  }
-
-  .modal-row {
-    margin-bottom: 0.75rem;
-  }
-
-  .modal-row label {
-    display: block;
-    font-size: 0.9rem;
-    margin-bottom: 0.25rem;
-    color: #333;
-  }
-
-  .modal-row input[type="email"],
-  .modal-row input[type="password"] {
-    width: 100%;
-    padding: 0.6rem 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    box-sizing: border-box;
-  }
-
-  .modal-submit {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #2563eb;
-    color: white;
-    border: none;
-    padding: 0.6rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  .modal-submit:hover {
-    background: #1e40af;
-  }
-
-  .modal-small {
-    font-size: 0.9rem;
-    color: #444;
-  }
-
-  .login-social-row {
-    margin-bottom: 0.6rem;
-  }
-
-  @media (max-width:640px) {
-    .login-modal {
-      align-items: flex-start;
-      padding-top: 1.5rem;
+  @keyframes modalPop {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
     }
 
-    .login-modal-panel {
-      margin: 0 12px;
-      width: calc(100% - 24px);
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
     }
+  }
+
+  .font-orbitron {
+    font-family: 'Orbitron', sans-serif;
   }
 </style>
-<!-- Banner de Cookies -->
+
 <?php include_once __DIR__ . '/cookies_banner.php'; ?>
 
-<!-- DEBUG TEMPORAL -->
-<script>
-console.log('Cookie consent exists:', <?= json_encode(CookieHelper::exists('cookies_consent')) ?>);
-console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_consent')) ?>);
-</script>
 
 <!-- Autocomplete + dropdown profile behavior + modal JS -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
 
     /* ---------- Autocomplete ---------- */
     const input = document.querySelector('.search-input');
@@ -601,7 +488,7 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
         '>': '&gt;',
         '"': '&quot;',
         "'": '&#39;'
-      } [s]));
+      }[s]));
     }
 
     function hideResults() {
@@ -612,7 +499,7 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
     }
 
     if (input) {
-      input.addEventListener('input', function(e) {
+      input.addEventListener('input', function (e) {
         const q = this.value.trim();
         if (q.length === 0) {
           hideResults();
@@ -716,9 +603,9 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
     let isTouchInteraction = false;
 
     if (allCategoriesButton && categoriesDropdown) {
-      
+
       // 1. Detectar interacción táctil para desactivar el hover
-      allCategoriesButton.addEventListener('touchstart', function() {
+      allCategoriesButton.addEventListener('touchstart', function () {
         isTouchInteraction = true;
       }, { passive: true });
 
@@ -750,7 +637,7 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
         // En móvil, el clic es el evento principal para abrir/cerrar
         // En escritorio, permite hacer clic para alternar si el usuario lo prefiere
         e.stopPropagation();
-        
+
         if (categoriesDropdown.classList.contains('open')) {
           closeCategories();
         } else {
@@ -801,7 +688,7 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
     function openLoginModal() {
       if (!loginModal) return;
       previouslyFocused.el = document.activeElement;
-      
+
       // 🔄 REGENERAR TOKEN CSRF FRESCO cada vez que se abre el modal
       fetch(`${BASE_URL}/auth/getCsrfToken`)
         .then(resp => resp.json())
@@ -826,7 +713,7 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
           console.error('❌ Error regenerando CSRF token:', err);
           // Continuar de todos modos con el token inicial
         });
-      
+
       loginModal.classList.add('open');
       loginModal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
@@ -847,11 +734,11 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
       // restore focus
       try {
         if (previouslyFocused.el) previouslyFocused.el.focus();
-      } catch (e) {}
+      } catch (e) { }
     }
 
     if (openLoginBtn) {
-      openLoginBtn.addEventListener('click', function(e) {
+      openLoginBtn.addEventListener('click', function (e) {
         e.preventDefault();
         openLoginModal();
       });
@@ -864,7 +751,7 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
     });
 
     // cerrar con Escape
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
         if (loginModal && loginModal.classList.contains('open')) {
           closeLoginModal();
@@ -874,7 +761,7 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
 
     // simple validation en cliente para evitar submit vacío
     if (loginForm) {
-      loginForm.addEventListener('submit', function(e) {
+      loginForm.addEventListener('submit', function (e) {
         const emailVal = (document.getElementById('email') || {}).value || '';
         const passVal = (document.getElementById('password') || {}).value || '';
         if (!emailVal || !passVal) {
@@ -895,9 +782,9 @@ console.log('Cookie consent value:', <?= json_encode(CookieHelper::get('cookies_
   }); // DOMContentLoaded end
 
   document.addEventListener("cartUpdated", (e) => {
-  const countEl = document.getElementById("cart-count");
-  if (countEl && e.detail && typeof e.detail.count === "number") {
-    countEl.textContent = e.detail.count;
-  }
-});
+    const countEl = document.getElementById("cart-count");
+    if (countEl && e.detail && typeof e.detail.count === "number") {
+      countEl.textContent = e.detail.count;
+    }
+  });
 </script>
