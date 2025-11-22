@@ -23,5 +23,5 @@ jobs:
           server: 'bytebox.pe'
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           local_path: './*'
-          remote_path: '/home1/ylxfwfte/test.bytebox.pe/'
+          remote_path: '/home1/ylxfwfte/bytebox.pe/'
           sftp_only: true
