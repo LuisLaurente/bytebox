@@ -157,17 +157,43 @@ class AuthController extends BaseController
             if (!$usuario) {
                 // Verificar si está en pendientes (Invitación de Admin o Registro no completado)
                 $db = \Core\Database::getInstance()->getConnection();
-                $stmt = $db->prepare("SELECT * FROM registros_pendientes WHERE email = ? AND expira_en > NOW()");
+                $stmt = $db->prepare("SELECT * FROM registros_pendientes WHERE email = ?");
                 $stmt->execute([$email]);
                 $pendiente = $stmt->fetch(\PDO::FETCH_ASSOC);
 
                 if ($pendiente && password_verify($password, $pendiente['password'])) {
-                    // ¡Encontrado! Activar el modal en la vista de login
+                    // 1. Calcular nueva expiración inteligente (Mantener 7 días si era admin)
+                    $fechaCreacion = strtotime($pendiente['created_at']);
+                    $fechaExpiracionOriginal = strtotime($pendiente['expira_en']);
+                    $ventanaOriginal = $fechaExpiracionOriginal - $fechaCreacion;
+
+                    // Si era una invitación de admin (> 24h), renovamos por 7 días. Si no, 10 min.
+                    if ($ventanaOriginal > 86400) {
+                        $expira = date('Y-m-d H:i:s', strtotime('+7 days'));
+                    } else {
+                        $expira = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+                    }
+
+                    $nuevoCodigo = rand(100000, 999999);
+                    $nombre = $pendiente['nombre'] ?? 'Usuario';
+
+                    // 2. Actualizar la tabla con el nuevo código
+                    $updateSql = "UPDATE registros_pendientes SET codigo = ?, expira_en = ? WHERE email = ?";
+                    $db->prepare($updateSql)->execute([$nuevoCodigo, $expira, $email]);
+
+                    // 3. Enviar el correo
+                    // (MailHelper ya tiene su protección ob_start interna, es seguro llamarlo aquí)
+                    \Core\Helpers\MailHelper::enviarCodigoVerificacion($email, $nombre, $nuevoCodigo);
+
+                    // 4. Activar flags de sesión y redirigir
                     $_SESSION['login_verificacion_pendiente'] = true;
                     $_SESSION['login_email_temp'] = $email;
                     
-                    $error = urlencode('Tu cuenta requiere verificación. Ingresa el código enviado a tu correo.');
-                    header('Location: ' . url("/auth/login?error=$error"));
+                    // Usamos success en vez de error para que sea más amigabl
+                    $mensaje = urlencode('Tu cuenta requiere verificación. Ingresa el código enviado a tu correo.');
+
+                    // Redirigir al login (que abrirá el modal automáticamente)
+                    header('Location: ' . url("/auth/login?error=$mensaje"));
                     exit;
                 }
 
@@ -269,6 +295,11 @@ class AuthController extends BaseController
                 error_log("✅ Token remember_me creado para usuario: " . $usuario['id']);
             }
 
+            if ($rol['nombre'] === 'admin') {
+                header('Location: ' . url('auth/profile')); 
+                exit;
+            }
+            
             // Redirigir según el parámetro redirect o al perfil por defecto
             if (!empty($redirect)) {
                 // Si redirect ya contiene la base, redirigir directamente

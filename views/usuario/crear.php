@@ -59,7 +59,8 @@
                                            value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
                                            required 
                                            class="usuario-crear-input"
-                                           placeholder="usuario@ejemplo.com">
+                                           placeholder="usuario@ejemplo.com"
+                                           autocomplete="nope">
                                 </div>
                             </div>
                             
@@ -76,7 +77,8 @@
                                                required 
                                                minlength="6"
                                                class="usuario-crear-input usuario-crear-password-input"
-                                               placeholder="Mínimo 6 caracteres">
+                                               placeholder="Mínimo 6 caracteres"
+                                               autocomplete="nope">
                                         <button type="button" 
                                                 onclick="togglePassword('crear_password')"
                                                 class="usuario-crear-password-toggle">
@@ -100,7 +102,8 @@
                                                required 
                                                minlength="6"
                                                class="usuario-crear-input usuario-crear-password-input"
-                                               placeholder="Confirma la contraseña">
+                                               placeholder="Confirma la contraseña"
+                                               autocomplete="nope">
                                         <button type="button" 
                                                 onclick="togglePassword('crear_confirmar_password')"
                                                 class="usuario-crear-password-toggle">
