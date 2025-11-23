@@ -144,6 +144,27 @@ class CuponController
         echo json_encode(['status' => 'success', 'mensaje' => 'Cupón removido correctamente']);
         exit;
     }
+    /**
+     * Eliminar un cupón
+     */
+    public function eliminar($id)
+    {
+        // Verificar que sea método POST para seguridad
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . url('cupon'));
+            exit;
+        }
+
+        $cuponModel = new Cupon();
+        
+        // Intentar eliminar
+        if ($cuponModel->eliminar($id)) {
+            header('Location: ' . url('cupon') . '?success=deleted');
+        } else {
+            header('Location: ' . url('cupon') . '?error=delete_failed');
+        }
+        exit;
+    }
 
     /**
      * Mostrar lista de cupones

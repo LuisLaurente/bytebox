@@ -28,6 +28,19 @@ body {
 .valorNumero{
     color: var(--color-negro);
 }
+.btn-delete {
+    background-color: #2ac1db;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-delete:hover {
+    background-color: var(--color-negro);
+}
 /* ===== LAYOUT PRINCIPAL ===== */
 .layout {
     display: flex;
