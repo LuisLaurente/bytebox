@@ -287,5 +287,35 @@ class Cupon
 
         return ['valido' => true, 'cupon' => $cupon];
     }
+    /**
+     * Eliminar un cupón por ID
+     * Borra primero el historial de uso para respetar la integridad referencial
+     */
+    public function eliminar($id)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            // 1. Eliminar registros de uso en 'cupon_usado'
+            $stmtHistorial = $this->db->prepare("DELETE FROM cupon_usado WHERE cupon_id = ?");
+            $stmtHistorial->execute([$id]);
+
+            // 2. (Opcional) Desvincular de pedidos existentes para que no se rompa el historial de pedidos
+            // Si prefieres que se borre el dato del pedido, omite esto, pero es más seguro mantenerlo null.
+            $stmtPedidos = $this->db->prepare("UPDATE pedidos SET cupon_id = NULL WHERE cupon_id = ?");
+            $stmtPedidos->execute([$id]);
+
+            // 3. Eliminar el cupón
+            $stmt = $this->db->prepare("DELETE FROM cupones WHERE id = ?");
+            $exito = $stmt->execute([$id]);
+
+            $this->db->commit();
+            return $exito;
+        } catch (Exception $e) {
+            $this->db->rollback();
+            error_log("Error al eliminar cupón: " . $e->getMessage());
+            return false;
+        }
+    }
 
 }
